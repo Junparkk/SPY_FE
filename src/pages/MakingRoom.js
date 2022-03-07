@@ -16,7 +16,6 @@ import { BsFillDoorClosedFill } from 'react-icons/bs';
 // 입장전 게임 설정 등
 // 최종 버전으로 만들기
 const Markingroom = () => {
-  const [count, setCount] = useState(6);
 
   return (
     <React.Fragment>
