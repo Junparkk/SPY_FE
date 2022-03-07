@@ -1,12 +1,20 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import JobCheckModal from '../components/JobCheckModal';
 import RoomCard from '../components/RoomCard';
 import InviteAlarm from '../components/InviteAlarm';
 
+import { actionCreators as roomActions } from '../redux/modules/room';
+
+import { apis } from '../shared/apis';
+
 const Main = () => {
+  const dispatch = useDispatch();
+  const room_list = useSelector((state) => state.room.list);
+
   //게임 시작 후 역할 모달로 보여주기 (추후에 게임 시작값이 들어오면 true로 바꿔주는 코드로 작성하기)
   const [isShowing, setIsShowing] = useState(true);
   useEffect(() => {
@@ -18,33 +26,38 @@ const Main = () => {
     }
   }, [isShowing]);
   //초대 알림 오면 상태 변화
-  const [isInvite, setIsInvite] = useState(true);
+  // const [isInvite, setIsInvite] = useState(true);
+  // useEffect(() => {
+  //   if (isInvite) {
+  //     const notiTimer = setTimeout(() => {
+  //       setIsInvite(false);
+  //     }, 2000);
+  //     return () => clearTimeout(notiTimer);
+  //   }
+  // }, [isInvite]);
+
+  //방 리스트 불러오기
+
+  console.log('check', room_list);
+
   useEffect(() => {
-    if (isInvite) {
-      const notiTimer = setTimeout(() => {
-        setIsInvite(false);
-      }, 2000);
-      return () => clearTimeout(notiTimer);
-    }
-  }, [isInvite]);
+    dispatch(roomActions.getRoomAPI());
+  }, []);
 
   return (
     <>
       {/* 초대 알림 */}
-      {isInvite && <InviteAlarm children="개똥이"></InviteAlarm>}
+      {/* {isInvite && <InviteAlarm children="개똥이"></InviteAlarm>} */}
       {/* 모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
 
       {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>}
 
       {/* 대기실 화면 */}
       <Container>
-        <RoomCard></RoomCard>
-        <RoomCard></RoomCard>
-        <RoomCard></RoomCard>
-        <RoomCard></RoomCard>
-        <RoomCard></RoomCard>
-        <RoomCard></RoomCard>
-        <RoomCard></RoomCard>
+        {room_list &&
+          room_list.map((p, idx) => {
+            return <RoomCard key={p.id} {...p}></RoomCard>;
+          })}
       </Container>
       <MakeRoomBtn>빠른 시작</MakeRoomBtn>
       <EnterRoomBtn>방 만들기</EnterRoomBtn>

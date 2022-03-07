@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import { createBrowserHistory } from 'history';
 import { connectRouter } from 'connected-react-router';
 
+import Room from './modules/room';
 // import User from './modules/user';
 // import Post from './modules/post';
 
@@ -10,6 +11,7 @@ import { connectRouter } from 'connected-react-router';
 export const history = createBrowserHistory();
 
 const rootReducer = combineReducers({
+  room: Room,
   //   user: User,
   //   post: Post,
   // 2. 리덕스에 넣어준다.
