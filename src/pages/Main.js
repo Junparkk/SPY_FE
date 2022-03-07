@@ -35,7 +35,7 @@ const Main = (props) => {
   //     }, 2000);
   //     return () => clearTimeout(notiTimer);
   //   }
-  // }, [isInvite]);s
+  // }, [isInvite]);
 
   //방 리스트 불러오기
   useEffect(() => {
@@ -87,8 +87,20 @@ const Cards = styled.div`
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
+  @media screen and (min-width: 1607px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @media screen and (min-width: 960px) and (max-width: 1607px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media screen and (min-width: 551px) and (max-width: 960px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: 0px) and (max-width: 551px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const MakeRoomBtn = styled.button`
