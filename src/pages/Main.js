@@ -34,7 +34,7 @@ const Main = () => {
   //     }, 2000);
   //     return () => clearTimeout(notiTimer);
   //   }
-  // }, [isInvite]);
+  // }, [isInvite]);s
 
   //방 리스트 불러오기
 
