@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const RoomCard = () => {
+const RoomCard = (props) => {
+  console.log('hi', props);
   const testImg = React.useRef(null);
   const test = () => {
     console.log(testImg.current.style.transform);
@@ -18,8 +19,10 @@ const RoomCard = () => {
           <DoorImgArea ref={testImg}></DoorImgArea>
         </InsideDoor>
         <TextArea>
-          <Title>방제용</Title>
-          <Player>정원 8명 현재인원 4명</Player>
+          <Title>{props.roomName}</Title>
+          <Player>
+            정원 {props.currPlayer}명 현재인원 {props.maxPlayer}명
+          </Player>
         </TextArea>
       </Cards>
     </>

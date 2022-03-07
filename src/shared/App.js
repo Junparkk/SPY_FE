@@ -7,7 +7,6 @@ import LoginTitle from '../pages/LoginTitle';
 import SignUp from '../pages/SignUp';
 import Header from '../components/Header';
 import MakingRoom from '../pages/MakingRoom';
-import Setting from '../pages/Setting';
 import Result from '../pages/Result';
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
         <Route path="/login" exact component={LoginTitle}></Route>
         <Route path="/signup" exact component={SignUp}></Route>
         <Route path="/makingroom" exact component={MakingRoom}></Route>
-        <Route path="/setting" exact component={Setting}></Route>
         <Route path="/result" exact component={Result}></Route>
       </ConnectedRouter>
     </>
