@@ -8,6 +8,7 @@ import SignUp from '../pages/SignUp';
 import Header from '../components/Header';
 import MakingRoom from '../pages/MakingRoom';
 import Result from '../pages/Result';
+import Ingame from '../pages/Ingame';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/signup" exact component={SignUp}></Route>
         <Route path="/makingroom" exact component={MakingRoom}></Route>
         <Route path="/result" exact component={Result}></Route>
+        <Route path="/room/:roomId" exact component={Ingame}></Route>
       </ConnectedRouter>
     </>
   );
