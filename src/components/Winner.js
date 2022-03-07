@@ -110,8 +110,9 @@ const Winner = () => {
         playsInline
         autoPlay
         muted
-        width="270"
-        height="270"
+        width="220"
+        height="250"
+        style={{borderRadius: "50%"}}
       />
       <button onClick={handleMuteClick} ref={muteBtn}>
         음소거
@@ -127,8 +128,8 @@ const Winner = () => {
 };
 
 const WinnerComp = styled.div`
-  width: 270px;
-  height: 270px;
+  width: 220px;
+  height: 250px;
   border: 1px solid black;
   border-radius: 50%;
   margin: 10px;
