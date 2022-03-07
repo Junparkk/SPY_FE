@@ -4,24 +4,21 @@ import styled from 'styled-components';
 const RoomCard = (props) => {
   console.log('hi', props);
   const testImg = React.useRef(null);
-  const test = () => {
+  const openDoor = () => {
     console.log(testImg.current.style.transform);
     testImg.current.style.transform = 'rotateY(-90deg)';
   };
+
   return (
     <>
-      <Cards
-        onClick={() => {
-          test();
-        }}
-      >
+      <Cards onClick={() => openDoor()}>
         <InsideDoor>
           <DoorImgArea ref={testImg}></DoorImgArea>
         </InsideDoor>
         <TextArea>
           <Title>{props.roomName}</Title>
           <Player>
-            정원 {props.currPlayer}명 현재인원 {props.maxPlayer}명
+            {props.currPlayer} / {props.maxPlayer}
           </Player>
         </TextArea>
       </Cards>

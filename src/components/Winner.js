@@ -110,8 +110,8 @@ const Winner = () => {
         playsInline
         autoPlay
         muted
-        width="270"
-        height="270"
+        width="270px"
+        height="270px"
       />
       <button onClick={handleMuteClick} ref={muteBtn}>
         음소거

@@ -19,7 +19,7 @@ function App() {
         <Route path="/signup" exact component={SignUp}></Route>
         <Route path="/makingroom" exact component={MakingRoom}></Route>
         <Route path="/result" exact component={Result}></Route>
-        <Route path="/ingame" exact component={Ingame}></Route>
+        <Route path="/room/:roomId" exact component={Ingame}></Route>
       </ConnectedRouter>
     </>
   );
