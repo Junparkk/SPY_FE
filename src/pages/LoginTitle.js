@@ -1,0 +1,109 @@
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { actionCreators as userActions} from "../redux/modules/user";
+
+function LoginTitle() {
+
+  //스크롤 업 애니매이션
+  const [ScrollY, setScrollY] = useState(0);
+
+  const handleFollow = () => {
+    setScrollY(window.scrollY);
+  };
+
+  const handleTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const watch = () => {
+      window.addEventListener('scroll', handleFollow);
+    };
+    watch();
+    return () => window.removeEventListener('scroll', handleFollow);
+  });
+
+  useEffect(() => {
+    document.documentElement.scroll(0, 3000);
+  }, []);
+
+  useEffect(() => {
+    console.log('Scroll is', ScrollY);
+  }, [ScrollY]);
+
+  //닉네임 서버 전달
+  const dispatch = useDispatch();
+
+  const [nickname, setNickname] = useState("")
+
+  const Login = () => {
+    dispatch(userActions.LoginDB(nickname))
+  }
+
+  return (
+    <>
+      <Wrap>
+        <TitleWrap>
+        <Logo src="https://o.remove.bg/downloads/9b4fea87-5873-44dd-99a4-75375bd3c0f6/Logo-removebg-preview.png" />
+        <span style={{ color: '#333333', fontSize: '5rem', fontWeight: '500' }}>
+          Inderstrial
+          <br />
+          S.P.Y
+        </span>
+        <div style={{ margin: '50px', fontWeight: 'bold' }}>
+          닉네임{' '}<br/>
+          <input
+            style={{
+              border: 'solid 1px black',
+              borderRadius: '10px',
+              width: '200px',
+              height: '30px',
+              margin : "16px"
+            }}
+            placeholder="닉네임을 입력해주세요"
+            onChange={(e)=>{setNickname(e.target.value)}}
+          ></input><br/>
+          <button onClick={Login}>입장하기</button>
+        </div>
+        </TitleWrap>
+        <Test>
+          <span style={{ fontSize: '5rem' }}>
+            건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다
+          </span>
+          <div>{ScrollY > 2088 ? handleTop() : ''}</div>
+        </Test>
+      </Wrap>
+    </>
+  );
+}
+
+const Wrap = styled.div`
+  width: 100%;
+  height: 3000px;
+  background-color: #dfd880;
+  text-align: center;
+`;
+
+const TitleWrap = styled.div`
+  width: 100%;
+`
+const Logo = styled.div`
+  margin: 0px auto;
+  width: 250px;
+  height: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+`;
+
+const Test = styled.div`
+  display: flex;
+  position: relative;
+  vertical-align: bottom;
+  height: 2000px;
+  background-color: #555555;
+`;
+
+export default LoginTitle;
