@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import JobCheckModal from '../components/JobCheckModal';
+import VoteModal from '../components/VoteModal';
 import RoomCard from '../components/RoomCard';
 import InviteAlarm from '../components/InviteAlarm';
 
@@ -46,10 +47,10 @@ const Main = (props) => {
     <>
       {/* 초대 알림 */}
       {/* {isInvite && <InviteAlarm children="개똥이"></InviteAlarm>} */}
-      {/* 모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
-
-      {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>}
-
+      {/* 직업모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
+      {/* {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>} */}
+      {/* 투표모달 테스트 */}
+      {isShowing && <VoteModal children="마퓌아"></VoteModal>}
       {/* 대기실 화면 */}
       <Container>
         {room_list &&
