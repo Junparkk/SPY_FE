@@ -14,6 +14,8 @@ import { apis } from '../shared/apis';
 
 const Main = (props) => {
   const dispatch = useDispatch();
+  const islogin = localStorage.getItem('nickname')
+  const userId = localStorage.getItem('userid')
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
 
@@ -60,6 +62,7 @@ const Main = (props) => {
                 onClick={() => {
                   const moveTimer = setTimeout(() => {
                     history.push(`/room/${p.id}`);
+                    dispatch(roomActions.enterRoomDB(userId, p.id))
                   }, 1000);
                   return () => clearTimeout(moveTimer);
                 }}
