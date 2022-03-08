@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { actionCreators as userActions} from "../redux/modules/user";
+import { actionCreators as userActions } from '../redux/modules/user';
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
 
 function LoginTitle() {
-
   //스크롤 업 애니매이션
   const [ScrollY, setScrollY] = useState(0);
 
@@ -36,37 +36,46 @@ function LoginTitle() {
   //닉네임 서버 전달
   const dispatch = useDispatch();
 
-  const [nickname, setNickname] = useState("")
+  const [nickname, setNickname] = useState('');
 
   const Login = () => {
-    dispatch(userActions.LoginDB(nickname))
-  }
+    dispatch(userActions.LoginDB(nickname));
+  };
 
   return (
     <>
       <Wrap>
         <TitleWrap>
-        <Logo src="https://o.remove.bg/downloads/9b4fea87-5873-44dd-99a4-75375bd3c0f6/Logo-removebg-preview.png" />
-        <span style={{ color: '#333333', fontSize: '5rem', fontWeight: '500' }}>
-          Inderstrial
-          <br />
-          S.P.Y
-        </span>
-        <div style={{ margin: '50px', fontWeight: 'bold' }}>
-          닉네임{' '}<br/>
-          <input
-            style={{
-              border: 'solid 1px black',
-              borderRadius: '10px',
-              width: '200px',
-              height: '30px',
-              margin : "16px"
-            }}
-            placeholder="닉네임을 입력해주세요"
-            onChange={(e)=>{setNickname(e.target.value)}}
-          ></input><br/>
-          <button onClick={Login}>입장하기</button>
-        </div>
+          <Logo src="" />
+          <span
+            style={{ color: '#333333', fontSize: '5rem', fontWeight: '500' }}
+          >
+            Inderstrial
+            <br />
+            S.P.Y
+          </span>
+          <div style={{ margin: '50px', fontWeight: 'bold' }}>
+            닉네임 <br />
+            <input
+              style={{
+                border: 'solid 1px black',
+                borderRadius: '10px',
+                width: '307px',
+                height: '50px',
+                margin: '16px',
+              }}
+              placeholder="닉네임을 입력해주세요"
+              onChange={(e) => {
+                setNickname(e.target.value);
+              }}
+            ></input>
+            <GiPerspectiveDiceSixFacesRandom
+              style={{ backgroundColor: '#9295FD', borderRadius: '56px' }}
+              size={56}
+            />
+            <br />
+            <StartBt onClick={Login}>start</StartBt>
+          </div>
         </TitleWrap>
         <Test>
           <span style={{ fontSize: '5rem' }}>
@@ -88,7 +97,7 @@ const Wrap = styled.div`
 
 const TitleWrap = styled.div`
   width: 100%;
-`
+`;
 const Logo = styled.div`
   margin: 0px auto;
   width: 250px;
@@ -104,6 +113,13 @@ const Test = styled.div`
   vertical-align: bottom;
   height: 2000px;
   background-color: #555555;
+`;
+
+const StartBt = styled.button`
+  border: none;
+  color: #9295fd;
+  height: 65px;
+  width: 171px;
 `;
 
 export default LoginTitle;

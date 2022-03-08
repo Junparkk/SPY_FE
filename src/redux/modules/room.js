@@ -8,8 +8,10 @@ import { apis } from '../../shared/apis';
 const SET_ROOM = 'SET_ROOM';
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
+const ENTER_USER = "ENTER_USER";
 
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
+const enterUser = createAction(ENTER_USER, (enter_room) => ({enter_room}));
 // const addPost = createAction(ADD_POST, (post) => ({ post }));
 // const editPost = createAction(EDIT_POST, (post_id, post) => ({
 //   post_id,
@@ -48,6 +50,23 @@ const getRoomAPI = () => {
   };
 };
 
+const enterRoomDB = (nickname, roomId) => {
+  return function (dispatch, getState, { history }) {
+    axios
+      .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${nickname}`, {
+      nickname:nickname,
+      roomId:roomId,
+      })
+      .then((response) => {
+        console.log(response)
+        history.push(`/room/${roomId}`);
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  };
+};
+
 export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
@@ -76,6 +95,7 @@ export default handleActions(
 
 const actionCreators = {
   getRoomAPI,
+  enterRoomDB,
 };
 
 export { actionCreators };

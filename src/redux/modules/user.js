@@ -54,7 +54,10 @@ const LoginDB = (nickname) => {
       })
       .then((response) => {
         window.alert(`${nickname} 님 반가워요`)
-        history.push('/');
+        console.log(response)
+        localStorage.setItem('nickname',nickname)
+        localStorage.setItem('userid', response.data.user.id)
+        // history.push('/');
       })
       .catch((error) => {
         window.alert(error);
