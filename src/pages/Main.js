@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import JobCheckModal from '../components/JobCheckModal';
+import VoteModal from '../components/VoteModal';
 import RoomCard from '../components/RoomCard';
 import InviteAlarm from '../components/InviteAlarm';
 
@@ -37,7 +38,7 @@ const Main = (props) => {
   //     }, 2000);
   //     return () => clearTimeout(notiTimer);
   //   }
-  // }, [isInvite]);s
+  // }, [isInvite]);
 
   //방 리스트 불러오기
   useEffect(() => {
@@ -48,10 +49,10 @@ const Main = (props) => {
     <>
       {/* 초대 알림 */}
       {/* {isInvite && <InviteAlarm children="개똥이"></InviteAlarm>} */}
-      {/* 모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
-
-      {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>}
-
+      {/* 직업모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
+      {/* {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>} */}
+      {/* 투표모달 테스트 */}
+      {isShowing && <VoteModal children="마퓌아"></VoteModal>}
       {/* 대기실 화면 */}
       <Container>
         {room_list &&
@@ -90,8 +91,20 @@ const Cards = styled.div`
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
+  @media screen and (min-width: 1607px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @media screen and (min-width: 960px) and (max-width: 1607px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media screen and (min-width: 551px) and (max-width: 960px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: 0px) and (max-width: 551px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const MakeRoomBtn = styled.button`
