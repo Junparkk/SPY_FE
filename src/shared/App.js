@@ -5,7 +5,7 @@ import { history } from '../redux/configureStore';
 import Main from '../pages/Main';
 import LoginTitle from '../pages/LoginTitle';
 import SignUp from '../pages/SignUp';
-import Header from '../components/Header';
+// import Header from '../components/Header';
 import MakingRoom from '../pages/MakingRoom';
 import Result from '../pages/Result';
 import Ingame from '../pages/Ingame'
@@ -14,7 +14,7 @@ import Tutorial from "../pages/Tutorial";
 function App() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <ConnectedRouter history={history}>
         <Route path="/" exact component={Main}></Route>
         <Route path="/login" exact component={LoginTitle}></Route>
