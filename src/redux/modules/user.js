@@ -12,7 +12,6 @@ const setUser = createAction(SET_USER, (user) => ({ user }));
 
 const initialState = {
   user: null,
-  is_login: false,
 };
 
 const LoginCheckDB = () => {
@@ -57,7 +56,7 @@ const LoginDB = (nickname) => {
         console.log(response)
         localStorage.setItem('nickname',nickname)
         localStorage.setItem('userid', response.data.user.id)
-        // history.push('/');
+        history.push('/');
       })
       .catch((error) => {
         window.alert(error);

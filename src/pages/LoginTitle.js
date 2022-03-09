@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
+import Logo from '../images/Logo.png';
+import Title from '../images/Title.png';
+import Building from '../images/Building.png';
+import App from '../shared/App.css'
+
+
 
 function LoginTitle() {
   //스크롤 업 애니매이션
@@ -46,43 +52,35 @@ function LoginTitle() {
     <>
       <Wrap>
         <TitleWrap>
-          <Logo src="" />
-          <span
-            style={{ color: '#333333', fontSize: '5rem', fontWeight: '500' }}
-          >
-            Inderstrial
-            <br />
-            S.P.Y
-          </span>
-          <div style={{ margin: '50px', fontWeight: 'bold' }}>
-            닉네임 <br />
+          <TitleLogo src={Logo} />
+          <HeaderTitle src={Title} />
+          <div style={{ fontWeight: 'bold'}}>
+            <InputNick>
             <input
               style={{
-                border: 'solid 1px black',
-                borderRadius: '10px',
-                width: '307px',
+                border: 'solid 2px #888888',
+                borderRadius: '20px',
+                width: '20%',
+                minWidth: "180px",
                 height: '50px',
-                margin: '16px',
               }}
-              placeholder="닉네임을 입력해주세요"
+              placeholder="닉네임"
               onChange={(e) => {
                 setNickname(e.target.value);
               }}
-            ></input>
+            />
             <GiPerspectiveDiceSixFacesRandom
-              style={{ backgroundColor: '#9295FD', borderRadius: '56px' }}
+              style={{ backgroundColor: '#9295FD', borderRadius: '56px', verticalAlign:"middle", marginLeft: "10px"}}
               size={56}
             />
+            </InputNick>
+            
             <br />
-            <StartBt onClick={Login}>start</StartBt>
+            <StartBt onClick={Login}>start!</StartBt>
           </div>
         </TitleWrap>
-        <Test>
-          <span style={{ fontSize: '5rem' }}>
-            건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다건물입니다
-          </span>
-          <div>{ScrollY > 2088 ? handleTop() : ''}</div>
-        </Test>
+        <div>{ScrollY > 2375 ? handleTop() : ''}</div>
+        <LoginBackground src={Building} />
       </Wrap>
     </>
   );
@@ -90,36 +88,66 @@ function LoginTitle() {
 
 const Wrap = styled.div`
   width: 100%;
-  height: 3000px;
-  background-color: #dfd880;
+  height: 3503px;
+  background-color: #ffe179;
   text-align: center;
+  background-size:cover;  
 `;
 
 const TitleWrap = styled.div`
   width: 100%;
+  padding : 80px 0px 0px 0px;
+  @media screen and (max-width: 663px) { padding: 40px 0px 0px 0px }
 `;
-const Logo = styled.div`
+const TitleLogo = styled.div`
   margin: 0px auto;
-  width: 250px;
-  height: 250px;
+  width: 207px;
+  height: 207px;
+  border-radius: 207px;
+  box-shadow: 10px 10px 10px gray;
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
+  
 `;
 
-const Test = styled.div`
-  display: flex;
-  position: relative;
-  vertical-align: bottom;
-  height: 2000px;
-  background-color: #555555;
+const HeaderTitle = styled.div`
+  margin: 20px auto;
+  width: 631px;
+  min-width:370px;
+  height: 275px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 663px) { width: 70%; }
+
 `;
+
+const InputNick = styled.div`
+margin-top: 10%;
+  @media screen and (max-width: 663px) { margin-top: -10% }
+`
 
 const StartBt = styled.button`
   border: none;
-  color: #9295fd;
+  background-color: #9295fd;
+  border-radius: 40px;
+  font-size: 31px;
+  color: #fff;
   height: 65px;
   width: 171px;
+  box-shadow: 10px 5px 5px gray;
+  font-family: 'yg-jalnan';
+  cursor: pointer;
+`;
+
+const LoginBackground = styled.div`
+  margin: -50px auto;
+  width: 100%;
+  height: 2488px;
+  background-image: url('${(props) => props.src}');
+  background-size: cover;
+  @media screen and (max-width: 1296px) { display:none; }
 `;
 
 export default LoginTitle;
