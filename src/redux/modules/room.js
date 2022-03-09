@@ -51,9 +51,7 @@ const initialPost = {
 const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
-      console.log(res, '확인하자');
       dispatch(setRoom(res.data.rooms));
-      console.log(res.data.rooms);
     });
   };
 };
@@ -62,14 +60,18 @@ const enterRoomDB = (nickname, roomId, roomPwd) => {
   return function (dispatch, getState, { history }) {
     axios
       .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${nickname}`, {
-      nickname:nickname,
-      roomId:roomId,
-      roomPwd: null,
+        nickname: nickname,
+        roomId: roomId,
+        roomPwd: null,
       })
       .then((response) => {
-        dispatch(enterUser(response.data.user))
-        console.log(response)
-        history.push(`/room/${roomId}`);
+        if (response.data.user.msg || false) {
+          dispatch(enterUser(response.data.user))
+          history.push(`/room/${roomId}`);
+        } else {
+          window.alert(response.data.user.msg);
+          window.location.reload();
+        }
       })
       .catch((error) => {
         window.alert(error);
@@ -113,10 +115,7 @@ export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
-        console.log(action, '넘어오니?');
         draft.list = action.payload.room_list;
-        console.log(action, '넘어오니?');
-        console.log(draft.list);
       }),
     // [ONE_POST]: (state, action) =>
     //   produce(state, (draft) => {
