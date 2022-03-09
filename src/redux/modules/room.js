@@ -6,12 +6,17 @@ import { apis } from '../../shared/apis';
 
 // post
 const SET_ROOM = 'SET_ROOM';
+//병우추가
+const ADD_ROOM = 'ADD_ROOM';
+
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
-const ENTER_USER = "ENTER_USER";
+const ENTER_USER = 'ENTER_USER';
 
+//병우추가
+const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
-const enterUser = createAction(ENTER_USER, (enter_room) => ({enter_room}));
+const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 // const addPost = createAction(ADD_POST, (post) => ({ post }));
 // const editPost = createAction(EDIT_POST, (post_id, post) => ({
 //   post_id,
@@ -22,6 +27,7 @@ const initialState = {
   list: [],
   post: [],
   comments: [],
+  room:[], // 병우추가
 };
 
 const initialPost = {
@@ -44,8 +50,8 @@ const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
       console.log(res, '확인하자');
-      dispatch(setRoom(res.data.room));
-      console.log(res.data.room);
+      dispatch(setRoom(res.data.rooms));
+      console.log(res.data.rooms);
     });
   };
 };
@@ -54,12 +60,27 @@ const enterRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
       .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${nickname}`, {
-      nickname:nickname,
-      roomId:roomId,
+        nickname: nickname,
+        roomId: roomId,
       })
       .then((response) => {
-        console.log(response)
+        console.log(response);
         history.push(`/room/${roomId}`);
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  };
+};
+
+//병우 추가
+const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
+  return function (dispatch, getState, { history }) {
+    axios
+      .post(`http://mafia.milagros.shop/api/room/user/${userId}`, { roomName, maxPlayer, roomPwd })
+      .then((response) => {
+        console.log(response);
+        // history.push();
       })
       .catch((error) => {
         window.alert(error);
@@ -89,6 +110,14 @@ export default handleActions(
     //   produce(state, (draft) => {
     //     draft.list = action.payload;
     //   }),
+
+    //병우추가
+    // [ADD_ROOM]: (state, action) =>
+    //   produce(state, (draft) => {
+    //     draft.room = action.payload.game_room;
+    //     // console.log(action, '넘어오니?');
+    //     console.log(draft.list);
+    //   }),
   },
   initialState
 );
@@ -96,6 +125,7 @@ export default handleActions(
 const actionCreators = {
   getRoomAPI,
   enterRoomDB,
+  createRoomDB,
 };
 
 export { actionCreators };

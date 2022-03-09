@@ -14,7 +14,7 @@ import Tutorial from "../pages/Tutorial";
 function App() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <ConnectedRouter history={history}>
         <Route path="/" exact component={Main}></Route>
         <Route path="/login" exact component={LoginTitle}></Route>
