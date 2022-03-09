@@ -8,10 +8,10 @@ import { apis } from '../../shared/apis';
 const SET_ROOM = 'SET_ROOM';
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
-const ENTER_USER = "ENTER_USER";
+const ENTER_USER = 'ENTER_USER';
 
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
-const enterUser = createAction(ENTER_USER, (enter_room) => ({enter_room}));
+const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 // const addPost = createAction(ADD_POST, (post) => ({ post }));
 // const editPost = createAction(EDIT_POST, (post_id, post) => ({
 //   post_id,
@@ -43,9 +43,8 @@ const initialPost = {
 const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
-      console.log(res, '확인하자');
-      dispatch(setRoom(res.data.room));
-      console.log(res.data.room);
+      dispatch(setRoom(res.data.rooms));
+      console.log('불러와져랏', res);
     });
   };
 };
@@ -54,12 +53,17 @@ const enterRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
       .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${nickname}`, {
-      nickname:nickname,
-      roomId:roomId,
+        nickname: nickname,
+        roomId: roomId,
+        roomPwd: null,
       })
       .then((response) => {
-        console.log(response)
-        history.push(`/room/${roomId}`);
+        if (response.data.user.msg || false) {
+          history.push(`/room/${roomId}`);
+        } else {
+          window.alert(response.data.user.msg);
+          window.location.reload();
+        }
       })
       .catch((error) => {
         window.alert(error);
@@ -71,10 +75,7 @@ export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
-        console.log(action, '넘어오니?');
         draft.list = action.payload.room_list;
-        console.log(action, '넘어오니?');
-        console.log(draft.list);
       }),
     // [ONE_POST]: (state, action) =>
     //   produce(state, (draft) => {

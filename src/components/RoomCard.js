@@ -5,7 +5,6 @@ const RoomCard = (props) => {
   console.log('hi', props);
   const testImg = React.useRef(null);
   const openDoor = () => {
-    console.log(testImg.current.style.transform);
     testImg.current.style.transform = 'rotateY(-90deg)';
   };
 

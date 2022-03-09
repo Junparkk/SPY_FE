@@ -7,6 +7,7 @@ import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
 import RoomCard from '../components/RoomCard';
 import InviteAlarm from '../components/InviteAlarm';
+import PasswordModal from '../components/PasswordModal';
 
 import { actionCreators as roomActions } from '../redux/modules/room';
 
@@ -14,8 +15,8 @@ import { apis } from '../shared/apis';
 
 const Main = (props) => {
   const dispatch = useDispatch();
-  const islogin = localStorage.getItem('nickname')
-  const userId = localStorage.getItem('userid')
+  const islogin = localStorage.getItem('nickname');
+  const userId = localStorage.getItem('userid');
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
 
@@ -60,11 +61,16 @@ const Main = (props) => {
             return (
               <Cards
                 onClick={() => {
-                  const moveTimer = setTimeout(() => {
-                    history.push(`/room/${p.id}`);
-                    dispatch(roomActions.enterRoomDB(userId, p.id))
-                  }, 1000);
-                  return () => clearTimeout(moveTimer);
+                  if (p.roomPwd === null) {
+                    console.log('나는 널이요');
+                    const moveTimer = setTimeout(() => {
+                      dispatch(roomActions.enterRoomDB(userId, p.id));
+                    }, 1000);
+                    return () => clearTimeout(moveTimer);
+                  } else {
+                    console.log('나는 널이 아니오');
+                  }
+                  console.log('비번달기용', p.roomPwd);
                 }}
               >
                 <RoomCard key={p.id} {...p}></RoomCard>
@@ -72,6 +78,7 @@ const Main = (props) => {
             );
           })}
       </Container>
+
       <MakeRoomBtn>빠른 시작</MakeRoomBtn>
       <EnterRoomBtn onClick={() => history.push('/makingroom')}>
         방 만들기

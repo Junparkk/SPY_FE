@@ -2,19 +2,16 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 
-const VoteModal = (props) => {
+const PasswordModal = (props) => {
   const { _handleModal, children, ...rest } = props;
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest}>
-        <JobCheckImg></JobCheckImg>
-        <Contents size="80px">쉿!</Contents>
-        <Contents size="40px">당신은 {children}</Contents>
-        <Contents size="30px">투표투표~</Contents>
+        <PwdInput></PwdInput>
       </ModalBlock>
     </Container>,
-    document.getElementById('VoteModal')
+    document.getElementById('PasswordModal')
   );
 };
 
@@ -88,11 +85,12 @@ const Contents = styled.div`
   font-size: ${(props) => props.size};
 `;
 
-const JobCheckImg = styled.div`
-  width: 20rem;
-  height: 20rem;
-  border-radius: 50%;
-  background-color: blueviolet;
+const PwdInput = styled.input`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  height: 100px;
 `;
 
-export default VoteModal;
+export default PasswordModal;
