@@ -6,11 +6,16 @@ import { apis } from '../../shared/apis';
 
 // post
 const SET_ROOM = 'SET_ROOM';
+//병우추가
+const ADD_ROOM = 'ADD_ROOM';
+
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
 const ENTER_USER = 'ENTER_USER';
 const LIVE_USER = 'LIVE_USER';
 
+//병우추가
+const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 const liveUser = createAction(LIVE_USER, (live_room) => ({ live_room }));
@@ -24,6 +29,7 @@ const initialState = {
   list: [],
   post: [],
   comments: [],
+  room: [], // 병우추가
 };
 
 const initialPost = {
@@ -46,7 +52,6 @@ const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
       dispatch(setRoom(res.data.rooms));
-      console.log('불러와져랏', res);
     });
   };
 };
@@ -91,6 +96,24 @@ const liveRoomDB = (nickname, roomId) => {
       });
   };
 };
+//병우 추가
+const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
+  return function (dispatch, getState, { history }) {
+    axios
+      .post(`http://mafia.milagros.shop/api/room/user/${userId}`, {
+        roomName,
+        maxPlayer,
+        roomPwd,
+      })
+      .then((response) => {
+        console.log(response);
+        // history.push();
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  };
+};
 
 export default handleActions(
   {
@@ -111,6 +134,14 @@ export default handleActions(
     //   produce(state, (draft) => {
     //     draft.list = action.payload;
     //   }),
+
+    //병우추가
+    // [ADD_ROOM]: (state, action) =>
+    //   produce(state, (draft) => {
+    //     draft.room = action.payload.game_room;
+    //     // console.log(action, '넘어오니?');
+    //     console.log(draft.list);
+    //   }),
   },
   initialState
 );
@@ -119,6 +150,7 @@ const actionCreators = {
   getRoomAPI,
   enterRoomDB,
   liveRoomDB,
+  createRoomDB,
 };
 
 export { actionCreators };
