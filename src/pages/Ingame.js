@@ -31,18 +31,19 @@ function Ingame(props) {
   const [username, setUsername] = useState('');
   const [room, setRoom] = useState('');
   const [showChat, setShowChat] = useState(false);
-  const islogin = localStorage.getItem('userid');
+  const userNick = localStorage.getItem('nickname')
+  console.log(userNick)
+  console.log(roomId)
 
   useEffect(() => {
     localStorage.getItem('userid');
-    dispatch(roomActions.enterRoomDB(islogin, roomId));
+    dispatch(roomActions.enterRoomDB(userId, roomId));
+    joinRoom()
   }, []);
 
   const joinRoom = () => {
-    if (username !== '' && room !== '') {
-      socket.emit('join_room', room);
+      socket.emit('join_room', roomId, userNick);
       setShowChat(true);
-    }
   };
 
   const liveRoom = () => {
@@ -78,7 +79,7 @@ function Ingame(props) {
           onStop={handleEnd}
         >
           <ChatBox>
-            <Chat socket={socket} username={username} room={room} />
+            <Chat socket={socket} username={username} room={roomId} />
           </ChatBox>
         </Draggable>
         <button onClick={liveRoom}>방나가기</button>

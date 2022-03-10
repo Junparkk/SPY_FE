@@ -65,7 +65,7 @@ const enterRoomDB = (nickname, roomId, roomPwd) => {
         roomPwd: null,
       })
       .then((response) => {
-        if (response.data.user.msg || false) {
+        if ((response.data.user.msg || false) === false) {
           dispatch(enterUser(response.data.user))
           history.push(`/room/${roomId}`);
         } else {
