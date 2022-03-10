@@ -1,9 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 
+//이미지
+import Logo from '../images/Logo.png';
+import Null from '../images/Null.png';
 // 컴포넌트
+
 
 //리액트 아이콘
 import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
@@ -13,16 +17,17 @@ const Markingroom = () => {
   const dispatch = useDispatch();
   const hostName = localStorage.getItem('nickname');
   const userId = localStorage.getItem('userid');
-  const [createRoom, setCreateRoom] = useState('');
+  // const [createRoom, setCreateRoom] = useState('');
   const [roomName, setRoomName] = useState('');
   const [roomPwd, setRoomPwd] = useState(null);
   console.log(userId);
   //인원디폴트 6(명)
   // const [maxPlayer, setMaxPlayer] = useState(6);
-  const countAnt = useRef();
   // 방 문짝 선택 디폴트(0) 맨앞에꺼
-  const [count, setCount] = useState(6);
 
+  //Ants 카운트
+  const [count, setCount] = useState(6);
+  console.log(count)
   const [roomLock, setRoomLock] = useState(false);
 
   const RoomCreate = () => {
@@ -91,9 +96,11 @@ const Markingroom = () => {
                       }
                       setCount(index + 1);
                     }}
-                    style={{
-                      background: count < index + 1 ? '#918280' : 'yellow',
-                    }}
+                    
+                    src={count < index + 1 ? Null : Logo}
+                    //  style={{
+                    //     background: count < index + 1 ? "red" : "blue",
+                    //   }}
                   />
                 );
               })}
@@ -119,6 +126,7 @@ const Markingroom = () => {
     </React.Fragment>
   );
 };
+
 
 const Wrap = styled.div`
   width: 100%;
@@ -170,6 +178,7 @@ const RoomBtn = styled.button`
   width: 146px;
   height: 50px;
   border-radius: 45px;
+  cursor: pointer;
 `;
 
 //오른쪽 부분
@@ -204,17 +213,16 @@ const AntDiv = styled.div`
   margin: auto;
 `;
 
-const Ant = styled.div`
+const Ant = styled.img`
   width: 56px;
   height: 56px;
   margin: 9.5px;
   border-radius: 50%;
-  background-image: url('../spy.png');
-  background-size: cover;
-  border: 1px solid black;
+  /* background-size: cover;
+  object-fit: cover; */
+  /* border: 1px solid black; */
   cursor: pointer;
 `;
 
-// mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 
 export default Markingroom;

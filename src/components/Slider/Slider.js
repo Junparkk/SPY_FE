@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import '../../styles/slider.css';
 import dataSlider from './dataSlider';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { actionCreators as tutorialActions } from '../../redux/modules/room';
 //리액트 아이콘
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { AiOutlineCloseSquare } from 'react-icons/ai';
+
 
 const Slider = () => {
   // const [slideIndex, setSlideIndex] = useState(1); // 18분 유튜브
@@ -15,9 +17,16 @@ const Slider = () => {
   const slideLength = dataSlider.length;
   const [check, setCheck] = useState(false);
 
+  const dispatch = useDispatch();
+
+  const slideData = useSelector((state) => state.room.slideData);
+  console.log(slideData)
+
   useEffect(() => {
     setCurrentSlide(0);
+    dispatch(tutorialActions.getTutorialDB())
   }, []);
+
   const nextSlide = () => {
     setCurrentSlide(currentSlide === slideLength - 1 ? 0 : currentSlide + 1);
     console.log(setCurrentSlide);
@@ -32,7 +41,7 @@ const Slider = () => {
   };
 
   const tutorial = () => {
-    setCheck(true)
+    setCheck(true);
   };
   return (
     <div className="slider">

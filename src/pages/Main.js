@@ -19,7 +19,7 @@ const Main = (props) => {
   const userId = localStorage.getItem('userid');
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
-
+  console.log(room_list)
   //게임 시작 후 역할 모달로 보여주기 (추후에 게임 시작값이 들어오면 true로 바꿔주는 코드로 작성하기)
   const [isShowing, setIsShowing] = useState(true);
   useEffect(() => {

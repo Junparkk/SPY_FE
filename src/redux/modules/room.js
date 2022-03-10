@@ -8,6 +8,7 @@ import { apis } from '../../shared/apis';
 const SET_ROOM = 'SET_ROOM';
 //병우추가
 const ADD_ROOM = 'ADD_ROOM';
+const SET_TUTORIAL = "SET_TUTORIAL"
 
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
@@ -16,6 +17,7 @@ const LIVE_USER = "LIVE_USER"
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
+const setTutorial = createAction(SET_TUTORIAL,(tuto) => ({tuto}))
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({enter_room}));
 const liveUser = createAction(LIVE_USER, (live_room)=>({live_room}))
@@ -30,6 +32,7 @@ const initialState = {
   post: [],
   comments: [],
   room:[], // 병우추가
+  tuto:[],
 };
 
 const initialPost = {
@@ -56,13 +59,13 @@ const getRoomAPI = () => {
   };
 };
 
-const enterRoomDB = (nickname, roomId, roomPwd) => {
+const enterRoomDB = (nickname, roomId, roomPwd = null) => {
   return function (dispatch, getState, { history }) {
     axios
       .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${nickname}`, {
         nickname: nickname,
         roomId: roomId,
-        roomPwd: null,
+        roomPwd: roomPwd,
       })
       .then((response) => {
         if (response.data.user.msg || false) {
@@ -103,11 +106,26 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       .post(`http://mafia.milagros.shop/api/room/user/${userId}`, { roomName, maxPlayer, roomPwd })
       .then((response) => {
         console.log(response);
-        // history.push();
+        const roomId = response.data.room
+        history.push(`/room/${roomId}`);
       })
       .catch((error) => {
         window.alert(error);
       });
+  };
+};
+
+const getTutorialDB = () => {
+  return  function (dispatch, useState, { history }) {
+    axios
+    .get("http://mafia.milagros.shop/api/tutorial")
+    .then((response) => {
+      dispatch(setTutorial(response.data.tutorials))
+      console.log(response.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   };
 };
 
@@ -138,6 +156,13 @@ export default handleActions(
     //     // console.log(action, '넘어오니?');
     //     console.log(draft.list);
     //   }),
+    [SET_TUTORIAL]: (state, action) => {
+      produce(state, (draft) => {
+        draft.tuto = action.payload.tuto;
+        console.log(action)
+        console.log(draft.tuto)
+      })
+    }
   },
   initialState
 );
@@ -147,6 +172,7 @@ const actionCreators = {
   enterRoomDB,
   liveRoomDB,
   createRoomDB,
+  getTutorialDB,
 };
 
 export { actionCreators };
