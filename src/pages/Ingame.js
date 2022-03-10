@@ -24,7 +24,7 @@ function Ingame(props) {
   const handleEnd = () => {
     setOpacity(false);
   };
-  //채팅 
+  //채팅
   const dispatch = useDispatch();
   const userId = localStorage.getItem('userid');
   const roomId = props.match.params.roomId;
