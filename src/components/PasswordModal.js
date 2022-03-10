@@ -1,96 +1,140 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
 
+import { actionCreators as roomActions } from '../redux/modules/room';
 const PasswordModal = (props) => {
   const { _handleModal, children, ...rest } = props;
+  const dispatch = useDispatch();
+  const nickName = localStorage.getItem('userid');
+  const [pwd, setPwd] = React.useState('');
+  const roomId = useSelector((state) => state.room.roomState.roomId);
+  console.log(roomId);
+  const onChangePwd = (e) => {
+    setPwd(e.target.value);
+    console.log(pwd);
+  };
   return createPortal(
-    <Container>
-      <Background onClick={_handleModal} />
-      <ModalBlock {...rest}>
-        <PwdInput></PwdInput>
-      </ModalBlock>
-    </Container>,
+    <>
+      <PrivateModalContainer>
+        <PrivateModalDim></PrivateModalDim>
+        <PrivateModal>
+          <PrivateModalTop>
+            <p className="privateModal_top_title">입장하기</p>
+            <img
+              //   src={Close}
+              alt="닫기"
+              className="privateModal_top_close"
+              onClick={() => {
+                dispatch(roomActions.privateState(false));
+              }}
+            />
+          </PrivateModalTop>
+          <PrivateModalMid>
+            <p className="privateModal_mid_password">비밀번호</p>
+            <input
+              onChange={onChangePwd}
+              value={pwd}
+              type="password"
+              placeholder="4글자 이상의 비밀번호를 작성해주세요."
+            />
+          </PrivateModalMid>
+          <PrivateModalBot>
+            <p
+              className="privateModal_bot_btn"
+              onClick={() => {
+                if (pwd.length < 4) {
+                  window.alert('4글자 이상의 비밀번호를 작성해주세요.');
+                } else {
+                  dispatch(
+                    roomActions.roomPwCheckAPI(nickName, roomId, parseInt(pwd))
+                  );
+                }
+              }}
+            >
+              입장하기
+            </p>
+          </PrivateModalBot>
+        </PrivateModal>
+      </PrivateModalContainer>
+    </>,
     document.getElementById('PasswordModal')
   );
 };
 
-const Container = styled.div`
+const PrivateModalContainer = styled.div`
   position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  z-index: 9999;
+  height: 100vh;
+  width: 100vw;
 `;
-
-const Background = styled.div`
+const PrivateModalDim = styled.div`
+  width: 100vw;
+  height: 100vh;
   position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 54%;
+`;
+const PrivateModal = styled.div`
+  width: 28.54vw;
+  height: 32.27vh;
+  background: #fff;
+  border-radius: 16px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0 2.29vw;
+  box-sizing: border-box;
+`;
+const PrivateModalTop = styled.div`
   width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
-  animation: modal-bg-show 1s;
-  @keyframes modal-bg-show {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  height: 7.68vh;
+  border-bottom: 1px solid #e7e7e7;
+  position: relative;
+  .privateModal_top_title {
+    font-size: 1.84vh;
+    font-weight: 600;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+  .privateModal_top_close {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    height: 2.46vh;
+    width: 1.25vw;
   }
 `;
-
-const ModalBlock = styled.div`
-  position: absolute;
-  top: 15rem;
-  border-radius: 30px;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: black;
-  width: 60rem;
-  @media (max-width: 1120px) {
-    width: 50rem;
-  }
-  @media (max-width: 50rem) {
-    width: 80%;
-  }
-  min-height: 35rem;
-  animation: modal-show 1s;
-  @keyframes modal-show {
-    from {
-      opacity: 0;
-      margin-top: -50px;
-    }
-    to {
-      opacity: 1;
-      margin-top: 0;
-    }
+const PrivateModalMid = styled.div`
+  width: 100%;
+  .privateModal_mid_password {
+    margin: 3.69vh 0 0.82vh 0.73vw;
+    font-size: 1.43vh;
   }
 `;
-
-const Contents = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  font-size: ${(props) => props.size};
-`;
-
-const PwdInput = styled.input`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 300px;
-  height: 100px;
+const PrivateModalBot = styled.div`
+  width: 100%;
+  padding-top: 3.69vh;
+  .privateModal_bot_btn {
+    width: 100%;
+    height: 5.53vh;
+    background: #889cf2;
+    border-radius: 11px;
+    color: #fff;
+    font-size: 1.84vh;
+    font-weight: 600;
+    text-align: center;
+    line-height: 5.53vh;
+  }
 `;
 
 export default PasswordModal;

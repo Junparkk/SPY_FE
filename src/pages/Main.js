@@ -19,7 +19,9 @@ const Main = (props) => {
   const userId = localStorage.getItem('userid');
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
-  console.log(room_list)
+
+  const _private = useSelector((state) => state.room.roomState.privateState);
+
   //게임 시작 후 역할 모달로 보여주기 (추후에 게임 시작값이 들어오면 true로 바꿔주는 코드로 작성하기)
   const [isShowing, setIsShowing] = useState(true);
   useEffect(() => {
@@ -48,6 +50,8 @@ const Main = (props) => {
 
   return (
     <>
+      {/* 패스워드 모달 */}
+      {_private ? <PasswordModal /> : null}
       {/* 초대 알림 */}
       {/* {isInvite && <InviteAlarm children="개똥이"></InviteAlarm>} */}
       {/* 직업모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
@@ -58,24 +62,33 @@ const Main = (props) => {
       <Container>
         {room_list &&
           room_list.map((p, idx) => {
-            return (
-              <Cards
-                onClick={() => {
-                  if (p.roomPwd === null) {
-                    console.log('나는 널이요');
+            if (p.roomPwd === null) {
+              return (
+                <Cards
+                  onClick={() => {
+                    console.log('비번 없는 방 입장');
                     const moveTimer = setTimeout(() => {
                       dispatch(roomActions.enterRoomDB(userId, p.id));
                     }, 1000);
                     return () => clearTimeout(moveTimer);
-                  } else {
+                  }}
+                >
+                  <RoomCard key={p.id} {...p}></RoomCard>
+                </Cards>
+              );
+            } else {
+              return (
+                <Cards
+                  onClick={() => {
+                    dispatch(roomActions.privateRoom(p.id, true));
                     console.log('나는 널이 아니오');
-                  }
-                  console.log('비번달기용', p.roomPwd);
-                }}
-              >
-                <RoomCard key={p.id} {...p}></RoomCard>
-              </Cards>
-            );
+                    console.log('비번달기용', p.roomPwd);
+                  }}
+                >
+                  <RoomCard key={p.id} {...p}></RoomCard>
+                </Cards>
+              );
+            }
           })}
       </Container>
 

@@ -4,12 +4,13 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
+  const userNick = localStorage.getItem('nickname')
 
   const sendMessage = async () => {
     if (currentMessage !== '') {
       const messageData = {
         room: room,
-        author: username,
+        author: userNick,
         message: currentMessage,
         time:
           new Date(Date.now()).getHours() +
@@ -22,6 +23,9 @@ function Chat({ socket, username, room }) {
       setCurrentMessage('');
     }
   };
+
+
+
 
   useEffect(() => {
     socket.on('receive_message', (data) => {
@@ -41,7 +45,7 @@ function Chat({ socket, username, room }) {
               <>
                 <div
                   className="message"
-                  id={username === messageContent.author ? 'you' : 'other'}
+                  id={userNick === messageContent.author ? 'you' : 'other'}
                 >
                   <div>
                     <div className="message-meta">
