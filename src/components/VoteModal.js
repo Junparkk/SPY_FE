@@ -1,17 +1,39 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const VoteModal = (props) => {
-  const { _handleModal, children, ...rest } = props;
+  const { roomId, _handleModal, children, ...rest } = props;
+  console.log(props);
+  const dispatch = useDispatch();
+
+  const user_list = useSelector((state) => state.vote.userList);
+  console.log(user_list);
+
+  React.useEffect(() => {
+    //라운드수를 []안에 넣어주면 새로운 라운드 시작할 때 마다 유저를 넣어주겠지?
+    dispatch(voteActions.getUserDB(roomId));
+  }, []);
+
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest}>
-        <JobCheckImg></JobCheckImg>
-        <Contents size="80px">쉿!</Contents>
-        <Contents size="40px">당신은 {children}</Contents>
-        <Contents size="30px">투표투표~</Contents>
+        <Contents size="80px">투표</Contents>
+        <Contents size="40px">
+          가장 스파이로 의심되는 사람에게 투표하세요.
+        </Contents>
+        <Contents size="30px">투표투ㅁㄴㅇㄹㅁㅇㄴㄹㅁㄴㅇㄹ표~</Contents>
+        {/* 롤을 부여받은대로 보여줘야함 */}
+        <VotePlayerWrap>
+          {user_list &&
+            user_list.map((p, idx) => {
+              return <JobCheckImg></JobCheckImg>;
+            })}
+        </VotePlayerWrap>
       </ModalBlock>
     </Container>,
     document.getElementById('VoteModal')
@@ -89,10 +111,15 @@ const Contents = styled.div`
 `;
 
 const JobCheckImg = styled.div`
-  width: 20rem;
-  height: 20rem;
+  width: 10rem;
+  height: 10rem;
   border-radius: 50%;
   background-color: blueviolet;
 `;
 
+const VotePlayerWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+`;
 export default VoteModal;

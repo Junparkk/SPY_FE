@@ -7,6 +7,7 @@ import { actionCreators as roomActions } from '../redux/modules/room';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
+import VoteModal from '../components/VoteModal';
 
 const socket = io.connect('http://localhost:3001');
 
@@ -31,19 +32,19 @@ function Ingame(props) {
   const [username, setUsername] = useState('');
   const [room, setRoom] = useState('');
   const [showChat, setShowChat] = useState(false);
-  const userNick = localStorage.getItem('nickname')
-  console.log(userNick)
-  console.log(roomId)
+  const userNick = localStorage.getItem('nickname');
+  console.log(userNick);
+  console.log(roomId);
 
-  useEffect(() => {
-    localStorage.getItem('userid');
-    dispatch(roomActions.enterRoomDB(userId, roomId));
-    joinRoom()
-  }, []);
+  // useEffect(() => {
+  //   localStorage.getItem('userid');
+  //   dispatch(roomActions.enterRoomDB(userId, roomId));
+  //   joinRoom()
+  // }, []);
 
   const joinRoom = () => {
-      socket.emit('join_room', roomId, userNick);
-      setShowChat(true);
+    socket.emit('join_room', roomId, userNick);
+    setShowChat(true);
   };
 
   const liveRoom = () => {
@@ -52,6 +53,7 @@ function Ingame(props) {
 
   return (
     <>
+      <VoteModal roomId={roomId}></VoteModal>
       <div className="App">
         <div className="joinChatContainer">
           <input
