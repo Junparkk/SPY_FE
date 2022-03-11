@@ -11,7 +11,7 @@ const PRIVATE_ROOM = 'PRIVATE_ROOM';
 const PRIVATE_STATE = 'PRIVATE_STATE';
 //병우추가
 const ADD_ROOM = 'ADD_ROOM';
-const SET_TUTORIAL = "SET_TUTORIAL"
+const SET_TUTORIAL = 'SET_TUTORIAL';
 
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
@@ -20,7 +20,7 @@ const LIVE_USER = 'LIVE_USER';
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
-const setTutorial = createAction(SET_TUTORIAL,(tuto) => ({tuto}))
+const setTutorial = createAction(SET_TUTORIAL, (tuto) => ({ tuto }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 const liveUser = createAction(LIVE_USER, (live_room) => ({ live_room }));
@@ -40,8 +40,8 @@ const initialState = {
   list: [],
   post: [],
   comments: [],
-  room:[], // 병우추가
-  tuto:[],
+  room: [], // 병우추가
+  tuto: [],
   roomState: {
     roomId: null,
     privateState: false,
@@ -123,7 +123,7 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .then((response) => {
         console.log(response);
-        const roomId = response.data.room
+        const roomId = response.data.room;
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
@@ -163,19 +163,18 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
   };
 };
 
-
-
 const getTutorialDB = () => {
-  return  function (dispatch, useState, { history }) {
+  return function (dispatch, useState, { history }) {
     axios
-    .get("http://mafia.milagros.shop/api/tutorial")
-    .then((response) => {
-      dispatch(setTutorial(response.data.tutorials))
-      console.log(response.data)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+      .get('http://mafia.milagros.shop/api/tutorial')
+      .then((response) => {
+        dispatch(setTutorial(response.data.tutorials));
+        console.log(response.data.tutorials);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 };
 
@@ -184,6 +183,8 @@ export default handleActions(
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.list = action.payload.room_list;
+        console.log(draft.list);
+        console.log(action.payload);
       }),
     // [ONE_POST]: (state, action) =>
     //   produce(state, (draft) => {
@@ -206,13 +207,13 @@ export default handleActions(
     //     // console.log(action, '넘어오니?');
     //     console.log(draft.list);
     //   }),
-    [SET_TUTORIAL]: (state, action) => {
+    [SET_TUTORIAL]: (state, action) =>
       produce(state, (draft) => {
         draft.tuto = action.payload.tuto;
-        console.log(action)
-        console.log(draft.tuto)
-      })
-    },
+        console.log(draft.tuto);
+        console.log(action.payload);
+      }),
+
     [PRIVATE_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.roomState.roomId = action.payload.roomId;

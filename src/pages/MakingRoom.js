@@ -129,8 +129,8 @@ const Markingroom = () => {
 
 
 const Wrap = styled.div`
-  width: 100%;
-  height: 100vh;
+  width: 1440px;
+  height: 1024px;
   display: flex;
   background-color: #ffe179;
 `;
