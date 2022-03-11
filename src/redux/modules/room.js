@@ -16,14 +16,14 @@ const SET_TUTORIAL = "SET_TUTORIAL"
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
 const ENTER_USER = 'ENTER_USER';
-const LIVE_USER = 'LIVE_USER';
+const LEAVE_USER = 'LEAVE_USER';
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setTutorial = createAction(SET_TUTORIAL,(tuto) => ({tuto}))
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
-const liveUser = createAction(LIVE_USER, (live_room) => ({ live_room }));
+const leaveUser = createAction(LEAVE_USER, (leave_room) => ({ leave_room }));
 // const addPost = createAction(ADD_POST, (post) => ({ post }));
 // const editPost = createAction(EDIT_POST, (post_id, post) => ({
 //   post_id,
@@ -95,7 +95,7 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
   };
 };
 
-const liveRoomDB = (nickname, roomId) => {
+const leaveRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
       .put(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
@@ -103,7 +103,7 @@ const liveRoomDB = (nickname, roomId) => {
         roomId: roomId,
       })
       .then((response) => {
-        dispatch(liveUser(response.data.user));
+        dispatch(leaveUser(response.data.user));
         console.log(response);
         history.push('/');
       })
@@ -229,7 +229,7 @@ export default handleActions(
 const actionCreators = {
   getRoomAPI,
   enterRoomDB,
-  liveRoomDB,
+  leaveRoomDB,
   createRoomDB,
   getTutorialDB,
   privateRoom,
