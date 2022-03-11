@@ -57,7 +57,7 @@ const Main = (props) => {
       {/* 직업모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
       {/* {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>} */}
       {/* 투표모달 테스트 */}
-      {isShowing && <VoteModal children="마퓌아"></VoteModal>}
+      {/* <VoteModal children="마퓌아"></VoteModal> */}
       {/* 대기실 화면 */}
       <Container>
         {room_list &&

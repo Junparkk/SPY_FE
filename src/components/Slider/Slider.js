@@ -9,7 +9,6 @@ import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { AiOutlineCloseSquare } from 'react-icons/ai';
 
-
 const Slider = () => {
   // const [slideIndex, setSlideIndex] = useState(1); // 18분 유튜브
   const history = useHistory();
@@ -19,12 +18,12 @@ const Slider = () => {
 
   const dispatch = useDispatch();
 
-  const slideData = useSelector((state) => state.room.slideData);
-  console.log(slideData)
+  const slideData = useSelector((state) => state);
+  console.log(slideData);
 
   useEffect(() => {
     setCurrentSlide(0);
-    dispatch(tutorialActions.getTutorialDB())
+    dispatch(tutorialActions.getTutorialDB());
   }, []);
 
   const nextSlide = () => {

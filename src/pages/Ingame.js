@@ -152,7 +152,7 @@ function Ingame(props) {
   const handleEnd = () => {
     setOpacity(false);
   };
-  
+
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
     localStorage.getItem('userid');
@@ -163,8 +163,7 @@ function Ingame(props) {
     joinChat();
   }, []);
 
-
-  //백엔드 서버와 통신 가능한 비디오 
+  //백엔드 서버와 통신 가능한 비디오
   const joinVideo = () => {
     const OV = new OpenVidu();
 
