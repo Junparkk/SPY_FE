@@ -28,6 +28,7 @@ const PasswordModal = (props) => {
               className="privateModal_top_close"
               onClick={() => {
                 dispatch(roomActions.privateState(false));
+                window.location.replace('/');
               }}
             />
           </PrivateModalTop>

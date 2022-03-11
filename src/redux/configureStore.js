@@ -5,7 +5,7 @@ import { connectRouter } from 'connected-react-router';
 
 import Room from './modules/room';
 import User from './modules/user';
-// import Post from './modules/post';
+import Vote from './modules/vote';
 
 // 1. 히스토리 객체 생성
 export const history = createBrowserHistory();
@@ -13,6 +13,7 @@ export const history = createBrowserHistory();
 const rootReducer = combineReducers({
   room: Room,
   user: User,
+  vote: Vote,
   //   post: Post,
   // 2. 리덕스에 넣어준다.
   router: connectRouter(history),

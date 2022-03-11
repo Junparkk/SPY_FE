@@ -15,13 +15,13 @@ const ADD_ROOM = 'ADD_ROOM';
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
 const ENTER_USER = 'ENTER_USER';
-const LIVE_USER = 'LIVE_USER';
+const LEAVE_USER = 'LEAVE_USER';
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
-const liveUser = createAction(LIVE_USER, (live_room) => ({ live_room }));
+const leaveUser = createAction(LEAVE_USER, (leave_room) => ({ leave_room }));
 // const addPost = createAction(ADD_POST, (post) => ({ post }));
 // const editPost = createAction(EDIT_POST, (post_id, post) => ({
 //   post_id,
@@ -34,6 +34,7 @@ const privateRoom = createAction(PRIVATE_ROOM, (roomId, privateState) => ({
 const privateState = createAction(PRIVATE_STATE, (privateState) => ({
   privateState,
 }));
+
 const initialState = {
   list: [],
   post: [],
@@ -77,13 +78,11 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
       })
       .then((res) => {
         if (res.data.user.msg === undefined) {
-          dispatch(enterUser(res.data.user));
-          console.log(res.data.user);
-          history.push(`/room/${roomId}`);
+          // dispatch(enterUser(res.data.user));
+          history.replace(`/room/${roomId}`);
         } else {
-          console.log('제발뜨지마');
-          window.alert('이건뭐임????', res.data.user.msg);
-          // window.location.reload();
+          window.alert(res.data.user.msg);
+          window.location.reload();
         }
       })
       .catch((error) => {
@@ -92,7 +91,7 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
   };
 };
 
-const liveRoomDB = (nickname, roomId) => {
+const leaveRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
       .put(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
@@ -100,9 +99,10 @@ const liveRoomDB = (nickname, roomId) => {
         roomId: roomId,
       })
       .then((response) => {
-        dispatch(liveUser(response.data.user));
+        dispatch(leaveUser(response.data.user));
+        // dispatch(liveUser(response.data.user));
         console.log(response);
-        history.push('/');
+        window.location.replace('/');
       })
       .catch((error) => {
         window.alert(error);
@@ -142,11 +142,9 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
         console.log(res);
         if (res.data.user.msg === undefined) {
           dispatch(enterUser(res.data.user));
-          console.log('1', res.data.user.msg);
-          history.push(`/room/${roomId}`);
+          history.replace(`/room/${roomId}`);
         } else {
-          console.log('2', res.data.user.msg);
-          window.alert('이알럿이냐', res.data.user.msg);
+          window.alert(res.data.user.msg);
           window.location.reload();
         }
         // console.log(res.data.user);
@@ -159,7 +157,6 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
       });
   };
 };
-
 
 
 export default handleActions(
@@ -191,7 +188,6 @@ export default handleActions(
     //     // console.log(action, '넘어오니?');
     //     console.log(draft.list);
     //   }),
-
     [PRIVATE_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.roomState.roomId = action.payload.roomId;
@@ -208,7 +204,7 @@ export default handleActions(
 const actionCreators = {
   getRoomAPI,
   enterRoomDB,
-  liveRoomDB,
+  leaveRoomDB,
   createRoomDB,
   privateRoom,
   privateState,

@@ -7,10 +7,138 @@ import { actionCreators as roomActions } from '../redux/modules/room';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
+import { OpenVidu } from 'openvidu-browser';
+import axios from 'axios';
+import OpenViduSession from 'openvidu-react';
 
+//socket 서버
 const socket = io.connect('http://localhost:3001');
+//openvidu 서버
+const OPENVIDU_SERVER_URL = 'https://' + window.location.hostname + ':4443';
+const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
 function Ingame(props) {
+  //채팅
+  const dispatch = useDispatch();
+  const userId = localStorage.getItem('userid');
+  const roomId = props.match.params.roomId;
+  const [username, setUsername] = useState('');
+  const [room, setRoom] = useState('');
+  const [showChat, setShowChat] = useState(false);
+  const [session, setSession] = useState('');
+  const userNick = localStorage.getItem('nickname');
+  //화상채팅
+  const [mySessionId, setMySessionId] = useState('SessionA');
+  const [myUserName, setMyUsername] = useState(
+    'OpenVidu_User_' + Math.floor(Math.random() * 100)
+  );
+  const [token, setToken] = useState(undefined);
+
+  const handlerJoinSessionEvent = () => {
+    console.log('Join session');
+  };
+  const handlerLeaveSessionEvent = () => {
+    console.log('Leave session');
+    setMySessionId(undefined);
+  };
+  const handlerErrorEvent = () => {
+    console.log('Leave session');
+  };
+
+  const handleChangeSessionId = (e) => {
+    setMySessionId(e.target.value);
+  };
+
+  const handleChangeUserName = (e) => {
+    setMyUsername(e.target.value);
+  };
+
+  const joinSession = (event) => {
+    if (roomId && userNick) {
+      getToken().then((token) => {
+        setMySessionId();
+        setToken(token);
+      });
+    }
+    event.preventDefault();
+  };
+
+  const createSession = () => {
+    return new Promise((resolve, reject) => {
+      var data = JSON.stringify({ customSessionId: roomId });
+
+      axios
+        .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
+          headers: {
+            Authorization:
+              'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((res) => {
+          console.log('CREATE SESION', res);
+          resolve(res.data.id);
+        })
+        .catch((response) => {
+          var error = Object.assign({}, response);
+          if (error.response && error.response.status === 409) {
+            resolve(roomId);
+          } else {
+            console.log(error);
+            console.warn(
+              'No connection to OpenVidu Server. This may be a certificate error at ' +
+                OPENVIDU_SERVER_URL
+            );
+            if (
+              window.confirm(
+                'No connection to OpenVidu Server. This may be a certificate error at "' +
+                  OPENVIDU_SERVER_URL +
+                  '"\n\nClick OK to navigate and accept it. ' +
+                  'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
+                  OPENVIDU_SERVER_URL +
+                  '"'
+              )
+            ) {
+              window.location.assign(
+                OPENVIDU_SERVER_URL + '/accept-certificate'
+              );
+            }
+          }
+        });
+    });
+  };
+  const createToken = (sessionId) => {
+    return new Promise((resolve, reject) => {
+      var data = JSON.stringify({});
+      axios
+        .post(
+          OPENVIDU_SERVER_URL +
+            '/openvidu/api/sessions/' +
+            sessionId +
+            '/connection',
+          data,
+          {
+            headers: {
+              Authorization:
+                'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          console.log('TOKEN', response);
+          resolve(response.data.token);
+        })
+        .catch((error) => reject(error));
+    });
+  };
+
+  const getToken = () => {
+    return createSession(roomId)
+      .then((sessionId) => createToken(sessionId))
+      .catch((Err) => console.error(Err));
+  };
+
   //채팅창 드레그
   const nodeRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -24,34 +152,90 @@ function Ingame(props) {
   const handleEnd = () => {
     setOpacity(false);
   };
-  //채팅
-  const dispatch = useDispatch();
-  const userId = localStorage.getItem('userid');
-  const roomId = props.match.params.roomId;
-  const [username, setUsername] = useState('');
-  const [room, setRoom] = useState('');
-  const [showChat, setShowChat] = useState(false);
-  const userNick = localStorage.getItem('nickname')
-  console.log(userNick)
-  console.log(roomId)
 
+  // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
     localStorage.getItem('userid');
     dispatch(roomActions.enterRoomDB(userId, roomId));
-    joinRoom()
+    socket.on('join_room', (roomNumber, nickName, socketId) => {
+      console.log(roomNumber, nickName, socketId);
+    });
+    joinChat();
   }, []);
 
-  const joinRoom = () => {
-      socket.emit('join_room', roomId, userNick);
-      setShowChat(true);
+  //백엔드 서버와 통신 가능한 비디오
+  const joinVideo = () => {
+    const OV = new OpenVidu();
+
+    setSession({ session: OV.initSession() }, () => {
+      let mySession = session.session;
+      mySession.on('streamCreated', (event) => {
+        let subscriber = mySession.subscribe(event.stream, undefined);
+        let subscribers = session.subscribers;
+        subscribers.push(subscriber);
+
+        setSession({ subscribers });
+      });
+    });
   };
 
-  const liveRoom = () => {
-    dispatch(roomActions.liveRoomDB(userId, roomId));
+  const joinChat = () => {
+    socket.emit('join_room', roomId, userNick);
+    setShowChat(true);
+  };
+
+  const leaveRoom = () => {
+    dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
 
   return (
     <>
+      <div>
+        {mySessionId === undefined ? (
+          <div id="join">
+            <div id="join-dialog">
+              <h1> Join a video session </h1>
+              <form onSubmit={joinSession}>
+                <p>
+                  <label>Participant: </label>
+                  <input
+                    type="text"
+                    id="userName"
+                    value={myUserName}
+                    onChange={handleChangeUserName}
+                    required
+                  />
+                </p>
+                <p>
+                  <label> Session: </label>
+                  <input
+                    type="text"
+                    id="sessionId"
+                    value={mySessionId}
+                    onChange={handleChangeSessionId}
+                    required
+                  />
+                </p>
+                <p>
+                  <input name="commit" type="submit" value="JOIN" />
+                </p>
+              </form>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <OpenViduSession
+              id="opv-session"
+              sessionName={mySessionId}
+              user={myUserName}
+              token={token}
+              joinSession={handlerJoinSessionEvent}
+              leaveSession={handlerLeaveSessionEvent}
+              error={handlerErrorEvent}
+            />
+          </div>
+        )}
+      </div>
       <div className="App">
         <div className="joinChatContainer">
           <input
@@ -68,7 +252,7 @@ function Ingame(props) {
               setRoom(event.target.value);
             }}
           />
-          <button onClick={joinRoom}>참여하기</button>
+          <button onClick={joinChat}>참여하기</button>
         </div>
       </div>
       <div>
@@ -82,7 +266,7 @@ function Ingame(props) {
             <Chat socket={socket} username={username} room={roomId} />
           </ChatBox>
         </Draggable>
-        <button onClick={liveRoom}>방나가기</button>
+        <button onClick={leaveRoom}>방나가기</button>
       </div>
     </>
   );
