@@ -57,7 +57,7 @@ const Main = (props) => {
       {/* 직업모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
       {/* {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>} */}
       {/* 투표모달 테스트 */}
-      {/* <VoteModal children="마퓌아"></VoteModal> */}
+
       {/* 대기실 화면 */}
       <Container>
         {room_list &&
@@ -111,19 +111,23 @@ const Cards = styled.div`
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  background-color: #ffe179;
+  height: 100%;
+  padding-top: 200px;
+  grid-template-columns: repeat(5, 150px);
+  gap: 160px 100px;
+  justify-content: center;
   @media screen and (min-width: 1607px) {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 150px);
   }
   @media screen and (min-width: 960px) and (max-width: 1607px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 150px);
   }
   @media screen and (min-width: 551px) and (max-width: 960px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 150px);
   }
   @media screen and (min-width: 0px) and (max-width: 551px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 150px);
   }
 `;
 

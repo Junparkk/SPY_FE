@@ -30,14 +30,14 @@ const Cards = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50%;
+  width: 100%;
   height: 300px;
 `;
 
 const InsideDoor = styled.div`
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 146px;
+  height: 212px;
   background-color: none;
   transform-style: preserve-3d;
   transform: perspective(1500px);

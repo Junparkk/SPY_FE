@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
+import { actionCreators as voteActions } from '../redux/modules/vote';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import OpenViduSession from 'openvidu-react';
+
+import VoteModal from '../components/VoteModal';
 
 //socket 서버
 const socket = io.connect('http://localhost:3001');
@@ -156,7 +159,7 @@ function Ingame(props) {
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
     localStorage.getItem('userid');
-    dispatch(roomActions.enterRoomDB(userId, roomId));
+    // dispatch(roomActions.enterRoomDB(userId, roomId));
     socket.on('join_room', (roomNumber, nickName, socketId) => {
       console.log(roomNumber, nickName, socketId);
     });
@@ -188,8 +191,30 @@ function Ingame(props) {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
 
+  const [state, setState] = useState('vote');
+  const [isShowing, setIsShowing] = useState(true);
+  function daytimeVote() {
+    if (isShowing) {
+      dispatch(voteActions.getUserDB(roomId));
+      const notiTimer = setTimeout(() => {
+        setIsShowing(false);
+      }, 2000);
+      return () => clearTimeout(notiTimer);
+    }
+  }
+  useEffect(() => {
+    switch (state) {
+      case 'vote':
+        daytimeVote();
+        break;
+      default:
+        console.log('실행안됨');
+    }
+  }, [state]);
+
   return (
     <>
+      {isShowing && <VoteModal children="마퓌아"></VoteModal>}
       <div>
         {mySessionId === undefined ? (
           <div id="join">
@@ -224,7 +249,7 @@ function Ingame(props) {
           </div>
         ) : (
           <div>
-            <OpenViduSession
+            {/* <OpenViduSession
               id="opv-session"
               sessionName={mySessionId}
               user={myUserName}
@@ -232,7 +257,7 @@ function Ingame(props) {
               joinSession={handlerJoinSessionEvent}
               leaveSession={handlerLeaveSessionEvent}
               error={handlerErrorEvent}
-            />
+            /> */}
           </div>
         )}
       </div>

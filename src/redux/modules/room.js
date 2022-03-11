@@ -102,11 +102,7 @@ const leaveRoomDB = (nickname, roomId) => {
         roomId: roomId,
       })
       .then((response) => {
-<<<<<<< HEAD
         dispatch(leaveUser(response.data.user));
-=======
-        // dispatch(liveUser(response.data.user));
->>>>>>> 067a424cc971663fd622f7856ed2170b51649096
         console.log(response);
         window.location.replace('/');
       })

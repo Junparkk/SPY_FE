@@ -10,14 +10,12 @@ const VoteModal = (props) => {
   console.log(props);
   const dispatch = useDispatch();
 
-  const user_list = useSelector((state) => state.vote.userList);
-  console.log(user_list);
-
   React.useEffect(() => {
     //라운드수를 []안에 넣어주면 새로운 라운드 시작할 때 마다 유저를 넣어주겠지?
     dispatch(voteActions.getUserDB(roomId));
   }, []);
-
+  const user_list = useSelector((state) => state.vote.userList);
+  console.log('투표모달안에 몇명?', user_list);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
