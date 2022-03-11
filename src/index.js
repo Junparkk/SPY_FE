@@ -5,6 +5,7 @@ import './styles/index.css';
 import App from './shared/App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import registerServiceWorker from './registerServiceWorker'
 
 import store from './redux/configureStore';
 import { Provider } from 'react-redux';
@@ -25,3 +26,5 @@ serviceWorkerRegistration.unregister();
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+registerServiceWorker();
