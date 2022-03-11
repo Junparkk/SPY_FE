@@ -6650,11 +6650,7 @@ open@^8.0.9, open@^8.4.0:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-<<<<<<< HEAD
-openvidu-browser@^2.21.0:
-=======
 openvidu-browser@2.21.0, openvidu-browser@^2.21.0:
->>>>>>> aad0cc661a59162ade6ef5bc0bc277c17573bccb
   version "2.21.0"
   resolved "https://registry.yarnpkg.com/openvidu-browser/-/openvidu-browser-2.21.0.tgz#45824755633aadbd07bf09437f42fee473249847"
   integrity sha512-dQZ8lsvt7zydklG/naHtaWpnhRo5ErTjEkWslmg6e2fjFVy+GmGVrJBeMJrJDM2FrOWv8aH86fRNR+P7eESB9g==
@@ -6670,8 +6666,6 @@ openvidu-browser@2.21.0, openvidu-browser@^2.21.0:
     uuid "8.3.2"
     wolfy87-eventemitter "5.2.9"
 
-<<<<<<< HEAD
-=======
 openvidu-node-client@^2.21.0:
   version "2.21.0"
   resolved "https://registry.yarnpkg.com/openvidu-node-client/-/openvidu-node-client-2.21.0.tgz#efb617adecf6a0aaf149312a59ed5ba4ebcf054e"
@@ -6692,7 +6686,6 @@ openvidu-react@^2.21.0:
     openvidu-browser "2.21.0"
     typeface-roboto "0.0.75"
 
->>>>>>> aad0cc661a59162ade6ef5bc0bc277c17573bccb
 optionator@^0.8.1:
   version "0.8.3"
   resolved "https://registry.npmjs.org/optionator/-/optionator-0.8.3.tgz"
@@ -6930,14 +6923,11 @@ platform@1.3.6:
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.6.tgz#48b4ce983164b209c2d45a107adb31f473a6e7a7"
   integrity sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==
 
-<<<<<<< HEAD
-=======
 popper.js@1.16.1-lts:
   version "1.16.1-lts"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1-lts.tgz#cf6847b807da3799d80ee3d6d2f90df8a3f50b05"
   integrity sha512-Kjw8nKRl1m+VrSFCoVGPph93W/qrSO7ZkqPpTf7F4bk/sqcfWK019dWBUpE/fBOsOQY1dks/Bmcbfn1heM/IsA==
 
->>>>>>> aad0cc661a59162ade6ef5bc0bc277c17573bccb
 portfinder@^1.0.28:
   version "1.0.28"
   resolved "https://registry.npmjs.org/portfinder/-/portfinder-1.0.28.tgz"
@@ -8211,11 +8201,7 @@ semver@7.0.0:
 
 semver@7.3.5, semver@^7.3.2, semver@^7.3.5:
   version "7.3.5"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/semver/-/semver-7.3.5.tgz"
-=======
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"
->>>>>>> aad0cc661a59162ade6ef5bc0bc277c17573bccb
   integrity sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==
   dependencies:
     lru-cache "^6.0.0"

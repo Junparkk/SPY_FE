@@ -37,10 +37,6 @@ const Slider = () => {
     setCurrentSlide(index);
   };
 
-  //다시보지않기
-  const tutorial = () => {
-    setCheck(true);
-  };
   return (
     <div className="slider">
       <BsFillArrowLeftCircleFill className="arrow prev" onClick={prevSlide} />
