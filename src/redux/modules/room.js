@@ -11,7 +11,6 @@ const PRIVATE_ROOM = 'PRIVATE_ROOM';
 const PRIVATE_STATE = 'PRIVATE_STATE';
 //병우추가
 const ADD_ROOM = 'ADD_ROOM';
-const SET_TUTORIAL = "SET_TUTORIAL"
 
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
@@ -20,7 +19,6 @@ const LEAVE_USER = 'LEAVE_USER';
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
-const setTutorial = createAction(SET_TUTORIAL,(tuto) => ({tuto}))
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 const leaveUser = createAction(LEAVE_USER, (leave_room) => ({ leave_room }));
@@ -36,12 +34,12 @@ const privateRoom = createAction(PRIVATE_ROOM, (roomId, privateState) => ({
 const privateState = createAction(PRIVATE_STATE, (privateState) => ({
   privateState,
 }));
+
 const initialState = {
   list: [],
   post: [],
   comments: [],
-  room:[], // 병우추가
-  tuto:[],
+  room: [], // 병우추가
   roomState: {
     roomId: null,
     privateState: false,
@@ -80,13 +78,11 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
       })
       .then((res) => {
         if (res.data.user.msg === undefined) {
-          dispatch(enterUser(res.data.user));
-          console.log(res.data.user);
-          history.push(`/room/${roomId}`);
+          // dispatch(enterUser(res.data.user));
+          history.replace(`/room/${roomId}`);
         } else {
-          console.log('제발뜨지마');
-          window.alert('이건뭐임????', res.data.user.msg);
-          // window.location.reload();
+          window.alert(res.data.user.msg);
+          window.location.reload();
         }
       })
       .catch((error) => {
@@ -104,8 +100,9 @@ const leaveRoomDB = (nickname, roomId) => {
       })
       .then((response) => {
         dispatch(leaveUser(response.data.user));
+        // dispatch(liveUser(response.data.user));
         console.log(response);
-        history.push('/');
+        window.location.replace('/');
       })
       .catch((error) => {
         window.alert(error);
@@ -123,7 +120,7 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .then((response) => {
         console.log(response);
-        const roomId = response.data.room
+        const roomId = response.data.room;
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
@@ -145,11 +142,9 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
         console.log(res);
         if (res.data.user.msg === undefined) {
           dispatch(enterUser(res.data.user));
-          console.log('1', res.data.user.msg);
-          history.push(`/room/${roomId}`);
+          history.replace(`/room/${roomId}`);
         } else {
-          console.log('2', res.data.user.msg);
-          window.alert('이알럿이냐', res.data.user.msg);
+          window.alert(res.data.user.msg);
           window.location.reload();
         }
         // console.log(res.data.user);
@@ -164,26 +159,13 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
 };
 
 
-
-const getTutorialDB = () => {
-  return  function (dispatch, useState, { history }) {
-    axios
-    .get("http://mafia.milagros.shop/api/tutorial")
-    .then((response) => {
-      dispatch(setTutorial(response.data.tutorials))
-      console.log(response.data)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  };
-};
-
 export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.list = action.payload.room_list;
+        console.log(draft.list);
+        console.log(action.payload);
       }),
     // [ONE_POST]: (state, action) =>
     //   produce(state, (draft) => {
@@ -206,13 +188,6 @@ export default handleActions(
     //     // console.log(action, '넘어오니?');
     //     console.log(draft.list);
     //   }),
-    [SET_TUTORIAL]: (state, action) => {
-      produce(state, (draft) => {
-        draft.tuto = action.payload.tuto;
-        console.log(action)
-        console.log(draft.tuto)
-      })
-    },
     [PRIVATE_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.roomState.roomId = action.payload.roomId;
@@ -231,7 +206,6 @@ const actionCreators = {
   enterRoomDB,
   leaveRoomDB,
   createRoomDB,
-  getTutorialDB,
   privateRoom,
   privateState,
   roomPwCheckAPI,

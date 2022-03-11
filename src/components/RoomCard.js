@@ -30,7 +30,7 @@ const Cards = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 50%;
   height: 300px;
 `;
 
@@ -38,7 +38,7 @@ const InsideDoor = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: none;
   transform-style: preserve-3d;
   transform: perspective(1500px);
 `;
@@ -49,7 +49,7 @@ const DoorImgArea = styled.div`
   height: 100%;
   top: 0;
   left: 0;
-  background: url('https://previews.123rf.com/images/jemastock/jemastock1704/jemastock170410934/76579488-ilustración-de-vector-de-contorno-de-puerta-entrada-cercana-de-madera.jpg')
+  background: url('https://user-images.githubusercontent.com/82128525/157817385-204a2ef1-4331-4da2-8feb-b29a9ad505fe.png')
     no-repeat 0 0 / 100% 100%;
   transform-style: preserve-3d;
   transform-origin: left;

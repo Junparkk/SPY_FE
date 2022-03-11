@@ -35,7 +35,6 @@ const Result = () => {
           <Winner/>
           
 
-          {/* 위너를 컴포넌트로 빼버리자 */}
           {/* </Room> */}
         </Win>
 

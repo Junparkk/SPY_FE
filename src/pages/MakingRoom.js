@@ -8,7 +8,6 @@ import Logo from '../images/Logo.png';
 import Null from '../images/Null.png';
 // 컴포넌트
 
-
 //리액트 아이콘
 import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
 import { BsFillDoorClosedFill } from 'react-icons/bs';
@@ -27,7 +26,7 @@ const Markingroom = () => {
 
   //Ants 카운트
   const [count, setCount] = useState(6);
-  console.log(count)
+  console.log(count);
   const [roomLock, setRoomLock] = useState(false);
 
   const RoomCreate = () => {
@@ -36,7 +35,7 @@ const Markingroom = () => {
       return;
     }
     dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
-    window.alert("방 생성 완료")
+    window.alert('방 생성 완료');
   };
 
   return (
@@ -96,7 +95,6 @@ const Markingroom = () => {
                       }
                       setCount(index + 1);
                     }}
-                    
                     src={count < index + 1 ? Null : Logo}
                     //  style={{
                     //     background: count < index + 1 ? "red" : "blue",
@@ -120,6 +118,7 @@ const Markingroom = () => {
             <br />
             <div>문 사진</div>
             <br />
+            
           </RoomSet>
         </RightArea>
       </Wrap>
@@ -127,10 +126,9 @@ const Markingroom = () => {
   );
 };
 
-
 const Wrap = styled.div`
-  width: 100%;
-  height: 100vh;
+  width: 1440px;
+  height: 1024px;
   display: flex;
   background-color: #ffe179;
 `;
@@ -223,6 +221,5 @@ const Ant = styled.img`
   /* border: 1px solid black; */
   cursor: pointer;
 `;
-
 
 export default Markingroom;

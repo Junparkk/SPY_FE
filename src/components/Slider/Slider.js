@@ -3,12 +3,12 @@ import { useHistory } from 'react-router';
 import '../../styles/slider.css';
 import dataSlider from './dataSlider';
 import { useDispatch, useSelector } from 'react-redux';
-import { actionCreators as tutorialActions } from '../../redux/modules/room';
+// import { actionCreators as roomActions } from '../../redux/modules/room';
+import { actionCreators as roomActions } from '../../redux/modules/room';
 //리액트 아이콘
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
-import { AiOutlineCloseSquare } from 'react-icons/ai';
-
+import { GrClose } from 'react-icons/gr';
 
 const Slider = () => {
   // const [slideIndex, setSlideIndex] = useState(1); // 18분 유튜브
@@ -16,15 +16,12 @@ const Slider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideLength = dataSlider.length;
   const [check, setCheck] = useState(false);
-
-  const dispatch = useDispatch();
-
-  const slideData = useSelector((state) => state.room.slideData);
-  console.log(slideData)
+  //useSelector 튜토리얼 api 전용
+  const tuto = useSelector((state) => state.room.tuto);
+  console.log(tuto);
 
   useEffect(() => {
     setCurrentSlide(0);
-    dispatch(tutorialActions.getTutorialDB())
   }, []);
 
   const nextSlide = () => {
@@ -40,40 +37,25 @@ const Slider = () => {
     setCurrentSlide(index);
   };
 
-  const tutorial = () => {
-    setCheck(true);
-  };
   return (
     <div className="slider">
       <BsFillArrowLeftCircleFill className="arrow prev" onClick={prevSlide} />
       <BsFillArrowRightCircleFill className="arrow next" onClick={nextSlide} />
+
       {dataSlider.map((slide, index) => {
         return (
           <div
+            key={slide.id}
             className={index === currentSlide ? 'slide current' : 'slide'}
-            key={index}
           >
             {index === currentSlide && (
               <>
                 <img src={slide.image} alt="slide" />
                 <div className="content">
                   <h1>{slide.heading}</h1>
+                  <br/>
+                  <br/>
                   <p>{slide.desc}</p>
-
-                  <div className="closeBtn">
-                    <button
-                      className="skipBtn"
-                      onClick={() => {
-                        history.push('/');
-                      }}
-                    >
-                      SKIP
-                    </button>
-                    <button className="neverBtn" onClick={tutorial}>
-                      다시 열지 않기 <AiOutlineCloseSquare />
-                    </button>
-                  </div>
-                  {/* 인덱스가 3이면 시작하기로 바꾸기 */}
                 </div>
               </>
             )}
@@ -81,9 +63,23 @@ const Slider = () => {
         );
       })}
 
+      {/* <div className="closeBtn"> */}
+        <button
+          className="skipBtn"
+          onClick={() => {
+            history.push('/');
+          }}
+        >
+          SKIP
+        </button>
+        
+        
+      {/* </div> */}
+
       <div className="container-dots">
         {Array.from({ length: 3 }).map((item, index) => (
           <div
+            key={index}
             onClick={() => moveDot(index)}
             className={currentSlide === index ? 'dot active' : 'dot'}
           ></div>
