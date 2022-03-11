@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 const dataSlider = [
   {
     id: uuidv4(),
-    image: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg",
+    image: "",
     heading: '산업 스파이의 룰',
     desc: `"work to life"의 기밀무너를 훔쳐가기 위해 "without working"에서 잠입한 스파이입니다.
     
@@ -17,7 +17,7 @@ const dataSlider = [
   },
   {
     id: uuidv4(),
-    image: "https://t1.daumcdn.net/cfile/tistory/9901A8495CEF7E0A14",
+    image: "",
     heading: '평사원들의 룰',
     desc: `우리 회사에 잠입한 정보를 가져가려고 하는 산업 스파이를 찾아내세요!
 
@@ -31,7 +31,7 @@ const dataSlider = [
   },
   {
     id: uuidv4(),
-    image: "http://rgo4.com/files/attach/images/2681740/078/916/003/b3192069dadd05fec60d36879d742318.jpg",
+    image: "",
     heading: '특별한 직책을 가진 사원들의 룰',
     desc: `우리 회사에 잠입한 정보를 가져가려고 하는 산업 스파이가 숨어있습니다.
 

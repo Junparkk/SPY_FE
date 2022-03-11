@@ -31,6 +31,7 @@ const Header = () => {
               }}
             />
           </div>
+          <button>게임 룰(아이콘)</button>
         </div>
       </>
     );

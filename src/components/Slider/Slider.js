@@ -77,9 +77,7 @@ const Slider = () => {
           SKIP
         </button>
         
-        <button className="neverBtn" onClick={tutorial}>
-          다시 열지 않기 <GrClose />
-        </button>
+        
       {/* </div> */}
 
       <div className="container-dots">

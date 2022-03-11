@@ -196,7 +196,7 @@
   font-weight: 800;
 }
 
-.neverBtn {
+/* .neverBtn {
   position: absolute;
   bottom: 10px;
   right: 30%;
@@ -207,7 +207,7 @@
   height: 30px;
   cursor: pointer;
   text-align: center;
-}
+} */
 
 
 .closeBtn {
@@ -240,4 +240,5 @@
   /* background: #f1f1f1; */
   width: 100px;
   border-radius: 20px;
+  transition: 0.4s;
 }
