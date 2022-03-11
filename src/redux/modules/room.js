@@ -11,7 +11,6 @@ const PRIVATE_ROOM = 'PRIVATE_ROOM';
 const PRIVATE_STATE = 'PRIVATE_STATE';
 //병우추가
 const ADD_ROOM = 'ADD_ROOM';
-const SET_TUTORIAL = 'SET_TUTORIAL';
 
 // const ADD_POST = 'ADD_POST';
 // const EDIT_POST = 'EDIT_POST';
@@ -20,7 +19,6 @@ const LEAVE_USER = 'LEAVE_USER';
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
-const setTutorial = createAction(SET_TUTORIAL, (tuto) => ({ tuto }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 const leaveUser = createAction(LEAVE_USER, (leave_room) => ({ leave_room }));
@@ -42,7 +40,6 @@ const initialState = {
   post: [],
   comments: [],
   room: [], // 병우추가
-  tuto: [],
   roomState: {
     roomId: null,
     privateState: false,
@@ -103,6 +100,10 @@ const leaveRoomDB = (nickname, roomId) => {
       })
       .then((response) => {
         dispatch(leaveUser(response.data.user));
+<<<<<<< HEAD
+=======
+        // dispatch(liveUser(response.data.user));
+>>>>>>> 596945056b90a9325ceee4021902c43d87452b9d
         console.log(response);
         window.location.replace('/');
       })
@@ -160,25 +161,14 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
   };
 };
 
-const getTutorialDB = () => {
-  return function (dispatch, useState, { history }) {
-    axios
-      .get('http://mafia.milagros.shop/api/tutorial')
-      .then((response) => {
-        dispatch(setTutorial(response.data.tutorials));
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-};
 
 export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.list = action.payload.room_list;
+        console.log(draft.list);
+        console.log(action.payload);
       }),
     // [ONE_POST]: (state, action) =>
     //   produce(state, (draft) => {
@@ -201,12 +191,6 @@ export default handleActions(
     //     // console.log(action, '넘어오니?');
     //     console.log(draft.list);
     //   }),
-    [SET_TUTORIAL]: (state, action) =>
-      produce(state, (draft) => {
-        draft.tuto = action.payload.tuto;
-        console.log(action);
-        console.log(draft.tuto);
-      }),
     [PRIVATE_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.roomState.roomId = action.payload.roomId;
@@ -225,7 +209,6 @@ const actionCreators = {
   enterRoomDB,
   leaveRoomDB,
   createRoomDB,
-  getTutorialDB,
   privateRoom,
   privateState,
   roomPwCheckAPI,
