@@ -10,6 +10,7 @@ import { useRef } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import OpenViduSession from 'openvidu-react';
+import '../components/Video.css';
 
 //socket 서버
 const socket = io.connect('http://localhost:3001');
@@ -28,40 +29,36 @@ function Ingame(props) {
   const [session, setSession] = useState('');
   const userNick = localStorage.getItem('nickname');
   //화상채팅
-  const [mySessionId, setMySessionId] = useState('SessionA');
-  const [myUserName, setMyUsername] = useState(
-    'OpenVidu_User_' + Math.floor(Math.random() * 100)
-  );
   const [token, setToken] = useState(undefined);
 
   const handlerJoinSessionEvent = () => {
     console.log('Join session');
   };
-  const handlerLeaveSessionEvent = () => {
-    console.log('Leave session');
-    setMySessionId(undefined);
-  };
+  // const handlerLeaveSessionEvent = () => {
+  //   console.log('Leave session');
+  //   setMySessionId(undefined);
+  // };
   const handlerErrorEvent = () => {
     console.log('Leave session');
   };
 
-  const handleChangeSessionId = (e) => {
-    setMySessionId(e.target.value);
-  };
+  // const handleChangeSessionId = (e) => {
+  //   setMySessionId(e.target.value);
+  // };
 
-  const handleChangeUserName = (e) => {
-    setMyUsername(e.target.value);
-  };
+  // const handleChangeUserName = (e) => {
+  //   setMyUsername(e.target.value);
+  // };
 
-  const joinSession = (event) => {
-    if (roomId && userNick) {
-      getToken().then((token) => {
-        setMySessionId();
-        setToken(token);
-      });
-    }
-    event.preventDefault();
-  };
+  // const joinSession = (event) => {
+  //   if (roomId && userNick) {
+  //     getToken().then((token) => {
+  //       setMySessionId();
+  //       setToken(token);
+  //     });
+  //   }
+  //   event.preventDefault();
+  // };
 
   const createSession = () => {
     return new Promise((resolve, reject) => {
@@ -135,7 +132,7 @@ function Ingame(props) {
 
   const getToken = () => {
     return createSession(roomId)
-      .then((sessionId) => createToken(sessionId))
+      .then((roomId) => createToken(roomId))
       .catch((Err) => console.error(Err));
   };
 
@@ -190,52 +187,26 @@ function Ingame(props) {
 
   return (
     <>
-      <div>
-        {mySessionId === undefined ? (
-          <div id="join">
-            <div id="join-dialog">
-              <h1> Join a video session </h1>
-              <form onSubmit={joinSession}>
-                <p>
-                  <label>Participant: </label>
-                  <input
-                    type="text"
-                    id="userName"
-                    value={myUserName}
-                    onChange={handleChangeUserName}
-                    required
-                  />
-                </p>
-                <p>
-                  <label> Session: </label>
-                  <input
-                    type="text"
-                    id="sessionId"
-                    value={mySessionId}
-                    onChange={handleChangeSessionId}
-                    required
-                  />
-                </p>
-                <p>
-                  <input name="commit" type="submit" value="JOIN" />
-                </p>
-              </form>
-            </div>
-          </div>
-        ) : (
-          <div>
+      <Draggable
+        nodeRef={nodeRef}
+        onDrag={(e, data) => trackPos(data)}
+        onStart={handleStart}
+        onStop={handleEnd}
+      >
+        <VideoBox>
+          <div id="session">
             <OpenViduSession
-              id="opv-session"
-              sessionName={mySessionId}
-              user={myUserName}
+              sessionName={roomId}
+              user={userNick}
               token={token}
-              joinSession={handlerJoinSessionEvent}
-              leaveSession={handlerLeaveSessionEvent}
+              // joinSession={handlerJoinSessionEvent}
+              // leaveSession={handlerLeaveSessionEvent}
               error={handlerErrorEvent}
             />
           </div>
-        )}
-      </div>
+        </VideoBox>
+      </Draggable>
+
       <div className="App">
         <div className="joinChatContainer">
           <input
@@ -275,5 +246,9 @@ function Ingame(props) {
 const ChatBox = styled.div`
   float: right;
 `;
-
+const VideoBox = styled.div`
+  width: 500px;
+  height: 400px;
+  border-radius: 300px;
+`;
 export default Ingame;
