@@ -15,7 +15,7 @@ import OpenViduSession from 'openvidu-react';
 const socket = io.connect('http://localhost:3001');
 //openvidu 서버
 const OPENVIDU_SERVER_URL = 'https://' + window.location.hostname + ':4443';
-const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
+const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
 
 function Ingame(props) {
   //채팅
@@ -156,7 +156,7 @@ function Ingame(props) {
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
     localStorage.getItem('userid');
-    dispatch(roomActions.enterRoomDB(userId, roomId));
+    // dispatch(roomActions.enterRoomDB(userId, roomId));
     socket.on('join_room', (roomNumber, nickName, socketId) => {
       console.log(roomNumber, nickName, socketId);
     });
