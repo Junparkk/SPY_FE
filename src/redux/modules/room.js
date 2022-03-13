@@ -71,24 +71,20 @@ const getRoomAPI = () => {
 };
 
 const enterRoomDB = (userId, roomId, roomPwd) => {
+  console.log(roomId);
   return async function (dispatch, getState, { history }) {
     await axios
       .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: null,
       })
       .then((res) => {
-        history.replace(`/room/${roomId}`)
-        // if (res.data.user.msg === undefined) {
-        //   // dispatch(enterUser(res.data.user));
-        //   history.replace(`/room/${roomId}`);
-        // } else {
-        //   window.alert(res.data.user.msg);
-        //   window.location.reload();
-        // }
+        console.log(res);
+        history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
         window.alert(error.response.data.msg);
-        console.log(error.response.data.msg)
+        console.log(error.response.data.msg);
+        window.location.reload();
       });
   };
 };
@@ -144,16 +140,7 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
       })
       .then((res) => {
         console.log(res);
-        if (res.data.user.msg === undefined) {
-          dispatch(enterUser(res.data.user));
-          history.replace(`/room/${roomId}`);
-        } else {
-          window.alert(res.data.user.msg);
-          window.location.reload();
-        }
-        // console.log(res.data.user);
-        // dispatch(enterUser(res.data.user));
-        // history.push(`/room/${roomId}`);
+        history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
         window.alert('비밀번호를 다시 확인해주세요');
@@ -161,7 +148,6 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
       });
   };
 };
-
 
 export default handleActions(
   {

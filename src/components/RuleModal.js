@@ -27,43 +27,43 @@ const RuleModal = ({ showModal, setShowModal }) => {
   }, [keyPress]);
 
 //모달속 표 데이터
-  const columnData = [
-    {
-      maxPlayer: 6,
-      employee: 3,
-      lawyer: 0,
-      detective: 1,
-      spy: 2
-    },
-    {
-      maxPlayer: 7,
-      employee: 3,
-      lawyer: 1,
-      detective: 1,
-      spy: 2
-    },
-    {
-      maxPlayer: 8,
-      employee: 4,
-      lawyer: 1,
-      detective: 1,
-      spy: 2
-    },
-    {
-      maxPlayer: 9,
-      employee: 4,
-      lawyer: 1,
-      detective: 1,
-      spy: 3
-    },
-    {
-      maxPlayer: 10,
-      employee: 5,
-      lawyer: 1,
-      detective: 1,
-      spy: 3
-    },
-]
+//   const columnData = [
+//     {
+//       maxPlayer: 6,
+//       employee: 3,
+//       lawyer: 0,
+//       detective: 1,
+//       spy: 2
+//     },
+//     {
+//       maxPlayer: 7,
+//       employee: 3,
+//       lawyer: 1,
+//       detective: 1,
+//       spy: 2
+//     },
+//     {
+//       maxPlayer: 8,
+//       employee: 4,
+//       lawyer: 1,
+//       detective: 1,
+//       spy: 2
+//     },
+//     {
+//       maxPlayer: 9,
+//       employee: 4,
+//       lawyer: 1,
+//       detective: 1,
+//       spy: 3
+//     },
+//     {
+//       maxPlayer: 10,
+//       employee: 5,
+//       lawyer: 1,
+//       detective: 1,
+//       spy: 3
+//     },
+// ]
   return (
     <>
       {showModal ? (
