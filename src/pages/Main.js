@@ -59,38 +59,40 @@ const Main = (props) => {
       {/* 투표모달 테스트 */}
 
       {/* 대기실 화면 */}
-      <Container>
-        {room_list &&
-          room_list.map((p, idx) => {
-            if (p.roomPwd === null) {
-              return (
-                <Cards
-                  onClick={() => {
-                    console.log('비번 없는 방 입장');
-                    const moveTimer = setTimeout(() => {
-                      dispatch(roomActions.enterRoomDB(userId, p.id));
-                    }, 1000);
-                    return () => clearTimeout(moveTimer);
-                  }}
-                >
-                  <RoomCard key={p.id} {...p}></RoomCard>
-                </Cards>
-              );
-            } else {
-              return (
-                <Cards
-                  onClick={() => {
-                    dispatch(roomActions.privateRoom(p.id, true));
-                    console.log('나는 널이 아니오');
-                    console.log('비번달기용', p.roomPwd);
-                  }}
-                >
-                  <RoomCard key={p.id} {...p}></RoomCard>
-                </Cards>
-              );
-            }
-          })}
-      </Container>
+      <Wrap>
+        <Container>
+          {room_list &&
+            room_list.map((p, idx) => {
+              if (p.roomPwd === null) {
+                return (
+                  <Cards
+                    onClick={() => {
+                      console.log('비번 없는 방 입장');
+                      const moveTimer = setTimeout(() => {
+                        dispatch(roomActions.enterRoomDB(userId, p.id));
+                      }, 1000);
+                      return () => clearTimeout(moveTimer);
+                    }}
+                  >
+                    <RoomCard key={p.id} {...p}></RoomCard>
+                  </Cards>
+                );
+              } else {
+                return (
+                  <Cards
+                    onClick={() => {
+                      dispatch(roomActions.privateRoom(p.id, true));
+                      console.log('나는 널이 아니오');
+                      console.log('비번달기용', p.roomPwd);
+                    }}
+                  >
+                    <RoomCard key={p.id} {...p}></RoomCard>
+                  </Cards>
+                );
+              }
+            })}
+        </Container>
+      </Wrap>
 
       <MakeRoomBtn>빠른 시작</MakeRoomBtn>
       <EnterRoomBtn onClick={() => history.push('/makingroom')}>
@@ -108,15 +110,22 @@ const Cards = styled.div`
   width: 100%;
   height: 300px;
 `;
-
+const Wrap = styled.div`
+  height: 100vh;
+  /* width: 100vw; */
+  background-color: #ffe179;
+  overflow: auto;
+`;
 const Container = styled.div`
   display: grid;
-  background-color: #ffe179;
-  height: 100%;
+  /* background-color: #ffe179; */
+  /* height: 100%; */
   padding-top: 200px;
   grid-template-columns: repeat(5, 150px);
-  gap: 160px 100px;
+  grid-template-rows: repeat(auto-fit, 300px);
+  gap: 0px 100px;
   justify-content: center;
+
   @media screen and (min-width: 1607px) {
     grid-template-columns: repeat(5, 150px);
   }
@@ -127,7 +136,8 @@ const Container = styled.div`
     grid-template-columns: repeat(3, 150px);
   }
   @media screen and (min-width: 0px) and (max-width: 551px) {
-    grid-template-columns: repeat(3, 150px);
+    grid-template-columns: repeat(2, 100px);
+    gap: 50px 100px;
   }
 `;
 

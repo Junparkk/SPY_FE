@@ -187,32 +187,75 @@ function Ingame(props) {
   const leaveRoom = () => {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
-
-  const [state, setState] = useState('vote');
+  ///////////////////////////////////////////////////////////
+  const [state, setState] = useState('dayTimeVote');
   const [isShowing, setIsShowing] = useState(true);
+
+  useEffect(() => {
+    const notiTimer = setTimeout(() => {
+      setState('showVoteResult');
+    }, 3000);
+    return () => clearTimeout(notiTimer);
+  });
+  function gameStart() {
+    //게임스타트 함수 실행
+  }
+
   function daytimeVote() {
     if (isShowing) {
       dispatch(voteActions.getUserDB(roomId));
       const notiTimer = setTimeout(() => {
-        setIsShowing(false);
-      }, 2000);
+        setIsShowing(true);
+      }, 3000);
       return () => clearTimeout(notiTimer);
     }
   }
+
+  function showVoteResult() {
+    console.log('결과함수보여주기');
+
+    const notiTimer = setTimeout(() => {}, 3000);
+    return () => clearTimeout(notiTimer);
+  }
+
+  function nightDoLawyerVote() {
+    //변호사 함수 실행
+  }
+
+  function nightDoDetectiveVote() {
+    //탐정 함수 실행
+  }
+
+  function nightDoSpyVote() {
+    //스파이 함수 실행
+  }
+
   useEffect(() => {
     switch (state) {
-      case 'vote':
+      case 'gameStart':
+        break;
+      case 'dayTimeVote':
         daytimeVote();
+        break;
+      case 'showVoteResult':
+        showVoteResult();
+        break;
+      case 'nightDoLawyerVote':
+        break;
+      case 'nightDoDetectiveVote':
+        break;
+      case 'nightDoSpyVote':
         break;
       default:
         console.log('실행안됨');
     }
   }, [state]);
 
+  ///////////////////////////////////////////////////////////////
   return (
     <>
       {isShowing && <VoteModal children="마퓌아"></VoteModal>}
-      <Draggable
+      {/* <Draggable
         nodeRef={nodeRef}
         onDrag={(e, data) => trackPos(data)}
         onStart={handleStart}
@@ -230,7 +273,7 @@ function Ingame(props) {
             />
           </div>
         </VideoBox> */}
-      </Draggable>
+      {/* </Draggable> */}
 
       <div className="App">
         <div className="joinChatContainer">

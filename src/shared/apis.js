@@ -20,4 +20,10 @@ export const apis = {
   //   api.put(`/api/posts`, postId, title, price, imgurl, content),
   // del: (postId) => api.delete(`/api/posts`, postId),
   // changeStatus: (postId) => api.patch(`/api/status`, postId),
+
+  //vote
+  lawyerAct: (roomId) => api.patch(`/room/${roomId}/lawyerAct`),
+  detectiveAct: (roomId) => api.get(`/room/${roomId}detectiveAct`),
+  spyAct: (roomId) => api.patch(`/room/${roomId}/spyAct`),
+  dayTimeVote: (roomId) => api.patch(`/room/${roomId}/dayTimeVote`),
 };

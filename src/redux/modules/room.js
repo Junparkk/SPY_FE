@@ -71,22 +71,20 @@ const getRoomAPI = () => {
 };
 
 const enterRoomDB = (userId, roomId, roomPwd) => {
+  console.log(roomId);
   return async function (dispatch, getState, { history }) {
     await axios
       .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: null,
       })
       .then((res) => {
-        if (res.data.user.msg === undefined) {
-          // dispatch(enterUser(res.data.user));
-          history.replace(`/room/${roomId}`);
-        } else {
-          window.alert(res.data.user.msg);
-          window.location.reload();
-        }
+        console.log(res);
+        history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
-        window.alert(error);
+        window.alert(error.response.data.msg);
+        console.log(error.response.data.msg);
+        window.location.reload();
       });
   };
 };
@@ -94,16 +92,13 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
 const leaveRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .put(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
+      .patch(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
         nickname: nickname,
         roomId: roomId,
       })
       .then((response) => {
         dispatch(leaveUser(response.data.user));
-<<<<<<< HEAD
-=======
         // dispatch(liveUser(response.data.user));
->>>>>>> 596945056b90a9325ceee4021902c43d87452b9d
         console.log(response);
         window.location.replace('/');
       })
@@ -123,7 +118,7 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .then((response) => {
         console.log(response);
-        const roomId = response.data.room;
+        const roomId = response.data.room.id;
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
@@ -143,16 +138,7 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
       })
       .then((res) => {
         console.log(res);
-        if (res.data.user.msg === undefined) {
-          dispatch(enterUser(res.data.user));
-          history.replace(`/room/${roomId}`);
-        } else {
-          window.alert(res.data.user.msg);
-          window.location.reload();
-        }
-        // console.log(res.data.user);
-        // dispatch(enterUser(res.data.user));
-        // history.push(`/room/${roomId}`);
+        history.replace(`/room/${roomId}`);
       })
       .catch((err) => {
         window.alert('비밀번호를 다시 확인해주세요');
@@ -160,7 +146,6 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
       });
   };
 };
-
 
 export default handleActions(
   {

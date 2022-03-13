@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,31 +7,83 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const VoteModal = (props) => {
   const { roomId, _handleModal, children, ...rest } = props;
-  console.log(props);
-  const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    //라운드수를 []안에 넣어주면 새로운 라운드 시작할 때 마다 유저를 넣어주겠지?
-    dispatch(voteActions.getUserDB(roomId));
-  }, []);
   const user_list = useSelector((state) => state.vote.userList);
-  console.log('투표모달안에 몇명?', user_list);
+  const [click, setClick] = useState(false);
+  console.log('투표모달안에 몇명?', user_list.length);
+  const ref = useRef(null);
+  const clicked = (nickname) => {
+    setClick(!click);
+    console.log(click);
+    console.log(nickname);
+    console.log(ref);
+    console.log(ref.current);
+  };
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest}>
-        <Contents size="80px">투표</Contents>
-        <Contents size="40px">
+        <Contents size="4rem">투표</Contents>
+        <Contents margin="1rem" size="2rem">
           가장 스파이로 의심되는 사람에게 투표하세요.
         </Contents>
-        <Contents size="30px">투표투ㅁㄴㅇㄹㅁㅇㄴㄹㅁㄴㅇㄹ표~</Contents>
+
         {/* 롤을 부여받은대로 보여줘야함 */}
-        <VotePlayerWrap>
-          {user_list &&
-            user_list.map((p, idx) => {
-              return <JobCheckImg></JobCheckImg>;
-            })}
-        </VotePlayerWrap>
+        {(() => {
+          if (user_list.length <= 6) {
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        key={p.id}
+                        ref={ref}
+                        opacity={click ? '0.3' : ''}
+                        onClick={() => clicked(p.nickname)}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
+          } else if (user_list.length <= 8) {
+            <VotePlayerWrap>
+              {user_list &&
+                user_list.map((p, idx) => {
+                  return (
+                    <JobCheckImg
+                      key={p.id}
+                      ref={ref}
+                      opacity={click ? '0.3' : ''}
+                      onClick={() => clicked(p.nickname)}
+                    >
+                      <Contents>{p.nickname}</Contents>
+                    </JobCheckImg>
+                  );
+                })}
+            </VotePlayerWrap>;
+          } else if (user_list.length <= 10) {
+            <VotePlayerWrap>
+              {user_list &&
+                user_list.map((p, idx) => {
+                  return (
+                    <JobCheckImg
+                      key={p.id}
+                      ref={ref}
+                      opacity={click ? '0.3' : ''}
+                      onClick={() => clicked(p.nickname)}
+                    >
+                      <Contents>{p.nickname}</Contents>
+                    </JobCheckImg>
+                  );
+                })}
+            </VotePlayerWrap>;
+          }
+        })()}
+        {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
+        <SendBtn>선택 완료</SendBtn>
       </ModalBlock>
     </Container>,
     document.getElementById('VoteModal')
@@ -71,17 +123,17 @@ const Background = styled.div`
 
 const ModalBlock = styled.div`
   position: absolute;
-  top: 15rem;
+  top: 10%;
   border-radius: 30px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: black;
-  width: 60rem;
+  background-color: #ffe179;
+  width: 80%;
+  height: 60%;
   @media (max-width: 1120px) {
-    width: 50rem;
   }
   @media (max-width: 50rem) {
     width: 80%;
@@ -104,20 +156,61 @@ const Contents = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   color: white;
+  margin: ${(props) => props.margin};
   font-size: ${(props) => props.size};
 `;
 
 const JobCheckImg = styled.div`
-  width: 10rem;
-  height: 10rem;
+  display: flex;
+  justify-content: center;
+  width: 164px;
+  height: 164px;
   border-radius: 50%;
   background-color: blueviolet;
+  margin: auto;
+  opacity: ${(props) => props.opacity};
+  @media screen and (min-width: 551px) and (max-width: 1065px) {
+    width: 100px;
+    height: 100px;
+  }
+  @media screen and (min-width: 0px) and (max-width: 551px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const VotePlayerWrap = styled.div`
   width: 100%;
-  height: 100%;
-  display: flex;
+  height: 60%;
+  display: grid;
+  gap: 30px 200px;
+  grid-template-columns: repeat(3, 10rem);
+  grid-template-rows: repeat(2, 1fr);
+  justify-content: center;
+  align-items: center;
+
+  @media screen and (min-width: 1607px) {
+    grid-template-columns: repeat(3, 10rem);
+  }
+  @media screen and (min-width: 1065px) and (max-width: 1607px) {
+    grid-template-columns: repeat(3, 10rem);
+  }
+  @media screen and (min-width: 551px) and (max-width: 1065px) {
+    gap: 20px 10px;
+  }
+  @media screen and (min-width: 0px) and (max-width: 551px) {
+    gap: 0px;
+  }
 `;
+
+const SendBtn = styled.button`
+  width: 5rem;
+  height: 2rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: white;
+`;
+
 export default VoteModal;
