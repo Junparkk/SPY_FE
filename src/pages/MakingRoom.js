@@ -6,7 +6,12 @@ import { actionCreators as roomActions } from '../redux/modules/room';
 //이미지
 import Logo from '../images/Logo.png';
 import Null from '../images/Null.png';
+import blueDoor from '../images/blueDoor.png';
+import pinkDoor from '../images/pinkDoor.png';
+import whiteDoor from '../images/whiteDoor.png';
+
 // 컴포넌트
+import Header from '../components/Header';
 
 //리액트 아이콘
 import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
@@ -29,6 +34,8 @@ const Markingroom = () => {
   console.log(count);
   const [roomLock, setRoomLock] = useState(false);
 
+  //비밀번호 숫자만 입력하게 알럿띄우기(정규표현식)
+  // ¯\_( ͡° ͜ʖ ͡°)_/¯ 아몰랑;
   const RoomCreate = () => {
     if (roomName === '') {
       window.alert('방 제목을 입력해주세요.');
@@ -40,6 +47,7 @@ const Markingroom = () => {
 
   return (
     <React.Fragment>
+      <Header />
       <Wrap>
         <LeftArea bg="yellow" height="700">
           <BsFillDoorClosedFill style={{ fontSize: '250' }} />
@@ -70,7 +78,7 @@ const Markingroom = () => {
                 console.log(e.target.value);
               }}
               type="password"
-              placeholder="비밀번호"
+              placeholder="비밀번호(숫자)"
             />
           ) : null}
           <RoomBtn onClick={RoomCreate}>완료</RoomBtn>
@@ -78,8 +86,13 @@ const Markingroom = () => {
 
         <RightArea>
           <RoomSet>
-            <SetTitle>인원</SetTitle>
-            <p style={{ padding: '10px' }}>인원을 조정해 보세요!</p>
+            <TopText>
+              <SetTitle>인원</SetTitle>
+              <p style={{ padding: '13px' }}>클릭 해 인원을 조정해 보세요!</p>
+              <p style={{ padding: '13px' }}>
+                인원수에 따라 방의 모양이 자동으로 설정됩니다.{' '}
+              </p>
+            </TopText>
 
             <AntDiv>
               {Array.from({ length: 10 }, (Ants, index) => {
@@ -96,29 +109,16 @@ const Markingroom = () => {
                       setCount(index + 1);
                     }}
                     src={count < index + 1 ? Null : Logo}
-                    //  style={{
-                    //     background: count < index + 1 ? "red" : "blue",
-                    //   }}
                   />
                 );
               })}
             </AntDiv>
 
-            <SetTitle>문 모양</SetTitle>
-            <p style={{ padding: '10px' }}>
-              문의 모양과 좋아하는 색을 골라 선택하세요
-            </p>
-
-            <br />
-            <div>문 사진</div>
-            <br />
-            <div>문 사진</div>
-            <br />
-            <div>문 사진</div>
-            <br />
-            <div>문 사진</div>
-            <br />
-            
+            <DoorDiv>
+              <DoorImg src={whiteDoor} alt="door" />
+              <DoorImg src={pinkDoor} alt="door1" />
+              <DoorImg src={blueDoor} alt="door2" />
+            </DoorDiv>
           </RoomSet>
         </RightArea>
       </Wrap>
@@ -127,14 +127,20 @@ const Markingroom = () => {
 };
 
 const Wrap = styled.div`
-  width: 1440px;
-  height: 1024px;
+  width: 100%;
+  height: 100%;
   display: flex;
   background-color: #ffe179;
 `;
 
+// const MidWrap = styled.div`
+//   width: 1104px;
+//   height: 707px;
+//   margin: 201px auto 116px auto;
+// `;
+
 const LeftArea = styled.div`
-  width: 100%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -192,23 +198,37 @@ const RightArea = styled.div`
 const RoomSet = styled.div`
   width: 654px;
   height: 707px;
-  border-radius: 10%;
-  background-color: rgba(146, 150, 253, 0.2);
-  padding: 20px;
+  border-radius: 95px;
+  border: 5px solid #787edb;
+  background-color: #9296fd;
+  /* padding: 20px; */
   margin-top: 30px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+`;
+
+const TopText = styled.div`
+  width: 500px;
+  height: auto;
+  margin: 50px auto;
 `;
 
 const SetTitle = styled.p`
   font-size: 26px;
   line-height: 26px;
   font-weight: bold;
+  margin-bottom: 16px;
 `;
 
 const AntDiv = styled.div`
   display: flex;
   flex-flow: row wrap;
   width: 400px;
-  margin: auto;
+  margin: 49px auto 85px auto;
+  justify-content: center;
+  align-items: center;
+  clear:both;
 `;
 
 const Ant = styled.img`
@@ -216,10 +236,24 @@ const Ant = styled.img`
   height: 56px;
   margin: 9.5px;
   border-radius: 50%;
-  /* background-size: cover;
-  object-fit: cover; */
-  /* border: 1px solid black; */
   cursor: pointer;
 `;
 
+const DoorDiv = styled.div`
+  border-radius: 100px solid black;
+  width: 500px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  clear:both;
+`;
+
+const DoorImg = styled.img`
+  width: 100.33px;
+  height: 145.69px;
+  margin: 0px 30.5px 0px 30.5px;
+
+`;
 export default Markingroom;

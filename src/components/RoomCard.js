@@ -12,7 +12,7 @@ const RoomCard = (props) => {
     <>
       <Cards onClick={() => openDoor()}>
         <InsideDoor>
-          <DoorImgArea ref={testImg}></DoorImgArea>
+          <DoorImgArea props={props.maxPlayer} ref={testImg}></DoorImgArea>
         </InsideDoor>
         <TextArea>
           <Title>{props.roomName}</Title>

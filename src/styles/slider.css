@@ -105,7 +105,7 @@
 .content {
   position: absolute;
   top: 5rem;
-  left: 20%;
+  left: 23%;
   opacity: 0;
   width: 50%;
   padding: 3rem;
@@ -160,8 +160,8 @@
   border-radius: 50%;
   background-color: transparent;
   color: black;
-  width: 2rem;
-  height: 2rem;
+  width: 3rem;
+  height: 3rem;
   cursor: pointer;
   position: absolute;
   z-index: 99;
@@ -185,10 +185,11 @@
 .skipBtn {
   position: absolute;
   bottom: 50px;
-  left: 50%;
-  border: 1px solid blue;
+  left: 46%;
+  border: 1px solid white;
   border-radius: 38px;
-  background-color: lightskyblue;
+  background-color: #3a3a3a;
+  color: white;
   width: 146px;
   height: 49.35px;
   cursor: pointer;

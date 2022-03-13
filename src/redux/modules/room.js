@@ -77,16 +77,18 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
         roomPwd: null,
       })
       .then((res) => {
-        if (res.data.user.msg === undefined) {
-          // dispatch(enterUser(res.data.user));
-          history.replace(`/room/${roomId}`);
-        } else {
-          window.alert(res.data.user.msg);
-          window.location.reload();
-        }
+        history.replace(`/room/${roomId}`)
+        // if (res.data.user.msg === undefined) {
+        //   // dispatch(enterUser(res.data.user));
+        //   history.replace(`/room/${roomId}`);
+        // } else {
+        //   window.alert(res.data.user.msg);
+        //   window.location.reload();
+        // }
       })
       .catch((error) => {
-        window.alert(error);
+        window.alert(error.response.data.msg);
+        console.log(error.response.data.msg)
       });
   };
 };
@@ -94,7 +96,7 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
 const leaveRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .put(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
+      .patch(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
         nickname: nickname,
         roomId: roomId,
       })
@@ -106,6 +108,7 @@ const leaveRoomDB = (nickname, roomId) => {
       })
       .catch((error) => {
         window.alert(error);
+        console.log(error.response.data.msg)
       });
   };
 };
@@ -120,11 +123,12 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .then((response) => {
         console.log(response);
-        const roomId = response.data.room;
+        const roomId = response.data.room.id;
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
-        window.alert(error);
+        console.log(error.response.data.msg)
+        window.alert(error.msg);
       });
   };
 };
@@ -151,9 +155,9 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
         // dispatch(enterUser(res.data.user));
         // history.push(`/room/${roomId}`);
       })
-      .catch((err) => {
+      .catch((error) => {
         window.alert('비밀번호를 다시 확인해주세요');
-        console.log(err);
+        console.log(error.response.data.msg)
       });
   };
 };
