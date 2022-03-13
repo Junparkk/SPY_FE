@@ -251,10 +251,25 @@ function Ingame(props) {
     }
   }, [state]);
 
+  const test = () => {
+    // return function (dispatch, useState, { history }) {
+    axios
+      .patch(
+        `http://mafia.milagros.shop/api/room/${roomId}/user/${userId}/ready`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // };
+  };
+
   ///////////////////////////////////////////////////////////////
   return (
     <>
-      {isShowing && <VoteModal children="마퓌아"></VoteModal>}
+      {/* {isShowing && <VoteModal children="마퓌아"></VoteModal>} */}
       {/* <Draggable
         nodeRef={nodeRef}
         onDrag={(e, data) => trackPos(data)}
@@ -306,6 +321,7 @@ function Ingame(props) {
           </ChatBox>
         </Draggable>
         <button onClick={leaveRoom}>방나가기</button>
+        <button onClick={() => test()}>테슷흐</button>
       </div>
     </>
   );
