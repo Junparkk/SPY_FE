@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import '../../styles/slider.css';
+import styled from "styled-components"
 import dataSlider from './dataSlider';
 import { useDispatch, useSelector } from 'react-redux';
 // import { actionCreators as roomActions } from '../../redux/modules/room';
@@ -52,7 +53,7 @@ const Slider = () => {
               <>
                 <img src={slide.image} alt="slide" />
                 <div className="content">
-                  <h1>{slide.heading}</h1>
+                  <SlideTitle>{slide.heading}</SlideTitle>
                   <br/>
                   <br/>
                   <p>{slide.desc}</p>
@@ -88,5 +89,9 @@ const Slider = () => {
     </div>
   );
 };
+
+const SlideTitle = styled.p`
+
+`;
 
 export default Slider;

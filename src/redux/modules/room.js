@@ -104,6 +104,7 @@ const leaveRoomDB = (nickname, roomId) => {
       })
       .catch((error) => {
         window.alert(error);
+        console.log(error.response.data.msg)
       });
   };
 };
@@ -122,7 +123,8 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
-        window.alert(error);
+        console.log(error.response.data.msg)
+        window.alert(error.msg);
       });
   };
 };
@@ -140,9 +142,9 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
         console.log(res);
         history.replace(`/room/${roomId}`);
       })
-      .catch((err) => {
+      .catch((error) => {
         window.alert('비밀번호를 다시 확인해주세요');
-        console.log(err);
+        console.log(error.response.data.msg)
       });
   };
 };

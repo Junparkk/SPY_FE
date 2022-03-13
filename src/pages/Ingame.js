@@ -19,7 +19,7 @@ import VoteModal from '../components/VoteModal';
 const socket = io.connect('http://localhost:3001');
 //openvidu 서버
 const OPENVIDU_SERVER_URL = 'https://' + window.location.hostname + ':4443';
-const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
+const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
 
 function Ingame(props) {
   //채팅
