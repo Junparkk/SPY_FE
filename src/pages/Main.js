@@ -57,40 +57,42 @@ const Main = (props) => {
       {/* 직업모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
       {/* {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>} */}
       {/* 투표모달 테스트 */}
-      {/* <VoteModal children="마퓌아"></VoteModal> */}
+
       {/* 대기실 화면 */}
-      <Container>
-        {room_list &&
-          room_list.map((p, idx) => {
-            if (p.roomPwd === null) {
-              return (
-                <Cards
-                  onClick={() => {
-                    console.log('비번 없는 방 입장');
-                    const moveTimer = setTimeout(() => {
-                      dispatch(roomActions.enterRoomDB(userId, p.id));
-                    }, 1000);
-                    return () => clearTimeout(moveTimer);
-                  }}
-                >
-                  <RoomCard key={p.id} {...p}></RoomCard>
-                </Cards>
-              );
-            } else {
-              return (
-                <Cards
-                  onClick={() => {
-                    dispatch(roomActions.privateRoom(p.id, true));
-                    console.log('나는 널이 아니오');
-                    console.log('비번달기용', p.roomPwd);
-                  }}
-                >
-                  <RoomCard key={p.id} {...p}></RoomCard>
-                </Cards>
-              );
-            }
-          })}
-      </Container>
+      <Wrap>
+        <Container>
+          {room_list &&
+            room_list.map((p, idx) => {
+              if (p.roomPwd === null) {
+                return (
+                  <Cards
+                    onClick={() => {
+                      console.log('비번 없는 방 입장');
+                      const moveTimer = setTimeout(() => {
+                        dispatch(roomActions.enterRoomDB(userId, p.id));
+                      }, 1000);
+                      return () => clearTimeout(moveTimer);
+                    }}
+                  >
+                    <RoomCard key={p.id} {...p}></RoomCard>
+                  </Cards>
+                );
+              } else {
+                return (
+                  <Cards
+                    onClick={() => {
+                      dispatch(roomActions.privateRoom(p.id, true));
+                      console.log('나는 널이 아니오');
+                      console.log('비번달기용', p.roomPwd);
+                    }}
+                  >
+                    <RoomCard key={p.id} {...p}></RoomCard>
+                  </Cards>
+                );
+              }
+            })}
+        </Container>
+      </Wrap>
 
       <MakeRoomBtn>빠른 시작</MakeRoomBtn>
       <EnterRoomBtn onClick={() => history.push('/makingroom')}>
@@ -108,22 +110,34 @@ const Cards = styled.div`
   width: 100%;
   height: 300px;
 `;
-
+const Wrap = styled.div`
+  height: 100vh;
+  /* width: 100vw; */
+  background-color: #ffe179;
+  overflow: auto;
+`;
 const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  /* background-color: #ffe179; */
+  /* height: 100%; */
+  padding-top: 200px;
+  grid-template-columns: repeat(5, 150px);
+  grid-template-rows: repeat(auto-fit, 300px);
+  gap: 0px 100px;
+  justify-content: center;
+
   @media screen and (min-width: 1607px) {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 150px);
   }
   @media screen and (min-width: 960px) and (max-width: 1607px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 150px);
   }
   @media screen and (min-width: 551px) and (max-width: 960px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 150px);
   }
   @media screen and (min-width: 0px) and (max-width: 551px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 100px);
+    gap: 50px 100px;
   }
 `;
 
