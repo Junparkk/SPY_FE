@@ -2,7 +2,7 @@ import '../components/Chat.css';
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { actionCreators as voteActions } from '../redux/modules/vote';
 import styled from 'styled-components';
@@ -189,26 +189,30 @@ function Ingame(props) {
   };
   ///////////////////////////////////////////////////////////
   const [state, setState] = useState('dayTimeVote');
-  const [isShowing, setIsShowing] = useState(true);
+  const [isShowing, setIsShowing] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+
+  //현재 방에 접속해 있는 리스트 뽑아내기
+  const roomUserList = useSelector((state) => state.vote.userList);
 
   useEffect(() => {
-    const notiTimer = setTimeout(() => {
-      setState('showVoteResult');
-    }, 3000);
-    return () => clearTimeout(notiTimer);
-  });
+    dispatch(voteActions.getUserDB(roomId));
+  }, []);
+  // 유저리스트에서 본인 정보만 뽑아 내기
+  const findMe = roomUserList.filter(
+    (user) => user.userId === parseInt(userId)
+  );
+
   function gameStart() {
     //게임스타트 함수 실행
   }
 
   function daytimeVote() {
-    if (isShowing) {
-      dispatch(voteActions.getUserDB(roomId));
-      const notiTimer = setTimeout(() => {
-        setIsShowing(true);
-      }, 3000);
-      return () => clearTimeout(notiTimer);
-    }
+    const notiTimer = setTimeout(() => {
+      setIsShowing(true);
+    }, 3000);
+
+    return () => clearTimeout(notiTimer);
   }
 
   function showVoteResult() {
@@ -251,25 +255,21 @@ function Ingame(props) {
     }
   }, [state]);
 
-  const test = () => {
-    // return function (dispatch, useState, { history }) {
-    axios
-      .patch(
-        `http://mafia.milagros.shop/api/room/${roomId}/user/${userId}/ready`
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // };
+  const doReady = () => {
+    dispatch(roomActions.doReadyAPI(roomId, userId));
+    setIsReady(!isReady);
   };
-
+  const cancelReady = () => {
+    dispatch(roomActions.cancelReadyAPI(roomId, userId));
+    setIsReady(!isReady);
+  };
+  const doStart = () => {
+    dispatch(roomActions.doStartAPI(roomId, userId));
+  };
   ///////////////////////////////////////////////////////////////
   return (
     <>
-      {/* {isShowing && <VoteModal children="마퓌아"></VoteModal>} */}
+      {isShowing && <VoteModal isMe={findMe}></VoteModal>}
       {/* <Draggable
         nodeRef={nodeRef}
         onDrag={(e, data) => trackPos(data)}
@@ -321,7 +321,16 @@ function Ingame(props) {
           </ChatBox>
         </Draggable>
         <button onClick={leaveRoom}>방나가기</button>
-        <button onClick={() => test()}>테슷흐</button>
+        {/* 사용자별 버튼 다르게 보여주는 이중삼항연산자 */}
+        {findMe[0] && findMe[0].isHost === 'N' ? (
+          isReady ? (
+            <button onClick={() => cancelReady()}>준비 취소하기</button>
+          ) : (
+            <button onClick={() => doReady()}>준비</button>
+          )
+        ) : (
+          <button onClick={() => doStart()}>시작하기</button>
+        )}
       </div>
     </>
   );

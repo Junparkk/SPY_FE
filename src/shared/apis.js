@@ -12,6 +12,10 @@ export const apis = {
   // room
   lobby: () => api.get('/lobby'),
   player: (roomId) => api.get(`/room/${roomId}/users`),
+  ready: (roomId, userId) => api.patch(`/room/${roomId}/user/${userId}/ready`),
+  cancelReady: (roomId, userId) =>
+    api.patch(`/room/${roomId}/user/${userId}/cancelReady`),
+  start: (roomId, userId) => api.patch(`/room/${roomId}/user/${userId}/start`),
   // post: (postId) => api.get(`/api/posts/${postId}`),
   // add: (title, price, imgurl, content) =>
   //   api.post('/api/posts', title, price, imgurl, content),
