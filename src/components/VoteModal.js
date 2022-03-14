@@ -6,19 +6,28 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const VoteModal = (props) => {
-  const { roomId, _handleModal, children, ...rest } = props;
+  const { isMe, roomId, _handleModal, children, ...rest } = props;
 
   const user_list = useSelector((state) => state.vote.userList);
-  const [click, setClick] = useState(false);
+  const [voteBtnClicked, setVoteBtnClicked] = useState(null);
+  const [submit, setSubmit] = useState(false);
+
+  const ref = useRef();
+
   console.log('투표모달안에 몇명?', user_list.length);
-  const ref = useRef(null);
-  const clicked = (nickname) => {
-    setClick(!click);
-    console.log(click);
-    console.log(nickname);
-    console.log(ref);
-    console.log(ref.current);
+
+  const clicked = (idx) => {
+    setVoteBtnClicked(idx);
   };
+
+  const submitClicked = () => {
+    if (voteBtnClicked !== null) {
+      setSubmit(true);
+    } else {
+      window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
+    }
+  };
+  console.log(submit);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
@@ -37,10 +46,11 @@ const VoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        key={p.id}
+                        pointerEvents={submit ? 'none' : ''}
                         ref={ref}
-                        opacity={click ? '0.3' : ''}
-                        onClick={() => clicked(p.nickname)}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked(idx)}
                       >
                         <Contents>{p.nickname}</Contents>
                       </JobCheckImg>
@@ -54,10 +64,11 @@ const VoteModal = (props) => {
                 user_list.map((p, idx) => {
                   return (
                     <JobCheckImg
-                      key={p.id}
+                      pointerEvents={submit ? 'none' : ''}
                       ref={ref}
-                      opacity={click ? '0.3' : ''}
-                      onClick={() => clicked(p.nickname)}
+                      key={p.id}
+                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                      onClick={() => clicked()}
                     >
                       <Contents>{p.nickname}</Contents>
                     </JobCheckImg>
@@ -70,10 +81,11 @@ const VoteModal = (props) => {
                 user_list.map((p, idx) => {
                   return (
                     <JobCheckImg
-                      key={p.id}
+                      pointerEvents={submit ? 'none' : ''}
                       ref={ref}
-                      opacity={click ? '0.3' : ''}
-                      onClick={() => clicked(p.nickname)}
+                      key={p.id}
+                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                      onClick={() => clicked(idx)}
                     >
                       <Contents>{p.nickname}</Contents>
                     </JobCheckImg>
@@ -83,7 +95,9 @@ const VoteModal = (props) => {
           }
         })()}
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn>선택 완료</SendBtn>
+        <SendBtn disabled={submit} onClick={() => submitClicked()}>
+          선택 완료
+        </SendBtn>
       </ModalBlock>
     </Container>,
     document.getElementById('VoteModal')
@@ -171,6 +185,7 @@ const JobCheckImg = styled.div`
   background-color: blueviolet;
   margin: auto;
   opacity: ${(props) => props.opacity};
+  pointer-events: ${(props) => props.pointerEvents};
   @media screen and (min-width: 551px) and (max-width: 1065px) {
     width: 100px;
     height: 100px;
