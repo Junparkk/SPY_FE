@@ -199,15 +199,15 @@ function Ingame(props) {
               sessionName={roomId}
               user={userNick}
               token={token}
-              // joinSession={handlerJoinSessionEvent}
+              joinSession={handlerJoinSessionEvent}
               // leaveSession={handlerLeaveSessionEvent}
               error={handlerErrorEvent}
             />
           </div>
         </VideoBox>
       </Draggable>
-
-      <div className="App">
+      <button onClick={leaveRoom}>방나가기</button>
+      {/* <div className="App">
         <div className="joinChatContainer">
           <input
             type="text"
@@ -225,7 +225,7 @@ function Ingame(props) {
           />
           <button onClick={joinChat}>참여하기</button>
         </div>
-      </div>
+      </div> */}
       <div>
         <Draggable
           nodeRef={nodeRef}
@@ -237,7 +237,6 @@ function Ingame(props) {
             <Chat socket={socket} username={username} room={roomId} />
           </ChatBox>
         </Draggable>
-        <button onClick={leaveRoom}>방나가기</button>
       </div>
     </>
   );
@@ -247,7 +246,7 @@ const ChatBox = styled.div`
   float: right;
 `;
 const VideoBox = styled.div`
-  width: 500px;
+  width: 600px;
   height: 400px;
   border-radius: 300px;
 `;

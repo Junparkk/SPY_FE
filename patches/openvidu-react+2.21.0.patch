@@ -1,0 +1,25 @@
+diff --git a/node_modules/openvidu-react/dist/components/VideoRoomComponent.css b/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
+index e47b105..15fa6df 100644
+--- a/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
++++ b/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
+@@ -1,6 +1,6 @@
+ #header {
+   color: #ffffff;
+-  background-color: #333333;
++  background-color: #a72d2d;
+   padding: 0 14px 0 0;
+   position: absolute;
+   top: 0;
+diff --git a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
+index 113aa86..9e78bb4 100644
+--- a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
++++ b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
+@@ -1,7 +1,7 @@
+ #header {
+     color: #ffffff;
+     height: 40px;
+-    background-color: #333333;
++    background-color: #a10c0c;
+     padding: 0 14px 0 0;
+     position: absolute;
+     top: 0;
