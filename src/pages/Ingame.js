@@ -274,6 +274,7 @@ function Ingame(props) {
           </div>
         </VideoBox>
       </Draggable>
+      <button onClick={leaveRoom}>방나가기</button>
 
       {/* <div className="App">
         <div className="joinChatContainer">

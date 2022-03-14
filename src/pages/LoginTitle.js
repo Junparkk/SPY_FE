@@ -7,11 +7,15 @@ import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
 import Logo from '../images/Logo.png';
 import Title from '../images/Title.png';
 import Building from '../images/Building.png';
-import App from '../shared/App.css'
-
-
+import '../shared/App.css';
+import { useSelector } from 'react-redux';
 
 function LoginTitle() {
+  //랜덤 닉네임
+  const randomUser = useSelector((state) => state.user.randomNick);
+  const clearNick = () => {
+    setNickname('')
+  }
   //스크롤 업 애니매이션
   const [ScrollY, setScrollY] = useState(0);
 
@@ -39,6 +43,8 @@ function LoginTitle() {
     console.log('Scroll is', ScrollY);
   }, [ScrollY]);
 
+  useEffect(() => {}, []);
+
   //닉네임 서버 전달
   const dispatch = useDispatch();
 
@@ -47,6 +53,10 @@ function LoginTitle() {
   const Login = () => {
     dispatch(userActions.LoginDB(nickname));
   };
+  const randomNick = () => {
+    dispatch(userActions.RandomNickDB());
+    setNickname(randomUser)
+  };
 
   return (
     <>
@@ -54,27 +64,35 @@ function LoginTitle() {
         <TitleWrap>
           <TitleLogo src={Logo} />
           <HeaderTitle src={Title} />
-          <div style={{ fontWeight: 'bold'}}>
+          <div style={{ fontWeight: 'bold' }}>
             <InputNick>
-            <input
-              style={{
-                border: 'solid 2px #888888',
-                borderRadius: '20px',
-                width: '20%',
-                minWidth: "180px",
-                height: '50px',
-              }}
-              placeholder="닉네임"
-              onChange={(e) => {
-                setNickname(e.target.value);
-              }}
-            />
-            <GiPerspectiveDiceSixFacesRandom
-              style={{ backgroundColor: '#9295FD', borderRadius: '56px', verticalAlign:"middle", marginLeft: "10px"}}
-              size={56}
-            />
+              <input
+                value={nickname}
+                style={{
+                  border: 'solid 2px #888888',
+                  borderRadius: '20px',
+                  width: '20%',
+                  minWidth: '180px',
+                  height: '50px',
+                }}
+                placeholder="닉네임"
+                onChange={(e) => {
+                  setNickname(e.target.value);
+                }}
+                onClick = {clearNick}
+              />
+              <GiPerspectiveDiceSixFacesRandom
+                style={{
+                  backgroundColor: '#9295FD',
+                  borderRadius: '56px',
+                  verticalAlign: 'middle',
+                  marginLeft: '10px',
+                }}
+                size={56}
+                onClick={randomNick}
+              />
             </InputNick>
-            
+
             <br />
             <StartBt onClick={Login}>start!</StartBt>
           </div>
@@ -91,13 +109,15 @@ const Wrap = styled.div`
   height: 3503px;
   background-color: #ffe179;
   text-align: center;
-  background-size:cover;  
+  background-size: cover;
 `;
 
 const TitleWrap = styled.div`
   width: 100%;
-  padding : 80px 0px 0px 0px;
-  @media screen and (max-width: 663px) { padding: 40px 0px 0px 0px }
+  padding: 80px 0px 0px 0px;
+  @media screen and (max-width: 663px) {
+    padding: 40px 0px 0px 0px;
+  }
 `;
 const TitleLogo = styled.div`
   margin: 0px auto;
@@ -108,25 +128,27 @@ const TitleLogo = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  
 `;
 
 const HeaderTitle = styled.div`
   margin: 20px auto;
   width: 631px;
-  min-width:370px;
+  min-width: 370px;
   height: 275px;
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 663px) { width: 70%; }
-
+  @media screen and (max-width: 663px) {
+    width: 70%;
+  }
 `;
 
 const InputNick = styled.div`
-margin-top: 10%;
-  @media screen and (max-width: 663px) { margin-top: -10% }
-`
+  margin-top: 10%;
+  @media screen and (max-width: 663px) {
+    margin-top: -10%;
+  }
+`;
 
 const StartBt = styled.button`
   border: none;
@@ -147,7 +169,9 @@ const LoginBackground = styled.div`
   height: 2488px;
   background-image: url('${(props) => props.src}');
   background-size: cover;
-  @media screen and (max-width: 1296px) { display:none; }
+  @media screen and (max-width: 1296px) {
+    display: none;
+  }
 `;
 
 export default LoginTitle;
