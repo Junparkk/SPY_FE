@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
+import { actionCreators as voteActions } from '../redux/modules/vote';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
@@ -12,11 +13,13 @@ import axios from 'axios';
 import OpenViduSession from 'openvidu-react';
 import '../components/Video.css';
 
+import VoteModal from '../components/VoteModal';
+
 //socket 서버
 const socket = io.connect('http://localhost:3001');
 //openvidu 서버
 const OPENVIDU_SERVER_URL = 'https://' + window.location.hostname + ':4443';
-const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
+const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
 
 function Ingame(props) {
   //채팅
@@ -153,7 +156,7 @@ function Ingame(props) {
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
     localStorage.getItem('userid');
-    dispatch(roomActions.enterRoomDB(userId, roomId));
+    // dispatch(roomActions.enterRoomDB(userId, roomId));
     socket.on('join_room', (roomNumber, nickName, socketId) => {
       console.log(roomNumber, nickName, socketId);
     });
@@ -184,9 +187,74 @@ function Ingame(props) {
   const leaveRoom = () => {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
+  ///////////////////////////////////////////////////////////
+  const [state, setState] = useState('dayTimeVote');
+  const [isShowing, setIsShowing] = useState(true);
 
+  useEffect(() => {
+    const notiTimer = setTimeout(() => {
+      setState('showVoteResult');
+    }, 3000);
+    return () => clearTimeout(notiTimer);
+  });
+  function gameStart() {
+    //게임스타트 함수 실행
+  }
+
+  function daytimeVote() {
+    if (isShowing) {
+      dispatch(voteActions.getUserDB(roomId));
+      const notiTimer = setTimeout(() => {
+        setIsShowing(true);
+      }, 3000);
+      return () => clearTimeout(notiTimer);
+    }
+  }
+
+  function showVoteResult() {
+    console.log('결과함수보여주기');
+
+    const notiTimer = setTimeout(() => {}, 3000);
+    return () => clearTimeout(notiTimer);
+  }
+
+  function nightDoLawyerVote() {
+    //변호사 함수 실행
+  }
+
+  function nightDoDetectiveVote() {
+    //탐정 함수 실행
+  }
+
+  function nightDoSpyVote() {
+    //스파이 함수 실행
+  }
+
+  useEffect(() => {
+    switch (state) {
+      case 'gameStart':
+        break;
+      case 'dayTimeVote':
+        daytimeVote();
+        break;
+      case 'showVoteResult':
+        showVoteResult();
+        break;
+      case 'nightDoLawyerVote':
+        break;
+      case 'nightDoDetectiveVote':
+        break;
+      case 'nightDoSpyVote':
+        break;
+      default:
+        console.log('실행안됨');
+    }
+  }, [state]);
+
+  ///////////////////////////////////////////////////////////////
   return (
     <>
+      {/* {isShowing && <VoteModal children="마퓌아"></VoteModal>} */}
       <Draggable
         nodeRef={nodeRef}
         onDrag={(e, data) => trackPos(data)}
@@ -206,7 +274,7 @@ function Ingame(props) {
           </div>
         </VideoBox>
       </Draggable>
-      <button onClick={leaveRoom}>방나가기</button>
+
       {/* <div className="App">
         <div className="joinChatContainer">
           <input
