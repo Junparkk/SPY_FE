@@ -108,7 +108,7 @@ const leaveRoomDB = (nickname, roomId) => {
       });
   };
 };
-//병우 추가
+//방 만들기
 const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
   return function (dispatch, getState, { history }) {
     axios

@@ -35,7 +35,7 @@ const Markingroom = () => {
   const [roomLock, setRoomLock] = useState(false);
 
   //비밀번호 숫자만 입력하게 알럿띄우기(정규표현식)
-  // ¯\_( ͡° ͜ʖ ͡°)_/¯ 아몰랑;
+  // ¯\_( ͡° ͜ʖ ͡°)_/¯ 
   const RoomCreate = () => {
     if (roomName === '') {
       window.alert('방 제목을 입력해주세요.');
@@ -90,7 +90,7 @@ const Markingroom = () => {
               <SetTitle>인원</SetTitle>
               <p style={{ padding: '13px' }}>클릭 해 인원을 조정해 보세요!</p>
               <p style={{ padding: '13px' }}>
-                인원수에 따라 방의 모양이 자동으로 설정됩니다.{' '}
+                인원수에 따라 방의 모양이 자동으로 설정됩니다.
               </p>
             </TopText>
 

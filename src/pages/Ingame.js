@@ -254,14 +254,14 @@ function Ingame(props) {
   ///////////////////////////////////////////////////////////////
   return (
     <>
-      {isShowing && <VoteModal children="마퓌아"></VoteModal>}
-      {/* <Draggable
+      {/* {isShowing && <VoteModal children="마퓌아"></VoteModal>} */}
+      <Draggable
         nodeRef={nodeRef}
         onDrag={(e, data) => trackPos(data)}
         onStart={handleStart}
         onStop={handleEnd}
       >
-        {/* <VideoBox>
+        <VideoBox>
           <div id="session">
             <OpenViduSession
               sessionName={roomId}
@@ -272,8 +272,8 @@ function Ingame(props) {
               error={handlerErrorEvent}
             />
           </div>
-        </VideoBox> */}
-      {/* </Draggable> */}
+        </VideoBox>
+      </Draggable> 
 
       <div className="App">
         <div className="joinChatContainer">

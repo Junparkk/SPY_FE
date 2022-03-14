@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import '../../styles/slider.css';
-import styled from "styled-components"
+import styled from 'styled-components';
 import dataSlider from './dataSlider';
 import { useDispatch, useSelector } from 'react-redux';
 // import { actionCreators as roomActions } from '../../redux/modules/room';
@@ -10,6 +10,7 @@ import { actionCreators as roomActions } from '../../redux/modules/room';
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { GrClose } from 'react-icons/gr';
+import { current } from 'immer';
 
 const Slider = () => {
   // const [slideIndex, setSlideIndex] = useState(1); // 18분 유튜브
@@ -20,6 +21,8 @@ const Slider = () => {
   //useSelector 튜토리얼 api 전용
   const tuto = useSelector((state) => state.room.tuto);
   console.log(tuto);
+  console.log(dataSlider);
+  console.log(currentSlide)
 
   useEffect(() => {
     setCurrentSlide(0);
@@ -54,8 +57,8 @@ const Slider = () => {
                 <img src={slide.image} alt="slide" />
                 <div className="content">
                   <SlideTitle>{slide.heading}</SlideTitle>
-                  <br/>
-                  <br/>
+                  <br />
+                  <br />
                   <p>{slide.desc}</p>
                 </div>
               </>
@@ -64,18 +67,29 @@ const Slider = () => {
         );
       })}
 
-      {/* <div className="closeBtn"> */}
+      <button
+        className="skipBtn"
+        onClick={() => {
+          history.push('/');
+        }}
+      >
+        SKIP
+      </button>
+
+      {currentSlide > 1 ? (
         <button
-          className="skipBtn"
+          className="nextBtn"
           onClick={() => {
             history.push('/');
           }}
         >
-          SKIP
+          시작하기
         </button>
-        
-        
-      {/* </div> */}
+      ) : (
+        <button className="nextBtn" onClick={nextSlide}>
+          넘기기
+        </button>
+      )}
 
       <div className="container-dots">
         {Array.from({ length: 3 }).map((item, index) => (
@@ -91,7 +105,7 @@ const Slider = () => {
 };
 
 const SlideTitle = styled.p`
-
+  font-size: 32px;
 `;
 
 export default Slider;
