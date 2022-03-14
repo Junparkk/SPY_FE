@@ -11,6 +11,10 @@ const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
 
 const initialState = {
   userList: [],
+  dayTimeVoteModalState: {
+    roomId: null,
+    privateState: false,
+  },
 };
 
 //middleware
