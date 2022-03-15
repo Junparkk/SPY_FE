@@ -1,4 +1,5 @@
 import '../components/Chat.css';
+import '../shared/App.css';
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
@@ -12,6 +13,7 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import OpenViduSession from 'openvidu-react';
 import '../components/Video.css';
+import { RiArrowGoBackFill } from 'react-icons/ri';
 
 import VoteModal from '../components/VoteModal';
 
@@ -254,16 +256,17 @@ function Ingame(props) {
   ///////////////////////////////////////////////////////////////
   return (
     <>
-      {/* {isShowing && <VoteModal children="마퓌아"></VoteModal>} */}
-      <Draggable
-        nodeRef={nodeRef}
-        onDrag={(e, data) => trackPos(data)}
-        onStart={handleStart}
-        onStop={handleEnd}
-      >
-        <VideoBox>
+      <Wrap>
+        {/* {isShowing && <VoteModal children="마퓌아"></VoteModal>} */}
+        <Draggable
+          nodeRef={nodeRef}
+          onDrag={(e, data) => trackPos(data)}
+          onStart={handleStart}
+          onStop={handleEnd}
+        >
           <div id="session">
             <OpenViduSession
+              id="opv-session"
               sessionName={roomId}
               user={userNick}
               token={token}
@@ -272,51 +275,77 @@ function Ingame(props) {
               error={handlerErrorEvent}
             />
           </div>
-        </VideoBox>
-      </Draggable>
-      <button onClick={leaveRoom}>방나가기</button>
-
-      {/* <div className="App">
-        <div className="joinChatContainer">
-          <input
-            type="text"
-            placeholder="닉네임을 입력해주세요"
-            onChange={(event) => {
-              setUsername(event.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="방 번호를 입력해주세요"
-            onChange={(event) => {
-              setRoom(event.target.value);
-            }}
-          />
-          <button onClick={joinChat}>참여하기</button>
-        </div>
-      </div> */}
-      <div>
-        <Draggable
-          nodeRef={nodeRef}
-          onDrag={(e, data) => trackPos(data)}
-          onStart={handleStart}
-          onStop={handleEnd}
-        >
-          <ChatBox>
-            <Chat socket={socket} username={username} room={roomId} />
-          </ChatBox>
         </Draggable>
-      </div>
+        <div>
+          <Draggable
+            nodeRef={nodeRef}
+            onDrag={(e, data) => trackPos(data)}
+            onStart={handleStart}
+            onStop={handleEnd}
+          >
+            <ChatBox>
+              <Chat socket={socket} username={username} room={roomId} />
+            </ChatBox>
+          </Draggable>
+          <ButtonContainer>
+            <RiArrowGoBackFill
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '40px',
+                backgroundColor: '#9296fd',
+                cursor: 'pointer',
+                color: '#ffe179',
+                padding: '10px',
+                cursor: 'pointer',
+                margin: '100px 50px',
+              }}
+              onClick={leaveRoom}
+            />
+            <ReadyButton>준비</ReadyButton>
+            <StartButton>시작</StartButton>
+          </ButtonContainer>
+        </div>
+      </Wrap>
     </>
   );
 }
 
+const Wrap = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: #ffe179;
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const ReadyButton = styled.div`
+  width: 103px;
+  height: 59px;
+  border-radius: 40px;
+  background-color: #9296fd;
+  text-align: center;
+  margin: 100px 50px;
+  line-height: 59px;
+  font-family: 'yg-jalnan';
+  color: white;
+`;
+const StartButton = styled.div`
+  width: 103px;
+  height: 59px;
+  border-radius: 40px;
+  background-color: #9296fd;
+  text-align: center;
+  margin: 100px 50px;
+  line-height: 59px;
+  font-family: 'yg-jalnan';
+  color: white;
+`;
+
 const ChatBox = styled.div`
   float: right;
 `;
-const VideoBox = styled.div`
-  width: 600px;
-  height: 400px;
-  border-radius: 300px;
-`;
+
 export default Ingame;

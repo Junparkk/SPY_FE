@@ -16,25 +16,29 @@ index e47b105..77a116b 100644
    position: absolute;
    top: 0;
 diff --git a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
-index 113aa86..04b0ccf 100644
+index 113aa86..cdeb4f3 100644
 --- a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
 +++ b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
-@@ -1,7 +1,7 @@
+@@ -1,10 +1,10 @@
  #header {
 -    color: #ffffff;
-+    color: transparent;
++    color: #ffffff00;
      height: 40px;
 -    background-color: #333333;
-+    background-color: transparent;
++    background-color: #bd2d2d00;
      padding: 0 14px 0 0;
      position: absolute;
-     top: 0;
+-    top: 0;
++    top: 100;
+     left: 0;
+     z-index: 999999;
+     min-width: 400px !important;
 @@ -15,7 +15,7 @@
    
    .headerLight{
      color: #706969 !important;
 -    background-color: #eeeeee !important;
-+    background-color: transparent !important;
++    background-color: #eeeeee00 !important;
    }
    
    #navSessionInfo {
