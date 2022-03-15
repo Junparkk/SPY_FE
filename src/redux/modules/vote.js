@@ -28,13 +28,18 @@ const getUserDB = (roomId) => {
     });
   };
 };
-//낮시간 투표
-const sendDayTimeVoteAPI = (roomId, userId) => {
+//낮시간 투표 선택인원 보내기
+const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId) => {
   return async function (dispatch, useState, { history }) {
-    await apis.dayTimeVote(roomId, userId).then(function (res) {
-      console.log(res.data.users);
-      dispatch(setUsers(res.data.users));
-    });
+    await apis
+      .dayTimeVote(chosenRoomId, userId, {
+        roundNo: round,
+        candidacy: chosenId,
+      })
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 };
 //낮시간 투표 결과
@@ -42,7 +47,6 @@ const resultDayTimeVoteAPI = (roomId) => {
   return async function (dispatch, useState, { history }) {
     await apis.dayTimeVoteResult(roomId).then(function (res) {
       console.log(res.data.users);
-      dispatch(setUsers(res.data.users));
     });
   };
 };

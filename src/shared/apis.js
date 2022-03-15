@@ -29,7 +29,11 @@ export const apis = {
   lawyerAct: (roomId) => api.patch(`/room/${roomId}/lawyerAct`),
   detectiveAct: (roomId) => api.get(`/room/${roomId}detectiveAct`),
   spyAct: (roomId) => api.patch(`/room/${roomId}/spyAct`),
-  dayTimeVote: (roomId, userId) =>
-    api.patch(`/room/${roomId}/voter/${userId}/vote`),
+  dayTimeVote: (roomId, userId, round, chosenId) =>
+    api.patch(`/room/${roomId}/voter/${userId}/vote`, round, chosenId),
   dayTimeVoteResult: (roomId) => api.get(`/room/${roomId}/voteResult`),
+  getGameRoundNo: (roomId) => api.get(`/room/${roomId}/roundNo`),
+
+  //AI 플레이어 생성
+  makeAiPlayer: (roomId) => api.put(`room/${roomId}/ai`),
 };

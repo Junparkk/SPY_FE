@@ -16,6 +16,7 @@ import '../components/Video.css';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 
 import VoteModal from '../components/VoteModal';
+import { apis } from '../shared/apis';
 
 //socket 서버
 const socket = io.connect('http://localhost:3001');
@@ -205,8 +206,13 @@ function Ingame(props) {
     (user) => user.userId === parseInt(userId)
   );
 
+  useEffect(() => {
+    gameStart();
+  }, []);
+
   function gameStart() {
     //게임스타트 함수 실행
+    dispatch(roomActions.roundNoAIP(roomId));
   }
 
   function daytimeVote() {
@@ -272,7 +278,7 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        {isShowing && <VoteModal isMe={findMe}></VoteModal>}
+        {/* {isShowing && <VoteModal isMe={findMe}></VoteModal>} */}
         <Draggable
           nodeRef={nodeRef}
           onDrag={(e, data) => trackPos(data)}
