@@ -7,10 +7,16 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const VoteModal = (props) => {
   const { isMe, roomId, _handleModal, children, ...rest } = props;
+  const dispatch = useDispatch();
 
   const user_list = useSelector((state) => state.vote.userList);
+  const round = useSelector((state) => state.room.round);
+  const userId = localStorage.getItem('userid');
+
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
+  const [chosenId, setChosenId] = useState(0);
+  const [chosenRoomId, setChosenRoomId] = useState(0);
 
   const ref = useRef();
 
@@ -18,11 +24,19 @@ const VoteModal = (props) => {
 
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
+    console.log(idx);
+    const chosen = user_list[idx];
+    setChosenId(chosen.userId);
+    setChosenRoomId(chosen.roomId);
   };
 
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       setSubmit(true);
+      //디스패치로 넘겨주기 넣기
+      dispatch(
+        voteActions.sendDayTimeVoteAPI(chosenRoomId, userId, round, chosenId)
+      );
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
