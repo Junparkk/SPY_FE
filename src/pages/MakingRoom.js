@@ -95,7 +95,7 @@ const Markingroom = () => {
             </TopText>
 
             <AntDiv>
-              {Array.from({ length: 10 }, (Ants, index) => {
+              {Array.from({ length: 8 }, (Ants, index) => {
                 return (
                   <Ant
                     key={index}

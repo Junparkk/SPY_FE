@@ -6,8 +6,13 @@ import { apis } from '../../shared/apis';
 
 // post
 const SET_USERS = 'SET_USERS';
+const SEND_VOTE = 'SEND_VOTE';
 
 const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
+const voteUsers = createAction(SEND_VOTE, (userId, roomId) => ({
+  userId,
+  roomId,
+}));
 
 const initialState = {
   userList: [],
@@ -29,18 +34,37 @@ const getUserDB = (roomId) => {
   };
 };
 
+//병우추가 변호사가 누굴 찍었는지
+const lawyerActDB = (roomId, roundNo, userId ) => {
+  return async function (dispatch, useState, { history }) {
+    await apis.lawyerAct( roomId,{
+      roundNo: roundNo, 
+      userId: userId
+    }).then(function (res) {
+      console.log(res.data.users);
+    //   // window.alert(res.data);
+    //   // dispatch(voteUsers(res.data.users));
+    });
+  };
+};
+
 export default handleActions(
   {
     [SET_USERS]: (state, action) =>
       produce(state, (draft) => {
         draft.userList = action.payload.users_list;
       }),
+    // [SEND_VOTE]: (state, action) =>
+    //   produce(state, (draft) => {
+    //     draft.userList = action.payload.users_list;
+    //   }),
   },
   initialState
 );
 
 const actionCreators = {
   getUserDB,
+  lawyerActDB,
 };
 
 export { actionCreators };

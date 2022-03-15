@@ -26,7 +26,7 @@ export const apis = {
   // changeStatus: (postId) => api.patch(`/api/status`, postId),
 
   //vote
-  lawyerAct: (roomId) => api.patch(`/room/${roomId}/lawyerAct`),
+  lawyerAct: (roomId, roundNo, userId) => api.patch(`/room/${roomId}/lawyerAct`,roundNo, userId),
   detectiveAct: (roomId) => api.get(`/room/${roomId}detectiveAct`),
   spyAct: (roomId) => api.patch(`/room/${roomId}/spyAct`),
   dayTimeVote: (roomId) => api.patch(`/room/${roomId}/dayTimeVote`),

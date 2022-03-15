@@ -16,12 +16,13 @@ const ADD_ROOM = 'ADD_ROOM';
 // const EDIT_POST = 'EDIT_POST';
 const ENTER_USER = 'ENTER_USER';
 const LEAVE_USER = 'LEAVE_USER';
-
+const ROUND_NUM = 'ROUND_NUM';
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 const leaveUser = createAction(LEAVE_USER, (leave_room) => ({ leave_room }));
+const roundNoInfo = createAction(ROUND_NUM, (round_num) => ({ round_num }));
 // const addPost = createAction(ADD_POST, (post) => ({ post }));
 // const editPost = createAction(EDIT_POST, (post_id, post) => ({
 //   post_id,
@@ -44,6 +45,7 @@ const initialState = {
     roomId: null,
     privateState: false,
   },
+  round: 0,
 };
 
 const initialPost = {
@@ -125,7 +127,7 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .catch((error) => {
         console.log(error.response.data.msg);
-        window.alert(error.msg);
+        window.alert(error.response.data.msg);
       });
   };
 };
@@ -199,6 +201,20 @@ const doStartAPI = (userId, roomId) => {
   };
 };
 
+const roundNoAIP = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .getGameRoundNo(roomId)
+      .then((res) => {
+        dispatch(roundNoInfo(res.data.roundNo));
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+};
+
 export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
@@ -237,6 +253,11 @@ export default handleActions(
       produce(state, (draft) => {
         draft.roomState.privateState = action.payload.privateState;
       }),
+    [ROUND_NUM]: (state, action) =>
+      produce(state, (draft) => {
+        console.log(action.payload.round_num);
+        draft.round = action.payload.round_num;
+      }),
   },
   initialState
 );
@@ -252,6 +273,7 @@ const actionCreators = {
   doReadyAPI,
   doStartAPI,
   cancelReadyAPI,
+  roundNoAIP,
 };
 
 export { actionCreators };
