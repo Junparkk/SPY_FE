@@ -4,7 +4,14 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
-  const userNick = localStorage.getItem('nickname')
+  const [change, setChange] = useState(false);
+  const userNick = localStorage.getItem('nickname');
+
+  const chageChat = () => {
+    setChange(!change);
+  };
+
+  const [selectUser, setSelectUser] = useState('');
 
   const sendMessage = async () => {
     if (currentMessage !== '') {
@@ -24,21 +31,28 @@ function Chat({ socket, username, room }) {
     }
   };
 
-
-
-
   useEffect(() => {
     socket.on('receive_message', (data) => {
       setMessageList((list) => [...list, data]);
     });
   }, [socket]);
 
+  //귓속말 기능 보류
+  // useEffect(() => {
+  //   socket.on('join_room', (roomNumber, nickName, socketId) => {
+  //     console.log(roomNumber, nickName, socketId);
+  //   });
+  // }, []);
+  // const userInfo = socket.on('join_room', (roomNumber, nickName, socketId) => {
+  //   console.log(roomNumber, nickName, socketId)
+  // })
+
   return (
     <div className="chat-window">
-      <div className="chat-header">
+      <div className="chat-header" onClick={chageChat}>
         <p>채팅</p>
       </div>
-      <div className="chat-body">
+      <div className={change ? 'chat-Longbody' : 'chat-body'}>
         <ScrollToBottom className="message-container">
           {messageList.map((messageContent) => {
             return (
@@ -54,7 +68,7 @@ function Chat({ socket, username, room }) {
                     <div className="message-content">
                       <p>{messageContent.message}</p>
                     </div>
-                    <div className="message-time" style={{display:"flex"}}>
+                    <div className="message-time" style={{ display: 'flex' }}>
                       <p id="time">{messageContent.time}</p>
                     </div>
                   </div>
@@ -68,7 +82,6 @@ function Chat({ socket, username, room }) {
         <input
           type="text"
           value={currentMessage}
-          placeholder="바른말 고운말~"
           onChange={(event) => {
             setCurrentMessage(event.target.value);
           }}
@@ -76,7 +89,7 @@ function Chat({ socket, username, room }) {
             event.key === 'Enter' && sendMessage();
           }}
         />
-        <button onClick={sendMessage}>&#9658;</button>
+        <button onClick={sendMessage}>전송</button>
       </div>
     </div>
   );

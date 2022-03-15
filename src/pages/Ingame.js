@@ -1,4 +1,5 @@
 import '../components/Chat.css';
+import '../shared/App.css';
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
@@ -12,6 +13,7 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import OpenViduSession from 'openvidu-react';
 import '../components/Video.css';
+import { RiArrowGoBackFill } from 'react-icons/ri';
 
 import VoteModal from '../components/VoteModal';
 
@@ -269,79 +271,106 @@ function Ingame(props) {
   ///////////////////////////////////////////////////////////////
   return (
     <>
-      {/* {isShowing && <VoteModal isMe={findMe}></VoteModal>} */}
-      {/* <Draggable
-        nodeRef={nodeRef}
-        onDrag={(e, data) => trackPos(data)}
-        onStart={handleStart}
-        onStop={handleEnd}
-      >
-        {/* <VideoBox>
-          <div id="session">
-            <OpenViduSession
-              sessionName={roomId}
-              user={userNick}
-              token={token}
-              // joinSession={handlerJoinSessionEvent}
-              // leaveSession={handlerLeaveSessionEvent}
-              error={handlerErrorEvent}
-            />
-          </div>
-        </VideoBox> */}
-      {/* </Draggable> */}
-
-      <div className="App">
-        <div className="joinChatContainer">
-          <input
-            type="text"
-            placeholder="닉네임을 입력해주세요"
-            onChange={(event) => {
-              setUsername(event.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="방 번호를 입력해주세요"
-            onChange={(event) => {
-              setRoom(event.target.value);
-            }}
-          />
-          <button onClick={joinChat}>참여하기</button>
-        </div>
-      </div>
-      <div>
+      <Wrap>
+        {isShowing && <VoteModal isMe={findMe}></VoteModal>}
         <Draggable
           nodeRef={nodeRef}
           onDrag={(e, data) => trackPos(data)}
           onStart={handleStart}
           onStop={handleEnd}
         >
-          <ChatBox>
-            <Chat socket={socket} username={username} room={roomId} />
-          </ChatBox>
+          <div id="session">
+            <OpenViduSession
+              id="opv-session"
+              sessionName={roomId}
+              user={userNick}
+              token={token}
+              joinSession={handlerJoinSessionEvent}
+              // leaveSession={handlerLeaveSessionEvent}
+              error={handlerErrorEvent}
+            />
+          </div>
         </Draggable>
-        <button onClick={leaveRoom}>방나가기</button>
-        {/* 사용자별 버튼 다르게 보여주는 이중삼항연산자 */}
-        {findMe[0] && findMe[0].isHost === 'N' ? (
-          isReady ? (
-            <button onClick={() => cancelReady()}>준비 취소하기</button>
-          ) : (
-            <button onClick={() => doReady()}>준비</button>
-          )
-        ) : (
-          <button onClick={() => doStart()}>시작하기</button>
-        )}
-      </div>
+
+        <div>
+          <Draggable
+            nodeRef={nodeRef}
+            onDrag={(e, data) => trackPos(data)}
+            onStart={handleStart}
+            onStop={handleEnd}
+          >
+            <ChatBox>
+              <Chat socket={socket} username={username} room={roomId} />
+            </ChatBox>
+          </Draggable>
+          <ButtonContainer>
+            <RiArrowGoBackFill
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '40px',
+                backgroundColor: '#9296fd',
+                cursor: 'pointer',
+                color: '#ffe179',
+                padding: '10px',
+                cursor: 'pointer',
+                margin: '100px 50px',
+              }}
+              onClick={leaveRoom}
+            />
+            {findMe[0] && findMe[0].isHost === 'N' ? (
+              isReady ? (
+                <ReadyButton onClick={() => cancelReady()}>
+                  준비취소
+                </ReadyButton>
+              ) : (
+                <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
+              )
+            ) : (
+              <StartButton onClick={() => doStart()}>시작</StartButton>
+            )}
+          </ButtonContainer>
+        </div>
+      </Wrap>
     </>
   );
 }
 
+const Wrap = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: #ffe179;
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const ReadyButton = styled.div`
+  width: 103px;
+  height: 59px;
+  border-radius: 40px;
+  background-color: #9296fd;
+  text-align: center;
+  margin: 100px 50px;
+  line-height: 59px;
+  font-family: 'yg-jalnan';
+  color: white;
+`;
+const StartButton = styled.div`
+  width: 103px;
+  height: 59px;
+  border-radius: 40px;
+  background-color: #9296fd;
+  text-align: center;
+  margin: 100px 50px;
+  line-height: 59px;
+  font-family: 'yg-jalnan';
+  color: white;
+`;
+
 const ChatBox = styled.div`
   float: right;
 `;
-const VideoBox = styled.div`
-  width: 500px;
-  height: 400px;
-  border-radius: 300px;
-`;
+
 export default Ingame;

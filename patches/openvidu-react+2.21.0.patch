@@ -1,0 +1,82 @@
+diff --git a/node_modules/openvidu-react/dist/assets/images/openvidu_logo.png b/node_modules/openvidu-react/dist/assets/images/openvidu_logo.png
+deleted file mode 100644
+index 79daf33..0000000
+Binary files a/node_modules/openvidu-react/dist/assets/images/openvidu_logo.png and /dev/null differ
+diff --git a/node_modules/openvidu-react/dist/components/VideoRoomComponent.css b/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
+index e47b105..77a116b 100644
+--- a/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
++++ b/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
+@@ -1,6 +1,6 @@
+ #header {
+-  color: #ffffff;
+-  background-color: #333333;
++  color: transparent;
++  background-color: transparent;
+   padding: 0 14px 0 0;
+   position: absolute;
+   top: 0;
+diff --git a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
+index 113aa86..cdeb4f3 100644
+--- a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
++++ b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
+@@ -1,10 +1,10 @@
+ #header {
+-    color: #ffffff;
++    color: #ffffff00;
+     height: 40px;
+-    background-color: #333333;
++    background-color: #bd2d2d00;
+     padding: 0 14px 0 0;
+     position: absolute;
+-    top: 0;
++    top: 100;
+     left: 0;
+     z-index: 999999;
+     min-width: 400px !important;
+@@ -15,7 +15,7 @@
+   
+   .headerLight{
+     color: #706969 !important;
+-    background-color: #eeeeee !important;
++    background-color: #eeeeee00 !important;
+   }
+   
+   #navSessionInfo {
+diff --git a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.js b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.js
+index 8a5baae..b19b8a9 100644
+--- a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.js
++++ b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.js
+@@ -69,8 +69,6 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
+ 
+ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+ 
+-var logo = require('../../assets/images/openvidu_logo.png');
+-
+ var ToolbarComponent = /*#__PURE__*/function (_Component) {
+   _inherits(ToolbarComponent, _Component);
+ 
+@@ -142,7 +140,6 @@ var ToolbarComponent = /*#__PURE__*/function (_Component) {
+   }, {
+     key: "render",
+     value: function render() {
+-      var mySessionId = this.props.sessionId;
+       var localUser = this.props.user;
+       return /*#__PURE__*/_react["default"].createElement(_AppBar["default"], {
+         className: "toolbar",
+@@ -150,16 +147,6 @@ var ToolbarComponent = /*#__PURE__*/function (_Component) {
+       }, /*#__PURE__*/_react["default"].createElement(_Toolbar["default"], {
+         className: "toolbar"
+       }, /*#__PURE__*/_react["default"].createElement("div", {
+-        id: "navSessionInfo"
+-      }, /*#__PURE__*/_react["default"].createElement("img", {
+-        id: "header_img",
+-        alt: "OpenVidu Logo",
+-        src: logo
+-      }), this.props.sessionId && /*#__PURE__*/_react["default"].createElement("div", {
+-        id: "titleContent"
+-      }, /*#__PURE__*/_react["default"].createElement("span", {
+-        id: "session-title"
+-      }, mySessionId))), /*#__PURE__*/_react["default"].createElement("div", {
+         className: "buttonsContent"
+       }, /*#__PURE__*/_react["default"].createElement(_IconButton["default"], {
+         color: "inherit",

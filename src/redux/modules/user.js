@@ -5,13 +5,16 @@ import axios from 'axios';
 //액션
 const SET_USER = 'SET_USER';
 const LOG_OUT = 'LOG_OUT';
+const RANDOM_NICK = 'RANDOM_NICK';
 
 //액션 생성
 const logout = createAction(LOG_OUT, (user) => ({ user }));
 const setUser = createAction(SET_USER, (user) => ({ user }));
+const randomNick = createAction(RANDOM_NICK, (user) => user);
 
 const initialState = {
   user: null,
+  randomNick: null,
 };
 
 const LoginCheckDB = () => {
@@ -64,16 +67,15 @@ const LoginDB = (nickname) => {
   };
 };
 
-const dubCheckNickFB = (nick) => {
+const RandomNickDB = () => {
   return function (dispatch, getState, { history }) {
     axios
-      .post('api 주소 입력', { user_nick: nick })
-      .then((response) => {
-        console.log(response);
-        window.alert(response.data.msg);
+      .get('http://mafia.milagros.shop/api/randomNick', {})
+      .then((res) => {
+        dispatch(randomNick(res.data.nick));
       })
       .catch((error) => {
-        console.log(error);
+        window.alert(error);
       });
   };
 };
@@ -91,15 +93,20 @@ export default handleActions(
         draft.user = null;
         draft.is_login = false;
       }),
+    [RANDOM_NICK]: (state, action) =>
+      produce(state, (draft) => {
+        draft.randomNick = action.payload
+      }),
   },
   initialState
 );
 
 const actionCreators = {
   LoginDB,
-  dubCheckNickFB,
   LogOutDB,
   LoginCheckDB,
+  RandomNickDB,
+  randomNick,
 };
 
 export { actionCreators };
