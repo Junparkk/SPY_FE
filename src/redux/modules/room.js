@@ -65,11 +65,12 @@ const initialPost = {
 const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
+      console.log(res);
       dispatch(setRoom(res.data.rooms));
     });
   };
 };
-
+//방들어가기
 const enterRoomDB = (userId, roomId, roomPwd) => {
   console.log(roomId);
   return async function (dispatch, getState, { history }) {
@@ -88,7 +89,7 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
       });
   };
 };
-
+//방 나가기
 const leaveRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
@@ -104,7 +105,7 @@ const leaveRoomDB = (nickname, roomId) => {
       })
       .catch((error) => {
         window.alert(error);
-        console.log(error.response.data.msg)
+        console.log(error.response.data.msg);
       });
   };
 };
@@ -123,11 +124,12 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
-        console.log(error.response.data.msg)
+        console.log(error.response.data.msg);
         window.alert(error.msg);
       });
   };
 };
+// 방 들어갈 때 패스워드 확인하기
 const roomPwCheckAPI = (userId, roomId, pwd) => {
   console.log(userId);
   console.log(parseInt(pwd));
@@ -143,8 +145,56 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
         history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
-        window.alert('비밀번호를 다시 확인해주세요');
-        console.log(error.response.data.msg)
+        window.alert(error.response.data.msg);
+      });
+  };
+};
+// 유저 방에서 레디하기
+const doReadyAPI = (userId, roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .ready(userId, roomId)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error.response.data.msg);
+      });
+  };
+};
+// 유저 방 레디 취소하기
+const cancelReadyAPI = (userId, roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .cancelReady(userId, roomId)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error.response.data.msg);
+      });
+  };
+};
+//방 시작하기
+const doStartAPI = (userId, roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .start(userId, roomId)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        const result = window.confirm(error.response.data.msg);
+        if (result) {
+          //시작하기
+        } else {
+          const secondResult = window.confirm('인원 수 줄여서 시작하냐?');
+          if (secondResult) {
+            //시작
+          } else {
+            //대기방으로
+          }
+        }
       });
   };
 };
@@ -199,6 +249,9 @@ const actionCreators = {
   privateRoom,
   privateState,
   roomPwCheckAPI,
+  doReadyAPI,
+  doStartAPI,
+  cancelReadyAPI,
 };
 
 export { actionCreators };
