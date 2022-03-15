@@ -28,6 +28,24 @@ const getUserDB = (roomId) => {
     });
   };
 };
+//낮시간 투표
+const sendDayTimeVoteAPI = (roomId, userId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis.dayTimeVote(roomId, userId).then(function (res) {
+      console.log(res.data.users);
+      dispatch(setUsers(res.data.users));
+    });
+  };
+};
+//낮시간 투표 결과
+const resultDayTimeVoteAPI = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis.dayTimeVoteResult(roomId).then(function (res) {
+      console.log(res.data.users);
+      dispatch(setUsers(res.data.users));
+    });
+  };
+};
 
 export default handleActions(
   {
@@ -41,6 +59,8 @@ export default handleActions(
 
 const actionCreators = {
   getUserDB,
+  sendDayTimeVoteAPI,
+  resultDayTimeVoteAPI,
 };
 
 export { actionCreators };

@@ -23,6 +23,7 @@ const VoteModal = (props) => {
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       setSubmit(true);
+      //디스패치로 넘겨주기 넣기
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }

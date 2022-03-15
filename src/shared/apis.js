@@ -29,5 +29,7 @@ export const apis = {
   lawyerAct: (roomId) => api.patch(`/room/${roomId}/lawyerAct`),
   detectiveAct: (roomId) => api.get(`/room/${roomId}detectiveAct`),
   spyAct: (roomId) => api.patch(`/room/${roomId}/spyAct`),
-  dayTimeVote: (roomId) => api.patch(`/room/${roomId}/dayTimeVote`),
+  dayTimeVote: (roomId, userId) =>
+    api.patch(`/room/${roomId}/voter/${userId}/vote`),
+  dayTimeVoteResult: (roomId) => api.get(`/room/${roomId}/voteResult`),
 };
