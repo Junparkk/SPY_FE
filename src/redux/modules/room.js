@@ -17,6 +17,10 @@ const ADD_ROOM = 'ADD_ROOM';
 const ENTER_USER = 'ENTER_USER';
 const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
+<<<<<<< HEAD
+=======
+
+>>>>>>> a61235805ee79953c2146cff33b7893878e2bdeb
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
@@ -183,20 +187,44 @@ const doStartAPI = (userId, roomId) => {
     await apis
       .start(userId, roomId)
       .then((res) => {
+        //정상 실행
+        if (res.data.msg === '시작!') {
+          console.log(res);
+        } else {
+          const firstCheck = window.confirm(res.data.msg);
+          if (firstCheck) {
+            //AI로 실행
+            apis.makeAiPlayer(roomId).then((res) => console.log(res));
+          } else {
+            //AI로 실행 거절
+            const secondCheck = window.confirm(
+              '바로 시작 가능 인원으로 시작 하시겠습니까?'
+            );
+            if (secondCheck) {
+              //인원수 줄여서 시작
+            } else {
+              //대기실로 돌아가기
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        window.confirm(error.response.data.msg);
+      });
+  };
+};
+
+//방 라운드 정보
+const roundNoAIP = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .getGameRoundNo(roomId)
+      .then((res) => {
+        dispatch(roundNoInfo(res.data.roundNo));
         console.log(res);
       })
       .catch((error) => {
-        const result = window.confirm(error.response.data.msg);
-        if (result) {
-          //시작하기
-        } else {
-          const secondResult = window.confirm('인원 수 줄여서 시작하냐?');
-          if (secondResult) {
-            //시작
-          } else {
-            //대기방으로
-          }
-        }
+        console.log(error);
       });
   };
 };

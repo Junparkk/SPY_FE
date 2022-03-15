@@ -33,6 +33,28 @@ const getUserDB = (roomId) => {
     });
   };
 };
+//낮시간 투표 선택인원 보내기
+const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .dayTimeVote(chosenRoomId, userId, {
+        roundNo: round,
+        candidacy: chosenId,
+      })
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  };
+};
+//낮시간 투표 결과
+const resultDayTimeVoteAPI = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis.dayTimeVoteResult(roomId).then(function (res) {
+      console.log(res.data.users);
+    });
+  };
+};
 
 //병우추가 변호사가 누굴 찍었는지
 const lawyerActDB = (roomId, roundNo, userId ) => {
@@ -64,6 +86,8 @@ export default handleActions(
 
 const actionCreators = {
   getUserDB,
+  sendDayTimeVoteAPI,
+  resultDayTimeVoteAPI,
   lawyerActDB,
 };
 

@@ -100,12 +100,12 @@ const Markingroom = () => {
                   <Ant
                     key={index}
                     onClick={() => {
-                      if (index + 1 < 6) {
-                        window.alert(
-                          '게임 최소 인원은 6명입니다. 다시 설정해주세요.'
-                        );
-                        return;
-                      }
+                      // if (index + 1 < 6) {
+                      //   window.alert(
+                      //     '게임 최소 인원은 6명입니다. 다시 설정해주세요.'
+                      //   );
+                      //   return;
+                      // }
                       setCount(index + 1);
                     }}
                     src={count < index + 1 ? Null : Logo}
@@ -228,7 +228,7 @@ const AntDiv = styled.div`
   margin: 49px auto 85px auto;
   justify-content: center;
   align-items: center;
-  clear:both;
+  clear: both;
 `;
 
 const Ant = styled.img`
@@ -247,13 +247,12 @@ const DoorDiv = styled.div`
   justify-content: center;
   align-items: center;
   margin: auto;
-  clear:both;
+  clear: both;
 `;
 
 const DoorImg = styled.img`
   width: 100.33px;
   height: 145.69px;
   margin: 0px 30.5px 0px 30.5px;
-
 `;
 export default Markingroom;

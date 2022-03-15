@@ -29,5 +29,11 @@ export const apis = {
   lawyerAct: (roomId, roundNo, userId) => api.patch(`/room/${roomId}/lawyerAct`,roundNo, userId),
   detectiveAct: (roomId) => api.get(`/room/${roomId}detectiveAct`),
   spyAct: (roomId) => api.patch(`/room/${roomId}/spyAct`),
-  dayTimeVote: (roomId) => api.patch(`/room/${roomId}/dayTimeVote`),
+  dayTimeVote: (roomId, userId, round, chosenId) =>
+    api.patch(`/room/${roomId}/voter/${userId}/vote`, round, chosenId),
+  dayTimeVoteResult: (roomId) => api.get(`/room/${roomId}/voteResult`),
+  getGameRoundNo: (roomId) => api.get(`/room/${roomId}/roundNo`),
+
+  //AI 플레이어 생성
+  makeAiPlayer: (roomId) => api.put(`room/${roomId}/ai`),
 };

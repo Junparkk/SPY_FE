@@ -16,7 +16,11 @@ import '../components/Video.css';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 
 import VoteModal from '../components/VoteModal';
+<<<<<<< HEAD
 import LawyerVoteModal from '../components/LawyerVoteModal';
+=======
+import { apis } from '../shared/apis';
+>>>>>>> a61235805ee79953c2146cff33b7893878e2bdeb
 
 //socket 서버
 const socket = io.connect('http://localhost:3001');
@@ -205,9 +209,18 @@ function Ingame(props) {
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
   );
+<<<<<<< HEAD
   console.log(findMe)
+=======
+
+  useEffect(() => {
+    gameStart();
+  }, []);
+
+>>>>>>> a61235805ee79953c2146cff33b7893878e2bdeb
   function gameStart() {
     //게임스타트 함수 실행
+    dispatch(roomActions.roundNoAIP(roomId));
   }
 
   function daytimeVote() {
@@ -299,6 +312,7 @@ function Ingame(props) {
             />
           </div>
         </Draggable>
+
         <div>
           <Draggable
             nodeRef={nodeRef}
