@@ -15,7 +15,11 @@ export const apis = {
   ready: (roomId, userId) => api.patch(`/room/${roomId}/user/${userId}/ready`),
   cancelReady: (roomId, userId) =>
     api.patch(`/room/${roomId}/user/${userId}/cancelReady`),
-  start: (roomId, userId) => api.patch(`/room/${roomId}/user/${userId}/start`),
+  checkStart: (roomId, userId) => api.get(`/room/${roomId}/user/${userId}/msg`),
+  start: (roomId) => api.patch(`/room/${roomId}/start`),
+  changeMaxPlayer: (roomId, changeMaxLength) =>
+    api.patch(`/room/${roomId}/changeMaxPlayer`, changeMaxLength),
+  getRole: (roomId) => api.patch(`/room/${roomId}/role`),
   // post: (postId) => api.get(`/api/posts/${postId}`),
   // add: (title, price, imgurl, content) =>
   //   api.post('/api/posts', title, price, imgurl, content),
