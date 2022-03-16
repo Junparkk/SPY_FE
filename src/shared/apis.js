@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://mafia.milagros.shop/api',
+  baseURL: 'https://mafia.milagros.shop/api',
   headers: {
     'content-type': 'application/json;charset=UTF-8',
     accept: 'application/json,',

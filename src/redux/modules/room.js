@@ -54,7 +54,7 @@ const initialPost = {
   title: '아이폰 10',
   content: '아이폰 팔아요',
   price: 1000,
-  imgurl: 'http://gi.esmplus.com/dodomae/NAR/Monami/pluspen3000.jpg',
+  imgurl: 'https://gi.esmplus.com/dodomae/NAR/Monami/pluspen3000.jpg',
   createdAt: '2022-02-22',
   updatedAt: '2022-02-25',
   nickname: 'fasdfasdf',
@@ -78,7 +78,7 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
   console.log(roomId);
   return async function (dispatch, getState, { history }) {
     await axios
-      .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
+      .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: null,
       })
       .then((res) => {
@@ -96,13 +96,12 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
 const leaveRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .patch(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
+      .patch(`https://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
         nickname: nickname,
         roomId: roomId,
       })
       .then((response) => {
         dispatch(leaveUser(response.data.user));
-        // dispatch(liveUser(response.data.user));
         console.log(response);
         window.location.replace('/');
       })
@@ -116,7 +115,7 @@ const leaveRoomDB = (nickname, roomId) => {
 const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .post(`http://mafia.milagros.shop/api/room/user/${userId}`, {
+      .post(`https://mafia.milagros.shop/api/room/user/${userId}`, {
         roomName,
         maxPlayer,
         roomPwd,
@@ -140,7 +139,7 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
   return async function (dispatch, useState, { history }) {
     console.log(pwd);
     await axios
-      .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
+      .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: pwd,
       })
       .then((res) => {

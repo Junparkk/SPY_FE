@@ -8,6 +8,8 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.26.0",
     "connected-react-router": "6.8.0",
+    "firebase": "^9.6.8",
+    "firebase-tools": "^10.3.0",
     "history": "4.10.1",
     "immer": "^9.0.12",
     "openvidu-browser": "^2.21.0",
