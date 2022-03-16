@@ -17,10 +17,7 @@ const ADD_ROOM = 'ADD_ROOM';
 const ENTER_USER = 'ENTER_USER';
 const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
-<<<<<<< HEAD
-=======
 
->>>>>>> a61235805ee79953c2146cff33b7893878e2bdeb
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
@@ -44,7 +41,7 @@ const initialState = {
   list: [],
   post: [],
   comments: [],
-  room: [], // 병우추가
+  room: [],
   roomState: {
     roomId: null,
     privateState: false,
@@ -215,20 +212,6 @@ const doStartAPI = (userId, roomId) => {
 };
 
 //방 라운드 정보
-const roundNoAIP = (roomId) => {
-  return async function (dispatch, useState, { history }) {
-    await apis
-      .getGameRoundNo(roomId)
-      .then((res) => {
-        dispatch(roundNoInfo(res.data.roundNo));
-        console.log(res);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-};
-
 const roundNoAIP = (roomId) => {
   return async function (dispatch, useState, { history }) {
     await apis

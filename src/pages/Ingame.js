@@ -15,12 +15,13 @@ import OpenViduSession from 'openvidu-react';
 import '../components/Video.css';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 
+//컴포넌트
 import VoteModal from '../components/VoteModal';
-<<<<<<< HEAD
 import LawyerVoteModal from '../components/LawyerVoteModal';
-=======
+import DetectiveVoteModal from '../components/DetectiveVoteModal';
+import SpyVoteModal from '../components/SpyVoteModal';
+import JobCheckModal from '../components/JobCheckModal';
 import { apis } from '../shared/apis';
->>>>>>> a61235805ee79953c2146cff33b7893878e2bdeb
 
 //socket 서버
 const socket = io.connect('http://localhost:3001');
@@ -205,19 +206,16 @@ function Ingame(props) {
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
   }, []);
+  const round = useSelector((state) => state.room.round);
   // 유저리스트에서 본인 정보만 뽑아 내기
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
   );
-<<<<<<< HEAD
-  console.log(findMe)
-=======
 
   useEffect(() => {
     gameStart();
   }, []);
 
->>>>>>> a61235805ee79953c2146cff33b7893878e2bdeb
   function gameStart() {
     //게임스타트 함수 실행
     dispatch(roomActions.roundNoAIP(roomId));
@@ -237,14 +235,12 @@ function Ingame(props) {
     const notiTimer = setTimeout(() => {}, 3000);
     return () => clearTimeout(notiTimer);
   }
-  
-//병우 추가
-  function nightDoLawyerVote(userId) {
+
+  //병우 추가
+  function nightDoLawyerVote() {
     console.log('변호사 투표');
 
-    const notiTimer = setTimeout(() => {
-      dispatch(voteActions.lawyerActDB(userId))
-    }, 3000);
+    const notiTimer = setTimeout(() => {}, 3000);
     return () => clearTimeout(notiTimer);
   }
 
@@ -324,37 +320,43 @@ function Ingame(props) {
               <Chat socket={socket} username={username} room={roomId} />
             </ChatBox>
           </Draggable>
-          <ButtonContainer>
-            <RiArrowGoBackFill
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '40px',
-                backgroundColor: '#9296fd',
-                cursor: 'pointer',
-                color: '#ffe179',
-                padding: '10px',
-                cursor: 'pointer',
-                margin: '100px 50px',
-              }}
-              onClick={leaveRoom}
-            />
-            {findMe[0] && findMe[0].isHost === 'N' ? (
-              isReady ? (
-                <ReadyButton onClick={() => cancelReady()}>
-                  준비취소
-                </ReadyButton>
+
+          {round >= 1 ? null : (
+            <ButtonContainer>
+              <RiArrowGoBackFill
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '40px',
+                  backgroundColor: '#9296fd',
+                  cursor: 'pointer',
+                  color: '#ffe179',
+                  padding: '10px',
+                  cursor: 'pointer',
+                  margin: '100px 50px',
+                }}
+                onClick={leaveRoom}
+              />
+              {findMe[0] && findMe[0].isHost === 'N' ? (
+                isReady ? (
+                  <ReadyButton onClick={() => cancelReady()}>
+                    준비취소
+                  </ReadyButton>
+                ) : (
+                  <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
+                )
               ) : (
-                <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
-              )
-            ) : (
-              <StartButton onClick={() => doStart()}>시작</StartButton>
-            )}
-          </ButtonContainer>
+                <StartButton onClick={() => doStart()}>시작</StartButton>
+              )}
+            </ButtonContainer>
+          )}
 
-          {/* 변호사추가 */}
+          {/* 변호사추가  + 탐정 추가 */}
+          {/* 근데 자연스럽게 뜨고 사라지는건 어떻게 구현? */}
           {/* <LawyerVoteModal/> */}
-
+          {/* <DetectiveVoteModal/> */}
+          {/* <SpyVoteModal/> */}
+          <JobCheckModal roomId={roomId}/>
         </div>
       </Wrap>
     </>

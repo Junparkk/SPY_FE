@@ -5,53 +5,139 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { actionCreators as voteActions } from '../redux/modules/vote';
 
-const VoteModal = (props) => {
+// 스파이 모달
+const SpyVoteModal = (props) => {
   const { isMe, roomId, _handleModal, children, ...rest } = props;
   const dispatch = useDispatch();
-
-  const user_list = useSelector((state) => state.vote.userList);
   const round = useSelector((state) => state.room.round);
-  const userId = localStorage.getItem('userid');
-
+  const user_list = useSelector((state) => state.vote.userList);
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-
   const ref = useRef();
 
-  console.log('투표모달안에 몇명?', user_list.length);
+  // 스파이 모달을 first, second 만들어서 첫번쨰 모달에는 백으로 보내지 않고 킵해두기 ( 누가 첫번째 투표할지는 인덱스 앞에 있는 애 or 랜덤)
+  // 두번째 모달 띄울때 컨펌이 나와서 동의하는지 안하는지 true, false로 값 바디
+  // true일 때 바로 dispatch
+  // false일 때
 
+  //스파이 목록
+  const spy_list = user_list.filter((user) => user.role === 4);
+  //   console.log(spy_list);
+
+  // 투표 사람 클릭
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
-    console.log(idx);
     const chosen = user_list[idx];
-    setChosenId(chosen.userId);
+    setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
-  };
+    let pickNick = chosen.user.nickname;
 
-  const submitClicked = () => {
-    if (voteBtnClicked !== null) {
+    let text = `선택한 유저는 ${pickNick} 입니다. 해고 하시겠습니까?`;
+    if (window.confirm(text) === true || voteBtnClicked !== null) {
+      window.alert(`${pickNick} 해고를 동의하였습니다.`);
+      dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
       setSubmit(true);
-      //디스패치로 넘겨주기 넣기
-      dispatch(
-        voteActions.sendDayTimeVoteAPI(chosenRoomId, userId, round, chosenId)
-      );
     } else {
-      window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
+      window.alert(`${pickNick} 해고를 반대하였습니다.`);
     }
   };
+
+//   스파이끼리의 선택이 다르다면? 
+//   근데 각각 동시에 투표모달을 띄우기 vs 스파이한놈 먼저 선택 후 다음 스파이가 선택
+
+//////////////////////다른방법////////////////////////////
+
+//스파이 모두 같은 유저 선택 안했다면
+// 스파이의 인원수 > 스파이가 선택한 수
+// 얘네 둘은 넘기면 안된다.
+
+// 첫번쨰 선택한 값, 둘다(or 셋다) 선택한 값 받아오기
+// 만약 2번째 파라미터가 아니라면 리턴 첫번쨰 값 백엔드로
+// else if - (2번쨰 파라미터 길이 < 스파이 인원수) 리턴 첫번째 값 백엔드로
+// else  2번쨰 값 리턴 백엔드로
+
+
+
+  //   다른스파이가 누르고 확인 -> 이전애랑 넌 같지 않다
+  //   if (spy_list) {
+  //     dispatch;
+  //     if (role === 4) {
+  //       window.confirm('동의? ');
+  //     }
+  //   }
+
+  //   const voteSpy = (idx) => {
+  //     setVoteBtnClicked(idx);
+  //     const chosen = user_list[idx];
+  //     setChosenId(chosen.user.id);
+  //     setChosenRoomId(chosen.roomId);
+  //     let pickNick = chosen.user.nickname;
+
+  //     let text = `다른 스파이가 선택한 유저는 ${pickNick} 입니다.`
+  //       if (window.confirm(text) === true ) {
+  //         text = `${pickNick} 해고를 동의하였습니다.`;
+  //       } else {
+  //         text = `${pickNick} 해고를 반대하였습니다.`;
+  //       }
+
+  // if (spy_list.length === 1) {
+  //   if (voteBtnClicked !== null) {
+  //     dispatch(voteActions.detectiveActDB(chosenRoomId, chosenId));
+  //     setSubmit(true);
+  //   } else {
+  //     window.alert('해고 시킬 직원을 선택해주세요. :)');
+  //   }
+  // } else if (spy_list.length > 2) {
+
+  // }
+  //   };
+
+  //예외
+  //   [...spySelectUser].length > 1
+  //   spyCnt > spySelectUser
+  //   const exception = () => {
+  //     if (spy_list.length !== chosenId.length) {
+  //       console.log(spy_list.length);
+  //       return;
+  //     } else if (spy_list.length > chosenId.length) {
+  //       return;
+  //     }
+  //   };
+  //   // 최종
+  //   const spyVoteResult = (chosenId, lastChosenId) => {
+  //     if (!lastChosenId) {
+  //       console.log(lastChosenId);
+  //       return chosenId;
+  //     } else if (lastChosenId.length < spy_list.length) {
+  //       return chosenId;
+  //     } else {
+  //       return lastChosenId;
+  //     }
+  //   };
+
+  // 투표 값 서버로 전달
+  const submitClicked = () => {
+    if (voteBtnClicked !== null) {
+      dispatch(voteActions.detectiveActDB(chosenRoomId, chosenId));
+      setSubmit(true);
+    } else {
+      window.alert('해고 시킬 직원을 선택해주세요. :)');
+    }
+  };
+
   console.log(submit);
+
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest}>
         <Contents size="4rem">투표</Contents>
         <Contents margin="1rem" size="2rem">
-          가장 스파이로 의심되는 사람에게 투표하세요.
+          해고 시킬 직원을 선택해주세요.
         </Contents>
 
-        
         {/* 롤을 부여받은대로 보여줘야함 */}
         {(() => {
           if (user_list.length <= 6) {
@@ -109,8 +195,11 @@ const VoteModal = (props) => {
             </VotePlayerWrap>;
           }
         })()}
+
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn>선택 완료</SendBtn>
+        <SendBtn disabled={submit} onClick={submitClicked}>
+          선택 완료
+        </SendBtn>
       </ModalBlock>
     </Container>,
     document.getElementById('VoteModal')
@@ -198,6 +287,7 @@ const JobCheckImg = styled.div`
   background-color: blueviolet;
   margin: auto;
   opacity: ${(props) => props.opacity};
+  pointer-events: ${(props) => props.pointerEvents};
   @media screen and (min-width: 551px) and (max-width: 1065px) {
     width: 100px;
     height: 100px;
@@ -240,4 +330,4 @@ const SendBtn = styled.button`
   background-color: white;
 `;
 
-export default VoteModal;
+export default SpyVoteModal;

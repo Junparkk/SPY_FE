@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { actionCreators as voteActions } from '../redux/modules/vote';
 
-const JobCheckModal = (props) => {
+const JobCheckModal = ({ roomId }, props) => {
   const { _handleModal, children, ...rest } = props;
+  console.log(props)
+  const dispatch = useDispatch();
+  // const [roomId, setRoomId] = useState()
+  const [_roomId, setRoomId] = useState({roomId});
+  const room_id = _roomId.roomId
+  const userId = localStorage.getItem('userid');
+
+  console.log(room_id , "룸 아이디!!!");
+  console.log(userId , "아이디!!!");
+
+  useEffect(() => {
+    // 디스패치 룰 부여
+    dispatch(voteActions.divisionRole( room_id))
+  }, []);
+
+  const user_role = useSelector((state) => state.vote.users)
+  console.log(user_role)
+  // if role = 1 
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest}>
+        
         <JobCheckImg></JobCheckImg>
         <Contents size="80px">쉿!</Contents>
         <Contents size="40px">당신은 {children}</Contents>

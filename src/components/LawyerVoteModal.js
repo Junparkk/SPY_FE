@@ -25,16 +25,17 @@ const LawyerVoteModal = (props) => {
     setVoteBtnClicked(idx);
     console.log(idx);
     const chosen = user_list[idx];
-    setChosenId(chosen.id);
+    setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
     console.log(chosen);
-    console.log(chosen.id, '유저 아이디');
+    console.log(chosen.user.id, '유저 아이디');
     console.log(chosen.roomId, '룸 아이디');
+    console.log(chosen.user, "제발");
   };
 
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
-      dispatch(voteActions.lawyerActDB(chosenRoomId, round, chosenId));
+      dispatch(voteActions.lawyerActDB(chosenRoomId, chosenId));
       setSubmit(true);
     } else {
       window.alert('해고 당할거 같은 직원을 선택해주세요 :)');

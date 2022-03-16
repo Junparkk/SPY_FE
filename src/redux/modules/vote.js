@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
-import { immerable, produce } from 'immer';
+import { produce } from 'immer';
 
 import axios from 'axios';
 import { apis } from '../../shared/apis';
@@ -7,12 +7,11 @@ import { apis } from '../../shared/apis';
 // post
 const SET_USERS = 'SET_USERS';
 const SEND_VOTE = 'SEND_VOTE';
+const ROLE_GIVE = 'ROLE_GIVE';
 
 const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
-const voteUsers = createAction(SEND_VOTE, (userId, roomId) => ({
-  userId,
-  roomId,
-}));
+const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
+const giveUsers = createAction(ROLE_GIVE, (users) => ({ users }));
 
 const initialState = {
   userList: [],
@@ -20,6 +19,8 @@ const initialState = {
     roomId: null,
     privateState: false,
   },
+  userId: [],
+  users:[],
 };
 
 //middleware
@@ -56,17 +57,76 @@ const resultDayTimeVoteAPI = (roomId) => {
   };
 };
 
-//병우추가 변호사가 누굴 찍었는지
-const lawyerActDB = (roomId, roundNo, userId ) => {
+//변호사 투표
+const lawyerActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
-    await apis.lawyerAct( roomId,{
-      roundNo: roundNo, 
-      userId: userId
-    }).then(function (res) {
-      console.log(res.data.users);
-    //   // window.alert(res.data);
-    //   // dispatch(voteUsers(res.data.users));
-    });
+    console.log(roomId, userId, '변호사');
+    await apis
+      .lawyerAct(
+        roomId,
+        userId
+        // roundNo: roundNo,
+      )
+      .then(function (res) {
+        console.log(res.data);
+        window.alert(res.data.msg);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+//탐정 투표
+const detectiveActDB = (roomId, userId) => {
+  return async function (dispatch, useState, { history }) {
+    console.log(userId, '탐정 리듀서');
+    await apis
+      .detectiveAct(roomId, userId)
+      .then(function (res) {
+        console.log(res.data);
+        window.alert(res.data.msg);
+        // dispatch(answerUsers(res.data.userId));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+//스파이 투표
+const spyActDB = (roomId, userId) => {
+  return async function (dispatch, useState, { history }) {
+    console.log(userId, '스파이 리듀서');
+    await apis
+      .spyAct(
+        roomId,
+        userId
+        // roundNo: roundNo,
+      )
+      .then(function (res) {
+        console.log(res.data);
+        window.alert(res.data.msg);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+//룰 부여
+const divisionRole = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .role(roomId)
+      .then(function (res) {
+        window.alert(res.data.msg);
+        dispatch(giveUsers(res.data.users));
+        console.log(res.data.users);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 };
 
@@ -78,8 +138,16 @@ export default handleActions(
       }),
     // [SEND_VOTE]: (state, action) =>
     //   produce(state, (draft) => {
-    //     draft.userList = action.payload.users_list;
+    //     draft.userId = action.payload.userId;
+    //     console.log(draft.userId);
+    //     console.log(action.payload);
     //   }),
+    [ROLE_GIVE]: (state, action) =>
+      produce(state, (draft) => {
+        draft.users = action.payload.users;
+        console.log(draft.users);
+        console.log(action.payload);
+      }),
   },
   initialState
 );
@@ -89,6 +157,9 @@ const actionCreators = {
   sendDayTimeVoteAPI,
   resultDayTimeVoteAPI,
   lawyerActDB,
+  detectiveActDB,
+  spyActDB,
+  divisionRole,
 };
 
 export { actionCreators };
