@@ -51,7 +51,7 @@ const LogOutDB = () => {
 const LoginDB = (nickname) => {
   return function (dispatch, getState, { history }) {
     axios
-      .post('http://mafia.milagros.shop/api/user', {
+      .post('https://mafia.milagros.shop/api/user', {
         nickname: nickname,
       })
       .then((response) => {
@@ -70,7 +70,7 @@ const LoginDB = (nickname) => {
 const RandomNickDB = () => {
   return function (dispatch, getState, { history }) {
     axios
-      .get('http://mafia.milagros.shop/api/randomNick', {})
+      .get('https://mafia.milagros.shop/api/randomNick', {})
       .then((res) => {
         dispatch(randomNick(res.data.nick));
       })
