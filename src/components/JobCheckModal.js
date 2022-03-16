@@ -16,13 +16,15 @@ const JobCheckModal = ({ roomId }, props) => {
   console.log(room_id , "룸 아이디!!!");
   console.log(userId , "아이디!!!");
 
+
+  // 게임 시작 하고 바로 적용 될수 있도록 로직짜기
   useEffect(() => {
     // 디스패치 룰 부여
     dispatch(voteActions.divisionRole( room_id))
   }, []);
 
-  const user_role = useSelector((state) => state.vote.users)
-  console.log(user_role)
+  const user_role = useSelector((state) => state.vote.userList)
+  console.log(user_role.role)
   // if role = 1 
   return createPortal(
     <Container>

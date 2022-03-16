@@ -322,7 +322,7 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        {isShowing && <VoteModal isMe={findMe}></VoteModal>}
+        {/* {isShowing && <VoteModal isMe={findMe}></VoteModal>} */}
         <Draggable
           nodeRef={nodeRef}
           onDrag={(e, data) => trackPos(data)}

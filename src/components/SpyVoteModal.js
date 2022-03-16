@@ -60,63 +60,6 @@ const SpyVoteModal = (props) => {
 
 
 
-  //   다른스파이가 누르고 확인 -> 이전애랑 넌 같지 않다
-  //   if (spy_list) {
-  //     dispatch;
-  //     if (role === 4) {
-  //       window.confirm('동의? ');
-  //     }
-  //   }
-
-  //   const voteSpy = (idx) => {
-  //     setVoteBtnClicked(idx);
-  //     const chosen = user_list[idx];
-  //     setChosenId(chosen.user.id);
-  //     setChosenRoomId(chosen.roomId);
-  //     let pickNick = chosen.user.nickname;
-
-  //     let text = `다른 스파이가 선택한 유저는 ${pickNick} 입니다.`
-  //       if (window.confirm(text) === true ) {
-  //         text = `${pickNick} 해고를 동의하였습니다.`;
-  //       } else {
-  //         text = `${pickNick} 해고를 반대하였습니다.`;
-  //       }
-
-  // if (spy_list.length === 1) {
-  //   if (voteBtnClicked !== null) {
-  //     dispatch(voteActions.detectiveActDB(chosenRoomId, chosenId));
-  //     setSubmit(true);
-  //   } else {
-  //     window.alert('해고 시킬 직원을 선택해주세요. :)');
-  //   }
-  // } else if (spy_list.length > 2) {
-
-  // }
-  //   };
-
-  //예외
-  //   [...spySelectUser].length > 1
-  //   spyCnt > spySelectUser
-  //   const exception = () => {
-  //     if (spy_list.length !== chosenId.length) {
-  //       console.log(spy_list.length);
-  //       return;
-  //     } else if (spy_list.length > chosenId.length) {
-  //       return;
-  //     }
-  //   };
-  //   // 최종
-  //   const spyVoteResult = (chosenId, lastChosenId) => {
-  //     if (!lastChosenId) {
-  //       console.log(lastChosenId);
-  //       return chosenId;
-  //     } else if (lastChosenId.length < spy_list.length) {
-  //       return chosenId;
-  //     } else {
-  //       return lastChosenId;
-  //     }
-  //   };
-
   // 투표 값 서버로 전달
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
