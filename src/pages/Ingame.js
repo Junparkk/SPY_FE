@@ -203,9 +203,8 @@ function Ingame(props) {
   //현재 방에 접속해 있는 리스트 뽑아내기
 
   const roomUserList = useSelector((state) => state.vote.userList);
-  const voteCheck = useSelector((state) => state.vote.voteCheck);
   const round = useSelector((state) => state.room.round);
-  console.log(voteCheck);
+
   const changeMaxLength = roomUserList.length;
 
   // 유저리스트에서 본인 정보만 뽑아 내기
@@ -234,35 +233,13 @@ function Ingame(props) {
   function daytimeVote() {
     const notiTimer = setTimeout(() => {
       setState('showVoteResult');
-      // setIsShowing(false);
-
-      // const promise = new Promise((resolve, reject) => {
-      //   resolve(setIsShowing(false));
-      //   console.log('이거먼저');
-      // });
-
-      // //유저가 투표를 안하면 랜덤으로 값 보내고 투표를 하면 그냥 둔다
-      // if (voteCheck === false) {
-      //   promise.then(() =>
-      //     dispatch(
-      //       voteActions.sendDayTimeVoteAPI(findMe.roomId, userId, round, 0)
-      //     )
-      //   );
-      // } else {
-      //   promise
-      //     .then
-      //     // () => dispatch(voteActions.voteCheck(false))
-      //     ();
-      // }
-
-      // .then((res) => console.log('hi', res))
-      // .catch((err) => console.log(err));
     }, 5000);
     return () => clearTimeout(notiTimer);
   }
 
   function showVoteResult() {
     console.log('결과함수보여주기');
+    dispatch(voteActions.invalidVote(roomId, round));
 
     const notiTimer = setTimeout(() => {}, 3000);
     return () => clearTimeout(notiTimer);

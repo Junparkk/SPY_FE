@@ -41,7 +41,7 @@ const initialState = {
   list: [],
   post: [],
   comments: [],
-  room: [],
+  room: [], // 병우추가
   roomState: {
     roomId: null,
     privateState: false,
@@ -112,7 +112,7 @@ const leaveRoomDB = (nickname, roomId) => {
       });
   };
 };
-//방 만들기
+//병우 추가
 const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
   return function (dispatch, getState, { history }) {
     axios
@@ -128,7 +128,7 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .catch((error) => {
         console.log(error.response.data.msg);
-        window.alert(error.response.data.msg);
+        window.alert(error.msg);
       });
   };
 };

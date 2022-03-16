@@ -14,8 +14,6 @@ const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
 // const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
 const giveUsers = createAction(ROLE_GIVE, (users) => ({ users }));
 
-const voteCheck = createAction(VOTE_CHECK, (check_state) => ({ check_state }));
-
 const initialState = {
   userList: [],
   dayTimeVoteModalState: {
@@ -24,7 +22,6 @@ const initialState = {
   },
   userId: [],
   users: [],
-  voteCheck: false,
 };
 
 //middleware
@@ -134,6 +131,20 @@ const divisionRole = (roomId) => {
   };
 };
 
+// 아무 입력 없으면 자동으로 무효표 처리
+const invalidVote = (roomId, roundNo) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .sendInvalidVote(roomId, roundNo)
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
 export default handleActions(
   {
     [SET_USERS]: (state, action) =>
@@ -152,23 +163,19 @@ export default handleActions(
         console.log(draft.users);
         console.log(action.payload);
       }),
-    [VOTE_CHECK]: (state, action) =>
-      produce(state, (draft) => {
-        draft.voteCheck = action.payload.check_state;
-      }),
   },
   initialState
 );
 
 const actionCreators = {
   getUserDB,
-  voteCheck,
   sendDayTimeVoteAPI,
   resultDayTimeVoteAPI,
   lawyerActDB,
   detectiveActDB,
   spyActDB,
   divisionRole,
+  invalidVote,
 };
 
 export { actionCreators };
