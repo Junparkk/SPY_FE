@@ -1,17 +1,20 @@
 import { createAction, handleActions } from 'redux-actions';
 import { produce } from 'immer';
 
-import axios from 'axios';
+// import axios from 'axios';
 import { apis } from '../../shared/apis';
 
 // post
 const SET_USERS = 'SET_USERS';
-const SEND_VOTE = 'SEND_VOTE';
+// const SEND_VOTE = 'SEND_VOTE';
 const ROLE_GIVE = 'ROLE_GIVE';
+const VOTE_CHECK = 'VOTE_CHECK';
 
 const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
-const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
+// const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
 const giveUsers = createAction(ROLE_GIVE, (users) => ({ users }));
+
+const voteCheck = createAction(VOTE_CHECK, (check_state) => ({ check_state }));
 
 const initialState = {
   userList: [],
@@ -20,7 +23,8 @@ const initialState = {
     privateState: false,
   },
   userId: [],
-  users:[],
+  users: [],
+  voteCheck: false,
 };
 
 //middleware
@@ -148,12 +152,17 @@ export default handleActions(
         console.log(draft.users);
         console.log(action.payload);
       }),
+    [VOTE_CHECK]: (state, action) =>
+      produce(state, (draft) => {
+        draft.voteCheck = action.payload.check_state;
+      }),
   },
   initialState
 );
 
 const actionCreators = {
   getUserDB,
+  voteCheck,
   sendDayTimeVoteAPI,
   resultDayTimeVoteAPI,
   lawyerActDB,

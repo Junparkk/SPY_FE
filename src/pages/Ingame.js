@@ -196,36 +196,68 @@ function Ingame(props) {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
   ///////////////////////////////////////////////////////////
-  const [state, setState] = useState('dayTimeVote');
+  const [state, setState] = useState('gameStart');
   const [isShowing, setIsShowing] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   //현재 방에 접속해 있는 리스트 뽑아내기
+
   const roomUserList = useSelector((state) => state.vote.userList);
-  console.log(roomUserList);
-  useEffect(() => {
-    dispatch(voteActions.getUserDB(roomId));
-  }, []);
+  const voteCheck = useSelector((state) => state.vote.voteCheck);
   const round = useSelector((state) => state.room.round);
+  console.log(voteCheck);
+  const changeMaxLength = roomUserList.length;
+
   // 유저리스트에서 본인 정보만 뽑아 내기
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
   );
-
+  console.log(findMe);
   useEffect(() => {
-    gameStart();
+    dispatch(voteActions.getUserDB(roomId));
   }, []);
+
+  // useEffect(() => {
+  //   gameStart();
+  // }, []);
 
   function gameStart() {
     //게임스타트 함수 실행
     dispatch(roomActions.roundNoAIP(roomId));
+    const notiTimer = setTimeout(() => {
+      setState('dayTimeVote');
+      setIsShowing(true);
+    }, 5000);
+    return () => clearTimeout(notiTimer);
   }
 
   function daytimeVote() {
     const notiTimer = setTimeout(() => {
-      setIsShowing(true);
-    }, 3000);
+      setState('showVoteResult');
+      // setIsShowing(false);
 
+      // const promise = new Promise((resolve, reject) => {
+      //   resolve(setIsShowing(false));
+      //   console.log('이거먼저');
+      // });
+
+      // //유저가 투표를 안하면 랜덤으로 값 보내고 투표를 하면 그냥 둔다
+      // if (voteCheck === false) {
+      //   promise.then(() =>
+      //     dispatch(
+      //       voteActions.sendDayTimeVoteAPI(findMe.roomId, userId, round, 0)
+      //     )
+      //   );
+      // } else {
+      //   promise
+      //     .then
+      //     // () => dispatch(voteActions.voteCheck(false))
+      //     ();
+      // }
+
+      // .then((res) => console.log('hi', res))
+      // .catch((err) => console.log(err));
+    }, 5000);
     return () => clearTimeout(notiTimer);
   }
 
@@ -255,6 +287,7 @@ function Ingame(props) {
   useEffect(() => {
     switch (state) {
       case 'gameStart':
+        gameStart();
         break;
       case 'dayTimeVote':
         daytimeVote();
@@ -283,13 +316,13 @@ function Ingame(props) {
     setIsReady(!isReady);
   };
   const doStart = () => {
-    dispatch(roomActions.doStartAPI(roomId, userId));
+    dispatch(roomActions.doStartAPI(roomId, userId, changeMaxLength));
   };
   ///////////////////////////////////////////////////////////////
   return (
     <>
       <Wrap>
-        {/* {isShowing && <VoteModal isMe={findMe}></VoteModal>} */}
+        {isShowing && <VoteModal isMe={findMe}></VoteModal>}
         <Draggable
           nodeRef={nodeRef}
           onDrag={(e, data) => trackPos(data)}
@@ -356,7 +389,7 @@ function Ingame(props) {
           {/* <LawyerVoteModal/> */}
           {/* <DetectiveVoteModal/> */}
           {/* <SpyVoteModal/> */}
-          <JobCheckModal roomId={roomId}/>
+          {/* <JobCheckModal roomId={roomId}/> */}
         </div>
       </Wrap>
     </>

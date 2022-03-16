@@ -153,10 +153,10 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
   };
 };
 // 유저 방에서 레디하기
-const doReadyAPI = (userId, roomId) => {
+const doReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .ready(userId, roomId)
+      .ready(roomId, userId)
       .then((res) => {
         console.log(res);
       })
@@ -166,10 +166,10 @@ const doReadyAPI = (userId, roomId) => {
   };
 };
 // 유저 방 레디 취소하기
-const cancelReadyAPI = (userId, roomId) => {
+const cancelReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .cancelReady(userId, roomId)
+      .cancelReady(roomId, userId)
       .then((res) => {
         console.log(res);
       })
@@ -179,19 +179,28 @@ const cancelReadyAPI = (userId, roomId) => {
   };
 };
 //방 시작하기
-const doStartAPI = (userId, roomId) => {
+const doStartAPI = (roomId, userId, changeMaxLength) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .start(userId, roomId)
+      .checkStart(roomId, userId)
       .then((res) => {
-        //정상 실행
+        console.log(res);
+        // 정상 실행
         if (res.data.msg === '시작!') {
           console.log(res);
         } else {
           const firstCheck = window.confirm(res.data.msg);
           if (firstCheck) {
             //AI로 실행
-            apis.makeAiPlayer(roomId).then((res) => console.log(res));
+            apis
+              .makeAiPlayer(roomId)
+              .then((res) => {
+                apis
+                  .start(roomId)
+                  .then((res) => console.log(res))
+                  .catch((err) => console.log(err));
+              })
+              .catch((err) => console.log(err));
           } else {
             //AI로 실행 거절
             const secondCheck = window.confirm(
@@ -199,13 +208,23 @@ const doStartAPI = (userId, roomId) => {
             );
             if (secondCheck) {
               //인원수 줄여서 시작
+              if (changeMaxLength < 6) {
+                window.alert('최소 플레이 가능 인원은 6명입니다.');
+              } else {
+                apis
+                  .changeMaxPlayer(roomId, { maxPlayer: changeMaxLength })
+                  .then((res) => console.log(res))
+                  .catch((err) => console.log(err));
+              }
             } else {
               //대기실로 돌아가기
+              window.alert('대기실로 돌아갑니다.');
             }
           }
         }
       })
       .catch((error) => {
+        console.log(error);
         window.confirm(error.response.data.msg);
       });
   };
@@ -214,6 +233,7 @@ const doStartAPI = (userId, roomId) => {
 //방 라운드 정보
 const roundNoAIP = (roomId) => {
   return async function (dispatch, useState, { history }) {
+    console.log(roomId);
     await apis
       .getGameRoundNo(roomId)
       .then((res) => {

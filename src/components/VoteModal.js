@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,7 +20,7 @@ const VoteModal = (props) => {
 
   const ref = useRef();
 
-  console.log('투표모달안에 몇명?', user_list.length);
+  console.log('투표모달안에 몇명?', user_list);
 
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
@@ -37,10 +37,52 @@ const VoteModal = (props) => {
       dispatch(
         voteActions.sendDayTimeVoteAPI(chosenRoomId, userId, round, chosenId)
       );
+      dispatch(voteActions.voteCheck(true));
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
   };
+
+  const aiAutoVoting = () => {
+    console.log(user_list);
+
+    console.log(round);
+    for (let i = 0; i < user_list.length; i++) {
+      const chooseRandomPlayer = Math.floor(Math.random() * user_list.length);
+      console.log(user_list[i]);
+      if (user_list[i].isAi === 'Y') {
+        console.log(i);
+        dispatch(
+          voteActions.sendDayTimeVoteAPI(
+            user_list[i].roomId,
+            user_list[i].userId,
+            round,
+            user_list[chooseRandomPlayer].userId
+          )
+        );
+      }
+    }
+
+    // user_list.map((p, i) => {
+    //   if (p.isAi === 'Y') {
+    //     console.log(p.userId);
+    //     console.log(chooseRandomPlayer);
+    //     dispatch(
+    //       voteActions.sendDayTimeVoteAPI(
+    //         chosenRoomId,
+    //         p.userId,
+    //         round,
+    //         chooseRandomPlayer
+    //       )
+    //     );
+    //   }
+    // });
+  };
+
+  useEffect(() => {
+    aiAutoVoting();
+  }, [round]);
+
   console.log(submit);
   return createPortal(
     <Container>
