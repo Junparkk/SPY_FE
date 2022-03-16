@@ -1,8 +1,7 @@
 #join, #session {
-    margin: auto;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 72vh;
+    height: 100vh;
     width: 100%;
 }

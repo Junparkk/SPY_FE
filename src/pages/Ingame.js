@@ -1,5 +1,6 @@
 import '../components/Chat.css';
 import '../shared/App.css';
+import '../components/Video.css';
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
@@ -9,66 +10,56 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
-import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
-import OpenViduSession from 'openvidu-react';
-import '../components/Video.css';
 import { RiArrowGoBackFill } from 'react-icons/ri';
-
-import VoteModal from '../components/VoteModal';
+import { OpenVidu } from 'openvidu-browser';
+import UserVideoComponent from '../UserVideoComponent';
+import Video from './Video';
 
 //socket 서버
-const socket = io.connect('http://localhost:3001');
+const socket = io.connect('http://3.38.211.55:4000');
 //openvidu 서버
-const OPENVIDU_SERVER_URL = 'https://' + window.location.hostname + ':4443';
+const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
 
 function Ingame(props) {
-  //채팅
-  const dispatch = useDispatch();
-  const userId = localStorage.getItem('userid');
-  const roomId = props.match.params.roomId;
-  const [username, setUsername] = useState('');
-  const [room, setRoom] = useState('');
-  const [showChat, setShowChat] = useState(false);
-  const [session, setSession] = useState('');
-  const userNick = localStorage.getItem('nickname');
-  //화상채팅
-  const [token, setToken] = useState(undefined);
+  //화상 채팅
+  const [session, setSession] = useState(undefined);
+  const [mainStreamManager, setMainStreamManager] = useState(undefined);
+  const [publisher, setPublisher] = useState(undefined);
+  const [subscribers, setSubscribers] = useState([]);
+  const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined);
 
-  const handlerJoinSessionEvent = () => {
-    console.log('Join session');
-  };
-  // const handlerLeaveSessionEvent = () => {
-  //   console.log('Leave session');
-  //   setMySessionId(undefined);
-  // };
-  const handlerErrorEvent = () => {
-    console.log('Leave session');
+  const onbeforeunload = () => {
+    leaveSession();
   };
 
-  // const handleChangeSessionId = (e) => {
-  //   setMySessionId(e.target.value);
-  // };
+  const handleMainVideoStream = (stream) => {
+    if (mainStreamManager !== stream) {
+      setMainStreamManager({
+        mainStreamManager: stream,
+      });
+    }
+  };
 
-  // const handleChangeUserName = (e) => {
-  //   setMyUsername(e.target.value);
-  // };
+  const deleteSubscriber = (streamManager) => {
+    let subscribers = subscribers;
+    let index = subscribers.indexOf(streamManager, 0);
+    if (index > -1) {
+      subscribers.splice(index, 1);
+      setSubscribers({
+        subscribers: subscribers,
+      });
+    }
+  };
 
-  // const joinSession = (event) => {
-  //   if (roomId && userNick) {
-  //     getToken().then((token) => {
-  //       setMySessionId();
-  //       setToken(token);
-  //     });
-  //   }
-  //   event.preventDefault();
-  // };
+  function getToken(roomId) {
+    return createSession(roomId).then((sessionId) => createToken(sessionId));
+  }
 
-  const createSession = () => {
+  function createSession(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = JSON.stringify({ customSessionId: roomId });
-
+      var data = JSON.stringify({ customSessionId: sessionId });
       axios
         .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
           headers: {
@@ -77,14 +68,14 @@ function Ingame(props) {
             'Content-Type': 'application/json',
           },
         })
-        .then((res) => {
-          console.log('CREATE SESION', res);
-          resolve(res.data.id);
+        .then((response) => {
+          console.log('CREATE SESION', response);
+          resolve(response.data.id);
         })
         .catch((response) => {
           var error = Object.assign({}, response);
-          if (error.response && error.response.status === 409) {
-            resolve(roomId);
+          if (error?.response?.status === 409) {
+            resolve(sessionId);
           } else {
             console.log(error);
             console.warn(
@@ -108,10 +99,11 @@ function Ingame(props) {
           }
         });
     });
-  };
-  const createToken = (sessionId) => {
+  }
+
+  function createToken(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = JSON.stringify({});
+      var data = {};
       axios
         .post(
           OPENVIDU_SERVER_URL +
@@ -133,12 +125,139 @@ function Ingame(props) {
         })
         .catch((error) => reject(error));
     });
+  }
+
+  function joinSession() {
+    const OV = new OpenVidu();
+
+    setSession({ session: OV.initSession() }, () => {
+      var mySession = roomId;
+
+      mySession.on('streamCreates', (event) => {
+        var subscriber = mySession.subscribe(event.stream, undefined);
+        subscribers.push(subscriber);
+
+        setSubscribers(subscribers);
+      });
+
+      mySession.on('streamDestroyed', (event) => {
+        deleteSubscriber(event.stream.streamManager);
+      });
+
+      mySession.on('exception', (exception) => {
+        console.worn(exception);
+      });
+
+      getToken().then((token) => {
+        mySession
+          .connect(token, { clientData: userNick })
+          .then(async () => {
+            var devices = await OV.getDevices();
+            var videoDevices = devices.filter(
+              (device) => device.kind === 'videoinput'
+            );
+
+            let publisher = OV.initPublisher(undefined, {
+              audioSource: undefined, // The source of audio. If undefined default microphone
+              videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
+              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              resolution: '640x480', // The resolution of your video
+              frameRate: 30, // The frame rate of your video
+              insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
+              mirror: false, // Whether to mirror your local video or not
+            });
+
+            mySession.publish(publisher);
+
+            setCurrentVideoDevice(videoDevices[0]);
+            setMainStreamManager(publisher);
+            setPublisher(publisher);
+          })
+          .catch((err) => {
+            console.log(
+              'There was an error connecting to the session:',
+              err.code,
+              err.message
+            );
+          });
+      });
+    });
+  }
+
+  const leaveSession = () => {
+    const mySession = session;
+    const OV = new OpenVidu();
+
+    if (mySession) {
+      mySession.disconnect();
+    }
+
+    OV = null;
+    setSession(undefined);
+    setSubscribers([]);
+    setMainStreamManager(undefined);
+    setPublisher(undefined);
   };
 
-  const getToken = () => {
-    return createSession(roomId)
-      .then((roomId) => createToken(roomId))
-      .catch((Err) => console.error(Err));
+  async function switchCamera() {
+    const OV = new OpenVidu();
+
+    try {
+      const devices = await OV.getDevices();
+      var videoDevices = devices.filter(
+        (device) => device.kind === 'videoinput'
+      );
+
+      if (videoDevices && videoDevices.length > 1) {
+        var newVideoDevice = videoDevices.filter(
+          (device) => device.deviceId !== currentVideoDevice.deviceId
+        );
+
+        if (newVideoDevice.length > 0) {
+          // Creating a new publisher with specific videoSource
+          // In mobile devices the default and first camera is the front one
+          var newPublisher = OV.initPublisher(undefined, {
+            videoSource: newVideoDevice[0].deviceId,
+            publishAudio: true,
+            publishVideo: true,
+            mirror: true,
+          });
+
+          //newPublisher.once("accessAllowed", () => {
+          await session.unpublish(mainStreamManager);
+
+          await session.publish(newPublisher);
+
+          setCurrentVideoDevice(newVideoDevice);
+          setMainStreamManager(newPublisher);
+          setPublisher(newPublisher);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', onbeforeunload);
+    return () => {
+      window.removeEventListener('beforeunload', onbeforeunload);
+    };
+  }, []);
+
+  //채팅
+  const dispatch = useDispatch();
+  const userId = localStorage.getItem('userid');
+  const roomId = props.match.params.roomId;
+  const [username, setUsername] = useState('');
+  const [room, setRoom] = useState('');
+  const [showChat, setShowChat] = useState(false);
+  const [chatView, setChatView] = useState(false);
+  const userNick = localStorage.getItem('nickname');
+
+  const Chatting = () => {
+    setChatView(!chatView);
   };
 
   //채팅창 드레그
@@ -165,22 +284,7 @@ function Ingame(props) {
     joinChat();
   }, []);
 
-  //백엔드 서버와 통신 가능한 비디오
-  const joinVideo = () => {
-    const OV = new OpenVidu();
-
-    setSession({ session: OV.initSession() }, () => {
-      let mySession = session.session;
-      mySession.on('streamCreated', (event) => {
-        let subscriber = mySession.subscribe(event.stream, undefined);
-        let subscribers = session.subscribers;
-        subscribers.push(subscriber);
-
-        setSession({ subscribers });
-      });
-    });
-  };
-
+  // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
     socket.emit('join_room', roomId, userNick);
     setShowChat(true);
@@ -200,6 +304,7 @@ function Ingame(props) {
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
   }, []);
+
   // 유저리스트에서 본인 정보만 뽑아 내기
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
@@ -273,47 +378,21 @@ function Ingame(props) {
     <>
       <Wrap>
         {/* {isShowing && <VoteModal isMe={findMe}></VoteModal>} */}
-        <Draggable
-          nodeRef={nodeRef}
-          onDrag={(e, data) => trackPos(data)}
-          onStart={handleStart}
-          onStop={handleEnd}
-        >
-          <div id="session">
-            <OpenViduSession
-              id="opv-session"
-              sessionName={roomId}
-              user={userNick}
-              token={token}
-              joinSession={handlerJoinSessionEvent}
-              // leaveSession={handlerLeaveSessionEvent}
-              error={handlerErrorEvent}
-            />
-          </div>
-        </Draggable>
         <div>
-          <Draggable
-            nodeRef={nodeRef}
-            onDrag={(e, data) => trackPos(data)}
-            onStart={handleStart}
-            onStop={handleEnd}
-          >
-            <ChatBox>
-              <Chat socket={socket} username={username} room={roomId} />
-            </ChatBox>
-          </Draggable>
+          <Video roomId={roomId} />
           <ButtonContainer>
             <RiArrowGoBackFill
               style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '40px',
+                width: '30px',
+                height: '30px',
+                borderRadius: '30px',
                 backgroundColor: '#9296fd',
                 cursor: 'pointer',
                 color: '#ffe179',
                 padding: '10px',
                 cursor: 'pointer',
-                margin: '100px 50px',
+                marginLeft: "100px",
+                zIndex: '100000',
               }}
               onClick={leaveRoom}
             />
@@ -328,7 +407,20 @@ function Ingame(props) {
             ) : (
               <StartButton onClick={() => doStart()}>시작</StartButton>
             )}
+            <ChatButton onClick={Chatting}>채팅창</ChatButton>
           </ButtonContainer>
+          {chatView ? (
+            <Draggable
+              nodeRef={nodeRef}
+              onDrag={(e, data) => trackPos(data)}
+              onStart={handleStart}
+              onStop={handleEnd}
+            >
+              <ChatBox>
+                <Chat socket={socket} username={username} room={roomId} />
+              </ChatBox>
+            </Draggable>
+          ) : null}
         </div>
       </Wrap>
     </>
@@ -339,37 +431,65 @@ const Wrap = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #ffe179;
+  //반응형 손봐야함
+  @media screen and (min-width: 663px) {
+    width: 100%;
+    height: 100vh;
+  }
 `;
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
 `;
 
 const ReadyButton = styled.div`
-  width: 103px;
+  width: 6.2%;
+  min-width: 60px;
   height: 59px;
   border-radius: 40px;
   background-color: #9296fd;
   text-align: center;
-  margin: 100px 50px;
   line-height: 59px;
   font-family: 'yg-jalnan';
   color: white;
+  z-index: 100000;
+  margin-left: 100px;
+  cursor: pointer;
 `;
 const StartButton = styled.div`
-  width: 103px;
+  width: 6.2%;
+  min-width: 60px;
   height: 59px;
   border-radius: 40px;
   background-color: #9296fd;
   text-align: center;
-  margin: 100px 50px;
   line-height: 59px;
   font-family: 'yg-jalnan';
   color: white;
+  z-index: 100000;
+  margin-left: 100px;
+  cursor: pointer;
+`;
+
+const ChatButton = styled.div`
+  width: 6.2%;
+  min-width: 60px;
+  height: 59px;
+  border-radius: 40px;
+  background-color: #9296fd;
+  text-align: center;
+  line-height: 59px;
+  font-family: 'yg-jalnan';
+  color: white;
+  z-index: 100000;
+  margin-left: 100px;
+  cursor: pointer;
 `;
 
 const ChatBox = styled.div`
+  position: absolute;
   float: right;
+  z-index: 100000;
+  margin: -380px 50px 0px 70%;
 `;
 
 export default Ingame;
