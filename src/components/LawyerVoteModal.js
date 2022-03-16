@@ -1,87 +1,48 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { actionCreators as voteActions } from '../redux/modules/vote';
 
-const VoteModal = (props) => {
+// 변호사 모달
+const LawyerVoteModal = (props) => {
   const { isMe, roomId, _handleModal, children, ...rest } = props;
+  console.log(props);
   const dispatch = useDispatch();
-
-  const user_list = useSelector((state) => state.vote.userList);
   const round = useSelector((state) => state.room.round);
-  const userId = localStorage.getItem('userid');
-
+  console.log(round)
+  const user_list = useSelector((state) => state.vote.userList);
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-
   const ref = useRef();
 
-  console.log('투표모달안에 몇명?', user_list);
+  console.log('투표모달안에 몇명?', user_list.length);
 
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
     console.log(idx);
     const chosen = user_list[idx];
-    setChosenId(chosen.userId);
+    setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
+    console.log(chosen);
+    console.log(chosen.user.id, '유저 아이디');
+    console.log(chosen.roomId, '룸 아이디');
+    console.log(chosen.user, "제발");
   };
 
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
+      dispatch(voteActions.lawyerActDB(chosenRoomId, chosenId));
       setSubmit(true);
-      //디스패치로 넘겨주기 넣기
-      dispatch(
-        voteActions.sendDayTimeVoteAPI(chosenRoomId, userId, round, chosenId)
-      );
-      dispatch(voteActions.voteCheck(true));
     } else {
-      window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
+      window.alert('해고 당할거 같은 직원을 선택해주세요 :)');
     }
+    console.log(chosenId);
+    console.log(chosenRoomId);
   };
-
-  const aiAutoVoting = () => {
-    console.log(user_list);
-
-    console.log(round);
-    for (let i = 0; i < user_list.length; i++) {
-      const chooseRandomPlayer = Math.floor(Math.random() * user_list.length);
-      console.log(user_list[i]);
-      if (user_list[i].isAi === 'Y') {
-        console.log(i);
-        dispatch(
-          voteActions.sendDayTimeVoteAPI(
-            user_list[i].roomId,
-            user_list[i].userId,
-            round,
-            user_list[chooseRandomPlayer].userId
-          )
-        );
-      }
-    }
-
-    // user_list.map((p, i) => {
-    //   if (p.isAi === 'Y') {
-    //     console.log(p.userId);
-    //     console.log(chooseRandomPlayer);
-    //     dispatch(
-    //       voteActions.sendDayTimeVoteAPI(
-    //         chosenRoomId,
-    //         p.userId,
-    //         round,
-    //         chooseRandomPlayer
-    //       )
-    //     );
-    //   }
-    // });
-  };
-
-  useEffect(() => {
-    aiAutoVoting();
-  }, [round]);
 
   console.log(submit);
   return createPortal(
@@ -90,10 +51,9 @@ const VoteModal = (props) => {
       <ModalBlock {...rest}>
         <Contents size="4rem">투표</Contents>
         <Contents margin="1rem" size="2rem">
-          가장 스파이로 의심되는 사람에게 투표하세요.
+          해고 당할 거 같은 직원에게 투표하세요.
         </Contents>
 
-        
         {/* 롤을 부여받은대로 보여줘야함 */}
         {(() => {
           if (user_list.length <= 6) {
@@ -151,8 +111,11 @@ const VoteModal = (props) => {
             </VotePlayerWrap>;
           }
         })()}
+
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn>선택 완료</SendBtn>
+        <SendBtn disabled={submit} onClick={submitClicked}>
+          선택 완료
+        </SendBtn>
       </ModalBlock>
     </Container>,
     document.getElementById('VoteModal')
@@ -240,6 +203,7 @@ const JobCheckImg = styled.div`
   background-color: blueviolet;
   margin: auto;
   opacity: ${(props) => props.opacity};
+  pointer-events: ${(props) => props.pointerEvents};
   @media screen and (min-width: 551px) and (max-width: 1065px) {
     width: 100px;
     height: 100px;
@@ -282,4 +246,4 @@ const SendBtn = styled.button`
   background-color: white;
 `;
 
-export default VoteModal;
+export default LawyerVoteModal;

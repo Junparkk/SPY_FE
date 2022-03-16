@@ -16,8 +16,16 @@ import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
 
+//컴포넌트
+import VoteModal from '../components/VoteModal';
+import LawyerVoteModal from '../components/LawyerVoteModal';
+import DetectiveVoteModal from '../components/DetectiveVoteModal';
+import SpyVoteModal from '../components/SpyVoteModal';
+import JobCheckModal from '../components/JobCheckModal';
+import { apis } from '../shared/apis';
+
 //socket 서버
-const socket = io.connect('http://3.38.211.55:4000');
+const socket = io.connect('https://3.38.211.55:4000');
 //openvidu 서버
 const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
@@ -294,31 +302,71 @@ function Ingame(props) {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
   ///////////////////////////////////////////////////////////
-  const [state, setState] = useState('dayTimeVote');
+  const [state, setState] = useState('gameStart');
   const [isShowing, setIsShowing] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   //현재 방에 접속해 있는 리스트 뽑아내기
-  const roomUserList = useSelector((state) => state.vote.userList);
 
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
   }, []);
+  const roomUserList = useSelector((state) => state.vote.userList);
+  const voteCheck = useSelector((state) => state.vote.voteCheck);
+  const round = useSelector((state) => state.room.round);
+  console.log(voteCheck);
+  const changeMaxLength = roomUserList.length;
 
   // 유저리스트에서 본인 정보만 뽑아 내기
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
   );
+  console.log(findMe);
+  useEffect(() => {
+    dispatch(voteActions.getUserDB(roomId));
+  }, []);
+
+  // useEffect(() => {
+  //   gameStart();
+  // }, []);
 
   function gameStart() {
     //게임스타트 함수 실행
+    dispatch(roomActions.roundNoAIP(roomId));
+    const notiTimer = setTimeout(() => {
+      setState('dayTimeVote');
+      setIsShowing(true);
+    }, 5000);
+    return () => clearTimeout(notiTimer);
   }
 
   function daytimeVote() {
     const notiTimer = setTimeout(() => {
-      setIsShowing(true);
-    }, 3000);
+      setState('showVoteResult');
+      // setIsShowing(false);
 
+      // const promise = new Promise((resolve, reject) => {
+      //   resolve(setIsShowing(false));
+      //   console.log('이거먼저');
+      // });
+
+      // //유저가 투표를 안하면 랜덤으로 값 보내고 투표를 하면 그냥 둔다
+      // if (voteCheck === false) {
+      //   promise.then(() =>
+      //     dispatch(
+      //       voteActions.sendDayTimeVoteAPI(findMe.roomId, userId, round, 0)
+      //     )
+      //   );
+      // } else {
+      //   promise
+      //     .then
+      //     // () => dispatch(voteActions.voteCheck(false))
+      //     ();
+      // }
+
+      // .then((res) => console.log('hi', res))
+      // .catch((err) => console.log(err));
+    }, 5000);
     return () => clearTimeout(notiTimer);
   }
 
@@ -329,8 +377,12 @@ function Ingame(props) {
     return () => clearTimeout(notiTimer);
   }
 
+  //병우 추가
   function nightDoLawyerVote() {
-    //변호사 함수 실행
+    console.log('변호사 투표');
+
+    const notiTimer = setTimeout(() => {}, 3000);
+    return () => clearTimeout(notiTimer);
   }
 
   function nightDoDetectiveVote() {
@@ -344,6 +396,7 @@ function Ingame(props) {
   useEffect(() => {
     switch (state) {
       case 'gameStart':
+        gameStart();
         break;
       case 'dayTimeVote':
         daytimeVote();
@@ -352,6 +405,7 @@ function Ingame(props) {
         showVoteResult();
         break;
       case 'nightDoLawyerVote':
+        nightDoLawyerVote();
         break;
       case 'nightDoDetectiveVote':
         break;
@@ -371,7 +425,7 @@ function Ingame(props) {
     setIsReady(!isReady);
   };
   const doStart = () => {
-    dispatch(roomActions.doStartAPI(roomId, userId));
+    dispatch(roomActions.doStartAPI(roomId, userId, changeMaxLength));
   };
   ///////////////////////////////////////////////////////////////
   return (
@@ -380,35 +434,6 @@ function Ingame(props) {
         {/* {isShowing && <VoteModal isMe={findMe}></VoteModal>} */}
         <div>
           <Video roomId={roomId} />
-          <ButtonContainer>
-            <RiArrowGoBackFill
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '30px',
-                backgroundColor: '#9296fd',
-                cursor: 'pointer',
-                color: '#ffe179',
-                padding: '10px',
-                cursor: 'pointer',
-                marginLeft: "100px",
-                zIndex: '100000',
-              }}
-              onClick={leaveRoom}
-            />
-            {findMe[0] && findMe[0].isHost === 'N' ? (
-              isReady ? (
-                <ReadyButton onClick={() => cancelReady()}>
-                  준비취소
-                </ReadyButton>
-              ) : (
-                <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
-              )
-            ) : (
-              <StartButton onClick={() => doStart()}>시작</StartButton>
-            )}
-            <ChatButton onClick={Chatting}>채팅창</ChatButton>
-          </ButtonContainer>
           {chatView ? (
             <Draggable
               nodeRef={nodeRef}
@@ -421,6 +446,44 @@ function Ingame(props) {
               </ChatBox>
             </Draggable>
           ) : null}
+          {round >= 1 ? null : (
+            <ButtonContainer>
+              <RiArrowGoBackFill
+                style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '30px',
+                  backgroundColor: '#9296fd',
+                  cursor: 'pointer',
+                  color: '#ffe179',
+                  padding: '10px',
+                  cursor: 'pointer',
+                  marginLeft: '100px',
+                  zIndex: '100000',
+                }}
+                onClick={leaveRoom}
+              />
+              {findMe[0] && findMe[0].isHost === 'N' ? (
+                isReady ? (
+                  <ReadyButton onClick={() => cancelReady()}>
+                    준비취소
+                  </ReadyButton>
+                ) : (
+                  <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
+                )
+              ) : (
+                <StartButton onClick={() => doStart()}>시작</StartButton>
+              )}
+              <ChatButton onClick={Chatting}>채팅창</ChatButton>
+            </ButtonContainer>
+          )}
+
+          {/* 변호사추가  + 탐정 추가 */}
+          {/* 근데 자연스럽게 뜨고 사라지는건 어떻게 구현? */}
+          {/* <LawyerVoteModal/> */}
+          {/* <DetectiveVoteModal/> */}
+          {/* <SpyVoteModal/> */}
+          {/* <JobCheckModal roomId={roomId}/> */}
         </div>
       </Wrap>
     </>

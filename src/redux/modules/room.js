@@ -16,12 +16,14 @@ const ADD_ROOM = 'ADD_ROOM';
 // const EDIT_POST = 'EDIT_POST';
 const ENTER_USER = 'ENTER_USER';
 const LEAVE_USER = 'LEAVE_USER';
+const ROUND_NUM = 'ROUND_NUM';
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 const leaveUser = createAction(LEAVE_USER, (leave_room) => ({ leave_room }));
+const roundNoInfo = createAction(ROUND_NUM, (round_num) => ({ round_num }));
 // const addPost = createAction(ADD_POST, (post) => ({ post }));
 // const editPost = createAction(EDIT_POST, (post_id, post) => ({
 //   post_id,
@@ -39,11 +41,12 @@ const initialState = {
   list: [],
   post: [],
   comments: [],
-  room: [], // 병우추가
+  room: [],
   roomState: {
     roomId: null,
     privateState: false,
   },
+  round: 0,
 };
 
 const initialPost = {
@@ -51,7 +54,7 @@ const initialPost = {
   title: '아이폰 10',
   content: '아이폰 팔아요',
   price: 1000,
-  imgurl: 'http://gi.esmplus.com/dodomae/NAR/Monami/pluspen3000.jpg',
+  imgurl: 'https://gi.esmplus.com/dodomae/NAR/Monami/pluspen3000.jpg',
   createdAt: '2022-02-22',
   updatedAt: '2022-02-25',
   nickname: 'fasdfasdf',
@@ -75,7 +78,7 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
   console.log(roomId);
   return async function (dispatch, getState, { history }) {
     await axios
-      .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
+      .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: null,
       })
       .then((res) => {
@@ -93,7 +96,7 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
 const leaveRoomDB = (nickname, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .patch(`http://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
+      .patch(`https://mafia.milagros.shop/api/out/${roomId}/user/${nickname}`, {
         nickname: nickname,
         roomId: roomId,
       })
@@ -108,11 +111,11 @@ const leaveRoomDB = (nickname, roomId) => {
       });
   };
 };
-//병우 추가
+//방 만들기
 const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .post(`http://mafia.milagros.shop/api/room/user/${userId}`, {
+      .post(`https://mafia.milagros.shop/api/room/user/${userId}`, {
         roomName,
         maxPlayer,
         roomPwd,
@@ -124,7 +127,7 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .catch((error) => {
         console.log(error.response.data.msg);
-        window.alert(error.msg);
+        window.alert(error.response.data.msg);
       });
   };
 };
@@ -136,7 +139,7 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
   return async function (dispatch, useState, { history }) {
     console.log(pwd);
     await axios
-      .put(`http://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
+      .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: pwd,
       })
       .then((res) => {
@@ -149,10 +152,10 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
   };
 };
 // 유저 방에서 레디하기
-const doReadyAPI = (userId, roomId) => {
+const doReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .ready(userId, roomId)
+      .ready(roomId, userId)
       .then((res) => {
         console.log(res);
       })
@@ -162,10 +165,10 @@ const doReadyAPI = (userId, roomId) => {
   };
 };
 // 유저 방 레디 취소하기
-const cancelReadyAPI = (userId, roomId) => {
+const cancelReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .cancelReady(userId, roomId)
+      .cancelReady(roomId, userId)
       .then((res) => {
         console.log(res);
       })
@@ -175,25 +178,69 @@ const cancelReadyAPI = (userId, roomId) => {
   };
 };
 //방 시작하기
-const doStartAPI = (userId, roomId) => {
+const doStartAPI = (roomId, userId, changeMaxLength) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .start(userId, roomId)
+      .checkStart(roomId, userId)
       .then((res) => {
+        console.log(res);
+        // 정상 실행
+        if (res.data.msg === '시작!') {
+          console.log(res);
+        } else {
+          const firstCheck = window.confirm(res.data.msg);
+          if (firstCheck) {
+            //AI로 실행
+            apis
+              .makeAiPlayer(roomId)
+              .then((res) => {
+                apis
+                  .start(roomId)
+                  .then((res) => console.log(res))
+                  .catch((err) => console.log(err));
+              })
+              .catch((err) => console.log(err));
+          } else {
+            //AI로 실행 거절
+            const secondCheck = window.confirm(
+              '바로 시작 가능 인원으로 시작 하시겠습니까?'
+            );
+            if (secondCheck) {
+              //인원수 줄여서 시작
+              if (changeMaxLength < 6) {
+                window.alert('최소 플레이 가능 인원은 6명입니다.');
+              } else {
+                apis
+                  .changeMaxPlayer(roomId, { maxPlayer: changeMaxLength })
+                  .then((res) => console.log(res))
+                  .catch((err) => console.log(err));
+              }
+            } else {
+              //대기실로 돌아가기
+              window.alert('대기실로 돌아갑니다.');
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        window.confirm(error.response.data.msg);
+      });
+  };
+};
+
+//방 라운드 정보
+const roundNoAIP = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    console.log(roomId);
+    await apis
+      .getGameRoundNo(roomId)
+      .then((res) => {
+        dispatch(roundNoInfo(res.data.roundNo));
         console.log(res);
       })
       .catch((error) => {
-        const result = window.confirm(error.response.data.msg);
-        if (result) {
-          //시작하기
-        } else {
-          const secondResult = window.confirm('인원 수 줄여서 시작하냐?');
-          if (secondResult) {
-            //시작
-          } else {
-            //대기방으로
-          }
-        }
+        console.log(error);
       });
   };
 };
@@ -236,6 +283,11 @@ export default handleActions(
       produce(state, (draft) => {
         draft.roomState.privateState = action.payload.privateState;
       }),
+    [ROUND_NUM]: (state, action) =>
+      produce(state, (draft) => {
+        console.log(action.payload.round_num);
+        draft.round = action.payload.round_num;
+      }),
   },
   initialState
 );
@@ -251,6 +303,7 @@ const actionCreators = {
   doReadyAPI,
   doStartAPI,
   cancelReadyAPI,
+  roundNoAIP,
 };
 
 export { actionCreators };
