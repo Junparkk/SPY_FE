@@ -6,8 +6,11 @@ import { apis } from '../../shared/apis';
 
 // post
 const SET_USERS = 'SET_USERS';
+const VOTE_CHECK = 'VOTE_CHECK';
 
 const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
+
+const voteCheck = createAction(VOTE_CHECK, (check_state) => ({ check_state }));
 
 const initialState = {
   userList: [],
@@ -15,6 +18,7 @@ const initialState = {
     roomId: null,
     privateState: false,
   },
+  voteCheck: false,
 };
 
 //middleware
@@ -57,12 +61,17 @@ export default handleActions(
       produce(state, (draft) => {
         draft.userList = action.payload.users_list;
       }),
+    [VOTE_CHECK]: (state, action) =>
+      produce(state, (draft) => {
+        draft.voteCheck = action.payload.check_state;
+      }),
   },
   initialState
 );
 
 const actionCreators = {
   getUserDB,
+  voteCheck,
   sendDayTimeVoteAPI,
   resultDayTimeVoteAPI,
 };
