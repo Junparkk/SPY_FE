@@ -308,7 +308,11 @@ function Ingame(props) {
 
   const [isStart, setIsStart] = useState(false);
   const [state, setState] = useState('preStart');
-  const [isShowing, setIsShowing] = useState(false);
+  const [isDayTimeModalShowing, setIsDayTimeModalShowing] = useState(false);
+  const [isRoleModalShowing, setIsRoleModalShowing] = useState(false);
+  // const [isLawyerModalShowing, setIsLawyerModalShowing] = useState(false); //변호사
+  // const [isDetectiveModalShowing, setIsDetectiveModalShowing] = useState(false); // 탐정
+  // const [isSpyModalShowing, setIsSpyModalShowing] = useState(false);  // 스파이
 
   const [isReady, setIsReady] = useState(false);
 
@@ -316,6 +320,17 @@ function Ingame(props) {
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
   }, []);
+
+  //시작 여부 확인 1초마다 반복 실행하도록
+  // useEffect(() => {
+  //   setInterval(function () {
+  //     console.log('ji');
+  //     apis
+  //       .startCheck(roomId)
+  //       .then((res) => console.log(res))
+  //       .catch((err) => console.log(err));
+  //   }, 500);
+  // }, []);
 
   const changeMaxLength = roomUserList.length;
 
@@ -331,34 +346,68 @@ function Ingame(props) {
   }, [start]);
 
   function preStart() {
+    console.log('프리스타트 안');
     const notiTimer = setTimeout(() => {
       if (start === true) {
-        setState('gameStart');
-        dispatch(roomActions.gameStart(false));
-        dispatch(voteActions.divisionRole(roomId));
+        console.log('프리스타트 안 타이머 안');
+        // setState('gameStart', dispatch(roomActions.gameStart(false)));
+        setState('getRole');
       }
     }, 2000);
     return () => clearTimeout(notiTimer);
+  }
+  //롤 받아오기
+  function getRole() {
+    dispatch(voteActions.divisionRole(roomId));
+    const getRoleTimer = setTimeout(() => {
+      setState('gameStart');
+    }, 500);
+    return () => clearTimeout(getRoleTimer);
   }
 
   function gameStart() {
     //게임스타트 함수 실행
     //라운드 불러오기
+    // function 이거먼저실행(나중) {
+    //   dispatch(voteActions.divisionRole(roomId));
+    //   setTimeout(() => {
+    //     나중();
+    //   }, 1000);
+    // }
+    // function 이게나중() {
+    //   setIsRoleModalShowing(true);
+    // }
+    // 이거먼저실행(function () {
+    //   이게나중();
+    // });
+
+    setIsRoleModalShowing(true);
     dispatch(roomActions.roundNoAIP(roomId));
+    console.log('게임스타트 안');
+
+    //모달 3초간 보여주고 끄기
+
+    const notiJobRoleTimer = setTimeout(() => {
+      setIsRoleModalShowing(false);
+      console.log('게임스타트 안 모달 끄는 타이머');
+    }, 3000);
 
     const notiTimer = setTimeout(() => {
       setState('dayTimeVote');
+
       //낮시간만큼 대기시키기
-    }, 2000);
-    return () => clearTimeout(notiTimer);
+    }, 10000);
+    return () => clearTimeout(notiTimer, notiJobRoleTimer);
   }
 
   function daytimeVote() {
     //투표 모달 보여주기
-    setIsShowing(true);
+    console.log('낮투표 속');
+    setIsDayTimeModalShowing(true);
 
     const notiTimer = setTimeout(() => {
-      setIsShowing(false);
+      console.log('낮투표 속 타이머');
+      setIsDayTimeModalShowing(false);
       setState('showVoteResult');
       //모달이 닫힐때까지 입력이 없으면 무효표 던지기
       dispatch(voteActions.invalidVote(roomId, round));
@@ -397,6 +446,9 @@ function Ingame(props) {
         preStart();
         console.log('실행됨?');
         break;
+      case 'getRole':
+        getRole();
+        break;
       case 'gameStart':
         gameStart();
         break;
@@ -433,7 +485,8 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        {isShowing && <VoteModal isMe={findMe}></VoteModal>}
+        {isDayTimeModalShowing && <VoteModal isMe={findMe}></VoteModal>}
+        {isRoleModalShowing && <JobCheckModal roomId={roomId}></JobCheckModal>}
         <div>
           <Video roomId={roomId} />
           {chatView ? (
@@ -485,7 +538,6 @@ function Ingame(props) {
           {/* <LawyerVoteModal/> */}
           {/* <DetectiveVoteModal/> */}
           {/* <SpyVoteModal/> */}
-          {/* <JobCheckModal roomId={roomId}/> */}
         </div>
       </Wrap>
     </>
