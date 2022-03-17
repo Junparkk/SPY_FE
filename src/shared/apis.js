@@ -20,6 +20,7 @@ export const apis = {
   changeMaxPlayer: (roomId, changeMaxLength) =>
     api.patch(`/room/${roomId}/changeMaxPlayer`, changeMaxLength),
   getRole: (roomId) => api.patch(`/room/${roomId}/role`),
+  startCheck: (roomId) => api.get(`/room/${roomId}/isStart`),
   // post: (postId) => api.get(`/api/posts/${postId}`),
   // add: (title, price, imgurl, content) =>
   //   api.post('/api/posts', title, price, imgurl, content),
