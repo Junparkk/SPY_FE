@@ -14,8 +14,6 @@ const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
 // const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
 const giveUsers = createAction(ROLE_GIVE, (users) => ({ users }));
 
-const voteCheck = createAction(VOTE_CHECK, (check_state) => ({ check_state }));
-
 const initialState = {
   userList: [],
   dayTimeVoteModalState: {
@@ -24,12 +22,11 @@ const initialState = {
   },
   userId: [],
   users: [],
-  voteCheck: false,
 };
 
 //middleware
 
-//전체 방 조회
+//전체 유저 조회
 const getUserDB = (roomId) => {
   return async function (dispatch, useState, { history }) {
     await apis.player(roomId).then(function (res) {
@@ -53,11 +50,14 @@ const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId) => {
   };
 };
 //낮시간 투표 결과
-const resultDayTimeVoteAPI = (roomId) => {
+const resultDayTimeVoteAPI = (roomId, roundNo) => {
   return async function (dispatch, useState, { history }) {
-    await apis.dayTimeVoteResult(roomId).then(function (res) {
-      console.log(res.data.users);
-    });
+    await apis
+      .dayTimeVoteResult(roomId, roundNo)
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 };
 
@@ -124,9 +124,22 @@ const divisionRole = (roomId) => {
     await apis
       .role(roomId)
       .then(function (res) {
-        window.alert(res.data.msg);
         dispatch(giveUsers(res.data.users));
-        console.log(res.data.users);
+        //롤 보여주는 모달 호출해줘야함!!!!!
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+// 아무 입력 없으면 자동으로 무효표 처리
+const invalidVote = (roomId, roundNo) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .sendInvalidVote(roomId, roundNo)
+      .then(function (res) {
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -152,23 +165,19 @@ export default handleActions(
         console.log(draft.users);
         console.log(action.payload);
       }),
-    [VOTE_CHECK]: (state, action) =>
-      produce(state, (draft) => {
-        draft.voteCheck = action.payload.check_state;
-      }),
   },
   initialState
 );
 
 const actionCreators = {
   getUserDB,
-  voteCheck,
   sendDayTimeVoteAPI,
   resultDayTimeVoteAPI,
   lawyerActDB,
   detectiveActDB,
   spyActDB,
   divisionRole,
+  invalidVote,
 };
 
 export { actionCreators };
