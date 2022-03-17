@@ -18,8 +18,8 @@ const ENTER_USER = 'ENTER_USER';
 const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
 const GAME_START = 'GAME_START';
+const START_CHECK = 'START_CHECK';
 
-//병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
@@ -39,17 +39,20 @@ const privateState = createAction(PRIVATE_STATE, (privateState) => ({
 }));
 const gameStart = createAction(GAME_START, (start) => ({ start }));
 
+const startCheck = createAction(START_CHECK, (Check) => ({ Check }));
+
 const initialState = {
   list: [],
   post: [],
   comments: [],
-  room: [], // 병우추가
+  room: [],
   roomState: {
     roomId: null,
     privateState: false,
   },
   round: 0,
   gameStart: false,
+  // startCheck: Y or N,
 };
 
 //middleware
@@ -235,6 +238,22 @@ const roundNoAIP = (roomId) => {
   };
 };
 
+//게임시작확인 미완
+const startCheckAPI = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    console.log(roomId);
+    await apis
+      .startCheck(roomId)
+      .then((res) => {
+        dispatch(roundNoInfo(res.data.roundNo));
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+};
+
 export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
@@ -299,6 +318,7 @@ const actionCreators = {
   cancelReadyAPI,
   roundNoAIP,
   gameStart,
+  startCheckAPI,
 };
 
 export { actionCreators };

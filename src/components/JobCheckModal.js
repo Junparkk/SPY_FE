@@ -9,12 +9,12 @@ const JobCheckModal = ({ roomId }, props) => {
   console.log(props);
   const dispatch = useDispatch();
   // const [roomId, setRoomId] = useState()
-  // const [_roomId, setRoomId] = useState({ roomId });
-  // const room_id = _roomId.roomId;
+  const [_roomId, setRoomId] = useState({ roomId });
+  const room_id = _roomId.roomId;
   const userId = localStorage.getItem('userid');
 
   // console.log(room_id, '룸 아이디!!!');
-  console.log(userId, '아이디!!!');
+  // console.log(userId, '아이디!!!');
 
   // 게임 시작 하고 바로 적용 될수 있도록 로직짜기
   // useEffect(() => {
@@ -57,7 +57,7 @@ const JobCheckModal = ({ roomId }, props) => {
     },
   ];
 
-  console.log(roles[3]);
+  // console.log(roles[3]);
   return createPortal(
     <Container>
       {(() => {
