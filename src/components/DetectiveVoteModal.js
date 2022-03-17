@@ -41,8 +41,10 @@ const DetectiveVoteModal = (props) => {
     }
   };
 
-  // 본인명단은 제외하기 아직 미완 0315
+  // 본인명단은 제외하기 
   const userId = localStorage.getItem('userid');
+
+  //필터할때 현재userID와 같은것만 빼고 노출하도록 !==
   const user_list = _user_list.filter((user) => user.userId !== parseInt(userId));
   console.log(user_list)
   
