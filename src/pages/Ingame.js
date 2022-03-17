@@ -25,7 +25,7 @@ import JobCheckModal from '../components/JobCheckModal';
 import { apis } from '../shared/apis';
 
 //socket 서버
-const socket = io.connect('https://3.38.211.55:4000');
+const socket = io.connect('https://mafia.milagros.shop');
 //openvidu 서버
 const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
