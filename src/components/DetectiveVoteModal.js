@@ -10,7 +10,7 @@ const DetectiveVoteModal = (props) => {
   const { isMe, roomId, _handleModal, children, ...rest } = props;
   const dispatch = useDispatch();
   const round = useSelector((state) => state.room.round);
-  const user_list = useSelector((state) => state.vote.userList);
+  const _user_list = useSelector((state) => state.vote.userList);
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
@@ -18,13 +18,13 @@ const DetectiveVoteModal = (props) => {
   const ref = useRef();
 
   console.log(round, '게임 라운드');
-  console.log(user_list, '유저 리스트');
-  console.log('투표모달안에 몇명?', user_list.length);
+  console.log(_user_list, '유저 리스트');
+  console.log('투표모달안에 몇명?', _user_list.length);
 
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
     console.log(idx, ' 얘는 인덱스');
-    const chosen = user_list[idx];
+    const chosen = _user_list[idx];
     setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
     console.log(chosen, '해당유저 정보');
@@ -43,7 +43,9 @@ const DetectiveVoteModal = (props) => {
 
   // 본인명단은 제외하기 아직 미완 0315
   const userId = localStorage.getItem('userid');
-  const findMe = user_list.filter((user) => user.userId === parseInt(userId));
+  const user_list = _user_list.filter((user) => user.userId !== parseInt(userId));
+  console.log(user_list)
+  
 
   console.log(submit);
   return createPortal(

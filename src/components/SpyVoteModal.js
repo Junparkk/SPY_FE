@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,14 +17,14 @@ const SpyVoteModal = (props) => {
   const [chosenRoomId, setChosenRoomId] = useState(0);
   const ref = useRef();
 
-  // 스파이 모달을 first, second 만들어서 첫번쨰 모달에는 백으로 보내지 않고 킵해두기 ( 누가 첫번째 투표할지는 인덱스 앞에 있는 애 or 랜덤)
-  // 두번째 모달 띄울때 컨펌이 나와서 동의하는지 안하는지 true, false로 값 바디
-  // true일 때 바로 dispatch
-  // false일 때
-
-  //스파이 목록
+  //스파이 목록 중 낮은 ID값 한테 투표권 주기
   const spy_list = user_list.filter((user) => user.role === 4);
-  //   console.log(spy_list);
+  const voteSpy = spy_list.sort((a, b) => b - a);
+  const spyId = localStorage.getItem('userid');
+
+  console.log(voteSpy[0]);
+  console.log(spyId)
+ 
 
   // 투표 사람 클릭
   const clicked = (idx) => {
@@ -32,95 +32,12 @@ const SpyVoteModal = (props) => {
     const chosen = user_list[idx];
     setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
-    let pickNick = chosen.user.nickname;
-
-    let text = `선택한 유저는 ${pickNick} 입니다. 해고 하시겠습니까?`;
-    if (window.confirm(text) === true || voteBtnClicked !== null) {
-      window.alert(`${pickNick} 해고를 동의하였습니다.`);
-      dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
-      setSubmit(true);
-    } else {
-      window.alert(`${pickNick} 해고를 반대하였습니다.`);
-    }
   };
-
-//   스파이끼리의 선택이 다르다면? 
-//   근데 각각 동시에 투표모달을 띄우기 vs 스파이한놈 먼저 선택 후 다음 스파이가 선택
-
-//////////////////////다른방법////////////////////////////
-
-//스파이 모두 같은 유저 선택 안했다면
-// 스파이의 인원수 > 스파이가 선택한 수
-// 얘네 둘은 넘기면 안된다.
-
-// 첫번쨰 선택한 값, 둘다(or 셋다) 선택한 값 받아오기
-// 만약 2번째 파라미터가 아니라면 리턴 첫번쨰 값 백엔드로
-// else if - (2번쨰 파라미터 길이 < 스파이 인원수) 리턴 첫번째 값 백엔드로
-// else  2번쨰 값 리턴 백엔드로
-
-
-
-  //   다른스파이가 누르고 확인 -> 이전애랑 넌 같지 않다
-  //   if (spy_list) {
-  //     dispatch;
-  //     if (role === 4) {
-  //       window.confirm('동의? ');
-  //     }
-  //   }
-
-  //   const voteSpy = (idx) => {
-  //     setVoteBtnClicked(idx);
-  //     const chosen = user_list[idx];
-  //     setChosenId(chosen.user.id);
-  //     setChosenRoomId(chosen.roomId);
-  //     let pickNick = chosen.user.nickname;
-
-  //     let text = `다른 스파이가 선택한 유저는 ${pickNick} 입니다.`
-  //       if (window.confirm(text) === true ) {
-  //         text = `${pickNick} 해고를 동의하였습니다.`;
-  //       } else {
-  //         text = `${pickNick} 해고를 반대하였습니다.`;
-  //       }
-
-  // if (spy_list.length === 1) {
-  //   if (voteBtnClicked !== null) {
-  //     dispatch(voteActions.detectiveActDB(chosenRoomId, chosenId));
-  //     setSubmit(true);
-  //   } else {
-  //     window.alert('해고 시킬 직원을 선택해주세요. :)');
-  //   }
-  // } else if (spy_list.length > 2) {
-
-  // }
-  //   };
-
-  //예외
-  //   [...spySelectUser].length > 1
-  //   spyCnt > spySelectUser
-  //   const exception = () => {
-  //     if (spy_list.length !== chosenId.length) {
-  //       console.log(spy_list.length);
-  //       return;
-  //     } else if (spy_list.length > chosenId.length) {
-  //       return;
-  //     }
-  //   };
-  //   // 최종
-  //   const spyVoteResult = (chosenId, lastChosenId) => {
-  //     if (!lastChosenId) {
-  //       console.log(lastChosenId);
-  //       return chosenId;
-  //     } else if (lastChosenId.length < spy_list.length) {
-  //       return chosenId;
-  //     } else {
-  //       return lastChosenId;
-  //     }
-  //   };
 
   // 투표 값 서버로 전달
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
-      dispatch(voteActions.detectiveActDB(chosenRoomId, chosenId));
+      dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
       setSubmit(true);
     } else {
       window.alert('해고 시킬 직원을 선택해주세요. :)');
@@ -129,19 +46,57 @@ const SpyVoteModal = (props) => {
 
   console.log(submit);
 
+
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
-      <ModalBlock {...rest}>
-        <Contents size="4rem">투표</Contents>
-        <Contents margin="1rem" size="2rem">
-          해고 시킬 직원을 선택해주세요.
-        </Contents>
+      {/* 높은애는 대기화면 나타내기(미완) */}
+      {voteSpy[0] && voteSpy[0].user.id === parseInt(spyId) ? (
+        <ModalBlock {...rest}>
+          <Contents size="4rem">투표</Contents>
+          <Contents margin="1rem" size="2rem">
+            해고 시킬 직원을 선택해주세요.
+          </Contents>
 
-        {/* 롤을 부여받은대로 보여줘야함 */}
-        {(() => {
-          if (user_list.length <= 6) {
-            return (
+          {/* 롤을 부여받은대로 보여줘야함 */}
+          {(() => {
+            if (user_list.length <= 6) {
+              return (
+                <VotePlayerWrap>
+                  {user_list &&
+                    user_list.map((p, idx) => {
+                      return (
+                        <JobCheckImg
+                          pointerEvents={submit ? 'none' : ''}
+                          ref={ref}
+                          key={p.id}
+                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                          onClick={() => clicked(idx)}
+                        >
+                          <Contents>{p.nickname}</Contents>
+                        </JobCheckImg>
+                      );
+                    })}
+                </VotePlayerWrap>
+              );
+            } else if (user_list.length <= 8) {
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked()}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>;
+            } else if (user_list.length <= 10) {
               <VotePlayerWrap>
                 {user_list &&
                   user_list.map((p, idx) => {
@@ -157,50 +112,16 @@ const SpyVoteModal = (props) => {
                       </JobCheckImg>
                     );
                   })}
-              </VotePlayerWrap>
-            );
-          } else if (user_list.length <= 8) {
-            <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked()}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
-          } else if (user_list.length <= 10) {
-            <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked(idx)}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
-          }
-        })()}
+              </VotePlayerWrap>;
+            }
+          })()}
 
-        {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn disabled={submit} onClick={submitClicked}>
-          선택 완료
-        </SendBtn>
-      </ModalBlock>
+          {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
+          <SendBtn disabled={submit} onClick={submitClicked}>
+            선택 완료
+          </SendBtn>
+        </ModalBlock>
+      ) : null}
     </Container>,
     document.getElementById('VoteModal')
   );
