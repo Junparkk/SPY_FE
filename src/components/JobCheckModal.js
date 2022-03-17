@@ -6,36 +6,124 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const JobCheckModal = ({ roomId }, props) => {
   const { _handleModal, children, ...rest } = props;
-  console.log(props)
+  console.log(props);
   const dispatch = useDispatch();
   // const [roomId, setRoomId] = useState()
-  const [_roomId, setRoomId] = useState({roomId});
-  const room_id = _roomId.roomId
+  // const [_roomId, setRoomId] = useState({ roomId });
+  // const room_id = _roomId.roomId;
   const userId = localStorage.getItem('userid');
 
-  console.log(room_id , "룸 아이디!!!");
-  console.log(userId , "아이디!!!");
+  // console.log(room_id, '룸 아이디!!!');
+  console.log(userId, '아이디!!!');
 
-  useEffect(() => {
-    // 디스패치 룰 부여
-    dispatch(voteActions.divisionRole( room_id))
-  }, []);
+  // 게임 시작 하고 바로 적용 될수 있도록 로직짜기
+  // useEffect(() => {
+  //   dispatch(voteActions.divisionRole(room_id));
+  // }, []);
 
-  const user_role = useSelector((state) => state.vote.users)
-  console.log(user_role)
-  // if role = 1 
+  const user_list = useSelector((state) => state.vote.userList);
+  // console.log(user_list[0].id);
+
+  const findMe = user_list.filter((user) => user.userId === parseInt(userId));
+  console.log(findMe);
+  const myRole = findMe[0]?.role;
+
+  console.log(myRole, '내역할은 이거다');
+
+  const roles = [
+    {
+      id: 1,
+      role: '평사원',
+      desc: '각박한 회사에서 최선을 다해 살아남으세요',
+      image: '',
+    },
+    {
+      id: 2,
+      role: '변호사',
+      desc: '정의로운 통찰력으로 사원들의 무죄를 증명하세요',
+      image: '',
+    },
+    {
+      id: 3,
+      role: '탐정',
+      desc: '남다른 추리력으로 사원들의 정체를  꿰뚫어보세요',
+      image: '',
+    },
+    {
+      id: 4,
+      role: '산업 스파이',
+      desc: '정체를 들키지 않고 지원들의 퇴직서를 받아내세요',
+      image: '',
+    },
+  ];
+
+  console.log(roles[3]);
   return createPortal(
     <Container>
-      <Background onClick={_handleModal} />
-      <ModalBlock {...rest}>
-        
-        <JobCheckImg></JobCheckImg>
-        <Contents size="80px">쉿!</Contents>
-        <Contents size="40px">당신은 {children}</Contents>
-        <Contents size="30px">
-          정체를 들키지 않고 직원들의 사직서를 받아내세요
-        </Contents>
-      </ModalBlock>
+      {(() => {
+        if (myRole && myRole === 1) {
+          return (
+            <>
+              <Background />
+              <ModalBlock>
+                <JobCheckImg>{roles[0].image}</JobCheckImg>
+                <Contents size="80px">쉿!</Contents>
+                <Contents size="40px">당신은 {roles[0].role}</Contents>
+                <Contents size="30px">{roles[0].desc}</Contents>
+              </ModalBlock>
+            </>
+          );
+        } else if (myRole && myRole === 2) {
+          return (
+            <>
+              <Background />
+              <ModalBlock>
+                <JobCheckImg>{roles[1].image}</JobCheckImg>
+                <Contents size="80px">쉿!</Contents>
+                <Contents size="40px">당신은 {roles[1].role}</Contents>
+                <Contents size="30px">{roles[1].desc}</Contents>
+              </ModalBlock>
+            </>
+          );
+        } else if (myRole && myRole === 3) {
+          return (
+            <>
+              <Background />
+              <ModalBlock>
+                <JobCheckImg>{roles[2].image}</JobCheckImg>
+                <Contents size="80px">쉿!</Contents>
+                <Contents size="40px">당신은 {roles[2].role}</Contents>
+                <Contents size="30px">{roles[2].desc}</Contents>
+              </ModalBlock>
+            </>
+          );
+        } else if (myRole && myRole === 4) {
+          return (
+            <>
+              <Background />
+              <ModalBlock>
+                <JobCheckImg>{roles[3].image}</JobCheckImg>
+                <Contents size="80px">쉿!</Contents>
+                <Contents size="40px">당신은 {roles[3].role}</Contents>
+                <Contents size="30px">{roles[3].desc}</Contents>
+              </ModalBlock>
+            </>
+          );
+        }
+      })()}
+
+      {/* {(() => {
+            if(myRole && myRole === 1) {
+              // 뷰
+            } else if (myRole && myRole === 2) {
+              //view
+            } else if (myRole && myRole === 3) {
+              //view
+            } else if (myRole && myRole === 4) {
+              //view
+            }
+          })}
+         */}
     </Container>,
     document.getElementById('JobCheckModal')
   );
@@ -60,7 +148,7 @@ const Background = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
+  /* backdrop-filter: blur(5px); */
   animation: modal-bg-show 1s;
   @keyframes modal-bg-show {
     from {
