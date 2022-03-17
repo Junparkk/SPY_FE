@@ -483,7 +483,7 @@ function Ingame(props) {
           {/* <LawyerVoteModal/> */}
           {/* <DetectiveVoteModal/> */}
           {/* <SpyVoteModal/> */}
-          {/* <JobCheckModal roomId={roomId}/> */}
+          <JobCheckModal roomId={roomId}/>
         </div>
       </Wrap>
     </>

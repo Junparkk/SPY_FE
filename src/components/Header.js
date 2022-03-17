@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 
-import { GrGamepad } from 'react-icons/gr';
+import { RiQuestionnaireLine } from 'react-icons/ri';
+import Logo from '../images/Logo.png';
+
 import RuleModal from './RuleModal';
 
 const Header = () => {
@@ -43,20 +45,23 @@ const Header = () => {
   //   );
   // }
 
-
   return (
     <React.Fragment>
       <Wrap>
-        <GrGamepad
+        <div style={{display:"flex"}}>
+          <div>총모양</div>
+          <div src={Logo}>로고</div>
+        </div>
+        <RiQuestionnaireLine
           onClick={openModal}
           style={{
             fontSize: '36px',
             cursor: 'pointer',
             padding: '16px',
-            position: 'relative',
+            // position: 'relative',
           }}
         />
-      <RuleModal showModal={showModal} setShowModal={setShowModal}/> 
+        <RuleModal showModal={showModal} setShowModal={setShowModal} />
       </Wrap>
     </React.Fragment>
   );
@@ -67,7 +72,7 @@ const Wrap = styled.div`
   width: 100%;
   height: 80px;
   justify-content: space-between;
-  background-color: #ffe179;
+  background-color: #6164ce;
   position: relative;
   top: 0;
   left: 0;
