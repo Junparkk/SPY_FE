@@ -302,17 +302,20 @@ function Ingame(props) {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
   ///////////////////////////////////////////////////////////
-  const [state, setState] = useState('gameStart');
+  const start = useSelector((state) => state.room.gameStart);
+  const roomUserList = useSelector((state) => state.vote.userList);
+  const round = useSelector((state) => state.room.round);
+
+  const [isStart, setIsStart] = useState(false);
+  const [state, setState] = useState('preStart');
   const [isShowing, setIsShowing] = useState(false);
+
   const [isReady, setIsReady] = useState(false);
 
   //현재 방에 접속해 있는 리스트 뽑아내기
-
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
   }, []);
-  const roomUserList = useSelector((state) => state.vote.userList);
-  const round = useSelector((state) => state.room.round);
 
   const changeMaxLength = roomUserList.length;
 
@@ -320,37 +323,55 @@ function Ingame(props) {
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
   );
-  console.log(findMe);
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
-  }, []);
+  }, [state]);
+  useEffect(() => {
+    preStart();
+  }, [start]);
 
-  // useEffect(() => {
-  //   gameStart();
-  // }, []);
+  function preStart() {
+    const notiTimer = setTimeout(() => {
+      if (start === true) {
+        setState('gameStart');
+        dispatch(roomActions.gameStart(false));
+        dispatch(voteActions.divisionRole(roomId));
+      }
+    }, 2000);
+    return () => clearTimeout(notiTimer);
+  }
 
   function gameStart() {
     //게임스타트 함수 실행
+    //라운드 불러오기
     dispatch(roomActions.roundNoAIP(roomId));
+
     const notiTimer = setTimeout(() => {
       setState('dayTimeVote');
-      setIsShowing(true);
-    }, 5000);
+      //낮시간만큼 대기시키기
+    }, 2000);
     return () => clearTimeout(notiTimer);
   }
 
   function daytimeVote() {
+    //투표 모달 보여주기
+    setIsShowing(true);
+
     const notiTimer = setTimeout(() => {
+      setIsShowing(false);
       setState('showVoteResult');
+      //모달이 닫힐때까지 입력이 없으면 무효표 던지기
+      dispatch(voteActions.invalidVote(roomId, round));
     }, 5000);
     return () => clearTimeout(notiTimer);
   }
 
   function showVoteResult() {
     console.log('결과함수보여주기');
-    dispatch(voteActions.invalidVote(roomId, round));
 
-    const notiTimer = setTimeout(() => {}, 3000);
+    const notiTimer = setTimeout(() => {
+      dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
+    }, 1000);
     return () => clearTimeout(notiTimer);
   }
 
@@ -372,6 +393,10 @@ function Ingame(props) {
 
   useEffect(() => {
     switch (state) {
+      case 'preStart':
+        preStart();
+        console.log('실행됨?');
+        break;
       case 'gameStart':
         gameStart();
         break;
@@ -408,7 +433,7 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        {/* {isShowing && <VoteModal isMe={findMe}></VoteModal>} */}
+        {isShowing && <VoteModal isMe={findMe}></VoteModal>}
         <div>
           <Video roomId={roomId} />
           {chatView ? (

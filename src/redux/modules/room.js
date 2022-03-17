@@ -17,6 +17,7 @@ const ADD_ROOM = 'ADD_ROOM';
 const ENTER_USER = 'ENTER_USER';
 const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
+const GAME_START = 'GAME_START';
 
 //병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
@@ -36,6 +37,7 @@ const privateRoom = createAction(PRIVATE_ROOM, (roomId, privateState) => ({
 const privateState = createAction(PRIVATE_STATE, (privateState) => ({
   privateState,
 }));
+const gameStart = createAction(GAME_START, (start) => ({ start }));
 
 const initialState = {
   list: [],
@@ -47,19 +49,7 @@ const initialState = {
     privateState: false,
   },
   round: 0,
-};
-
-const initialPost = {
-  postId: 'aalasdf',
-  title: '아이폰 10',
-  content: '아이폰 팔아요',
-  price: 1000,
-  imgurl: 'https://gi.esmplus.com/dodomae/NAR/Monami/pluspen3000.jpg',
-  createdAt: '2022-02-22',
-  updatedAt: '2022-02-25',
-  nickname: 'fasdfasdf',
-  userId: 'id',
-  isSold: false,
+  gameStart: false,
 };
 
 //middleware
@@ -186,7 +176,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
         console.log(res);
         // 정상 실행
         if (res.data.msg === '시작!') {
-          console.log(res);
+          dispatch(gameStart(true));
         } else {
           const firstCheck = window.confirm(res.data.msg);
           if (firstCheck) {
@@ -196,7 +186,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
               .then((res) => {
                 apis
                   .start(roomId)
-                  .then((res) => console.log(res))
+                  .then((res) => dispatch(gameStart(true)))
                   .catch((err) => console.log(err));
               })
               .catch((err) => console.log(err));
@@ -212,7 +202,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
               } else {
                 apis
                   .changeMaxPlayer(roomId, { maxPlayer: changeMaxLength })
-                  .then((res) => console.log(res))
+                  .then((res) => dispatch(gameStart(true)))
                   .catch((err) => console.log(err));
               }
             } else {
@@ -288,6 +278,10 @@ export default handleActions(
         console.log(action.payload.round_num);
         draft.round = action.payload.round_num;
       }),
+    [GAME_START]: (state, action) =>
+      produce(state, (draft) => {
+        draft.gameStart = action.payload.start;
+      }),
   },
   initialState
 );
@@ -304,6 +298,7 @@ const actionCreators = {
   doStartAPI,
   cancelReadyAPI,
   roundNoAIP,
+  gameStart,
 };
 
 export { actionCreators };

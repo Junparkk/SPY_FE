@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import blueDoor from '../images/blueDoor.png';
 
 import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
@@ -22,27 +23,6 @@ const Main = (props) => {
 
   const _private = useSelector((state) => state.room.roomState.privateState);
 
-  //게임 시작 후 역할 모달로 보여주기 (추후에 게임 시작값이 들어오면 true로 바꿔주는 코드로 작성하기)
-  const [isShowing, setIsShowing] = useState(true);
-  useEffect(() => {
-    if (isShowing) {
-      const notiTimer = setTimeout(() => {
-        setIsShowing(false);
-      }, 1000);
-      return () => clearTimeout(notiTimer);
-    }
-  }, [isShowing]);
-  //초대 알림 오면 상태 변화
-  // const [isInvite, setIsInvite] = useState(true);
-  // useEffect(() => {
-  //   if (isInvite) {
-  //     const notiTimer = setTimeout(() => {
-  //       setIsInvite(false);
-  //     }, 2000);
-  //     return () => clearTimeout(notiTimer);
-  //   }
-  // }, [isInvite]);
-
   //방 리스트 불러오기
   useEffect(() => {
     dispatch(roomActions.getRoomAPI());
@@ -52,11 +32,6 @@ const Main = (props) => {
     <>
       {/* 패스워드 모달 */}
       {_private ? <PasswordModal /> : null}
-      {/* 초대 알림 */}
-      {/* {isInvite && <InviteAlarm children="개똥이"></InviteAlarm>} */}
-      {/* 직업모달 테스트 영역 나중에 알맞은 곳으로 이동 예정 */}
-      {/* {isShowing && <JobCheckModal children="마퓌아"></JobCheckModal>} */}
-      {/* 투표모달 테스트 */}
 
       {/* 대기실 화면 */}
       <Wrap>
@@ -94,7 +69,6 @@ const Main = (props) => {
         </Container>
       </Wrap>
 
-      <MakeRoomBtn>빠른 시작</MakeRoomBtn>
       <EnterRoomBtn onClick={() => history.push('/makingroom')}>
         방 만들기
       </EnterRoomBtn>
@@ -141,33 +115,17 @@ const Container = styled.div`
   }
 `;
 
-const MakeRoomBtn = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-
-  border: none;
-  border-radius: 16px;
-  background: royalblue;
-  color: white;
-  padding: 12px;
-  font-weight: bold;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  :hover {
-    cursor: pointer;
-  }
-`;
-
 const EnterRoomBtn = styled.button`
   position: fixed;
   bottom: 20px;
   right: 100px;
-
+  width: 4rem;
+  height: 8rem;
   border: none;
   border-radius: 16px;
-  background: royalblue;
+  background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
   color: white;
-  padding: 12px;
+
   font-weight: bold;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   :hover {

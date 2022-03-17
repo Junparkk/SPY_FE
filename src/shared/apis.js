@@ -41,7 +41,8 @@ export const apis = {
 
   dayTimeVote: (roomId, userId, round, chosenId) =>
     api.patch(`/room/${roomId}/voter/${userId}/vote`, round, chosenId),
-  dayTimeVoteResult: (roomId) => api.get(`/room/${roomId}/voteResult`),
+  dayTimeVoteResult: (roomId, roundNo) =>
+    api.get(`/room/${roomId}/round/${roundNo}`),
   getGameRoundNo: (roomId) => api.get(`/room/${roomId}/roundNo`),
   sendInvalidVote: (roomId, roundNo) =>
     api.put(`/room/${roomId}/round/${roundNo}/invalidVote`),
