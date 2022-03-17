@@ -44,13 +44,11 @@ const VoteModal = (props) => {
 
   const aiAutoVoting = () => {
     console.log(user_list);
-
     console.log(round);
     for (let i = 0; i < user_list.length; i++) {
       const chooseRandomPlayer = Math.floor(Math.random() * user_list.length);
       console.log(user_list[i]);
       if (user_list[i].isAi === 'Y') {
-        console.log(i);
         dispatch(
           voteActions.sendDayTimeVoteAPI(
             user_list[i].roomId,

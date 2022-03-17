@@ -306,7 +306,6 @@ function Ingame(props) {
   const roomUserList = useSelector((state) => state.vote.userList);
   const round = useSelector((state) => state.room.round);
 
-  const [isStart, setIsStart] = useState(false);
   const [state, setState] = useState('preStart');
   const [isDayTimeModalShowing, setIsDayTimeModalShowing] = useState(false);
   const [isRoleModalShowing, setIsRoleModalShowing] = useState(false);
@@ -322,15 +321,22 @@ function Ingame(props) {
   }, []);
 
   //시작 여부 확인 1초마다 반복 실행하도록
-  // useEffect(() => {
-  //   setInterval(function () {
-  //     console.log('ji');
-  //     apis
-  //       .startCheck(roomId)
-  //       .then((res) => console.log(res))
-  //       .catch((err) => console.log(err));
-  //   }, 500);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(function () {
+      console.log('ji');
+      apis
+        .startCheck(roomId)
+        .then((res) => {
+          if (res.data.msg === 'Y') {
+            dispatch(gameStart(true));
+            clearInterval(interval);
+          } else {
+            console.log('bye');
+          }
+        })
+        .catch((err) => console.log(err));
+    }, 500);
+  }, []);
 
   const changeMaxLength = roomUserList.length;
 
