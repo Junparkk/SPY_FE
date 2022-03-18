@@ -224,7 +224,7 @@ const SetTitle = styled.p`
 const AntDiv = styled.div`
   display: flex;
   flex-flow: row wrap;
-  width: 400px;
+  width: 300px;
   margin: 49px auto 85px auto;
   justify-content: center;
   align-items: center;

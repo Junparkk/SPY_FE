@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
+import slide1 from '../../images/slide1.png'
+import slide2 from '../../images/slide2.png'
+import slide3 from '../../images/slide3.png'
 
 const dataSlider = [
   {
     id: uuidv4(),
-    image: "",
+    image: `${slide1}`,
     heading: '산업 스파이의 룰',
     desc: `"work to life"의 기밀무너를 훔쳐가기 위해 "without working"에서 잠입한 스파이입니다.
     
@@ -17,7 +20,7 @@ const dataSlider = [
   },
   {
     id: uuidv4(),
-    image: "",
+    image: `${slide2}`,
     heading: '평사원들의 룰',
     desc: `우리 회사에 잠입한 정보를 가져가려고 하는 산업 스파이를 찾아내세요!
 
@@ -31,7 +34,7 @@ const dataSlider = [
   },
   {
     id: uuidv4(),
-    image: "",
+    image: `${slide3}`,
     heading: '특별한 직책을 가진 사원들의 룰',
     desc: `우리 회사에 잠입한 정보를 가져가려고 하는 산업 스파이가 숨어있습니다.
 

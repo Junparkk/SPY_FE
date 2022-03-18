@@ -48,8 +48,6 @@ const DetectiveVoteModal = (props) => {
   const user_list = _user_list.filter((user) => user.userId !== parseInt(userId));
   console.log(user_list)
   
-
-  console.log(submit);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
