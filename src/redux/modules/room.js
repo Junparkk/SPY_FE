@@ -103,7 +103,7 @@ const leaveRoomDB = (nickname, roomId) => {
       .then((response) => {
         dispatch(leaveUser(response.data.user));
         console.log(response);
-        window.location.replace('/');
+        window.location.replace('/lobby');
       })
       .catch((error) => {
         window.alert(error);
