@@ -518,6 +518,15 @@ function Ingame(props) {
   }, []);
 
   useEffect(() => {
+    const getStatus = () => {
+      socket.emit('getStatus', roomId);
+    };
+    socket.on('getStatus', (status) => {
+      console.log(status);
+    });
+  }, []);
+
+  useEffect(() => {
     switch (status) {
       case 'isStart':
         isStart();

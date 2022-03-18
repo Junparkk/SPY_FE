@@ -59,7 +59,7 @@ const LoginDB = (nickname) => {
         console.log(response);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid', response.data.user.id);
-        history.push('/');
+        history.push('/lobby');
       })
       .catch((error) => {
         window.alert(error);
@@ -95,7 +95,7 @@ export default handleActions(
       }),
     [RANDOM_NICK]: (state, action) =>
       produce(state, (draft) => {
-        draft.randomNick = action.payload
+        draft.randomNick = action.payload;
       }),
   },
   initialState
