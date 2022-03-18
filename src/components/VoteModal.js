@@ -106,7 +106,7 @@ const VoteModal = (props) => {
                       ref={ref}
                       key={p.id}
                       opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked()}
+                      onClick={() => clicked(idx)}
                     >
                       <Contents>{p.nickname}</Contents>
                     </JobCheckImg>

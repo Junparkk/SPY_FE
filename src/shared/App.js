@@ -16,8 +16,8 @@ function App() {
     <>
       {/* <Header /> */}
       <ConnectedRouter history={history}>
-        <Route path="/" exact component={Main}></Route>
-        <Route path="/login" exact component={LoginTitle}></Route>
+        <Route path="/lobby" exact component={Main}></Route>
+        <Route path="/" exact component={LoginTitle}></Route>
         <Route path="/signup" exact component={SignUp}></Route>
         <Route path="/makingroom" exact component={MakingRoom}></Route>
         <Route path="/result" exact component={Result}></Route>

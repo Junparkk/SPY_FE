@@ -43,8 +43,6 @@ function LoginTitle() {
     console.log('Scroll is', ScrollY);
   }, [ScrollY]);
 
-  useEffect(() => {}, []);
-
   //닉네임 서버 전달
   const dispatch = useDispatch();
 

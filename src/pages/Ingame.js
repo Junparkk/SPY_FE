@@ -25,7 +25,7 @@ import JobCheckModal from '../components/JobCheckModal';
 import { apis } from '../shared/apis';
 
 //socket 서버
-const socket = io.connect('https://https://mafia.milagros.shop/api');
+const socket = io.connect('https://mafia.milagros.shop');
 //openvidu 서버
 const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
@@ -305,6 +305,7 @@ function Ingame(props) {
   const start = useSelector((state) => state.room.gameStart);
   const roomUserList = useSelector((state) => state.vote.userList);
   const round = useSelector((state) => state.room.round);
+  console.log(round, '현재라운드');
 
   const [state, setState] = useState('preStart');
   const [isDayTimeModalShowing, setIsDayTimeModalShowing] = useState(false);
@@ -509,9 +510,9 @@ function Ingame(props) {
         .then((res) => {
           setStatus(res.data.status);
           console.log(res.data.status);
-          if (res.data.status === 'showRole') {
-            clearInterval(interval);
-          }
+          // if (res.data.status === 'showRole') {
+          //   clearInterval(interval);
+          // }
         })
         .catch((err) => console.log(err));
     }, 1000);
@@ -561,28 +562,22 @@ function Ingame(props) {
     }, 3000);
 
     const voteTimer = setTimeout(() => {
-      apis
-        .statusCheck2(roomId)
-        .then((res) => {
-          setStatus2(res.data.status);
-          console.log(res.data.status);
-        })
-        .catch((err) => console.log(err));
-    }, 10000);
+      sendStatus_2();
+      console.log('voteTimer');
+    }, 5000);
     return () => clearTimeout(notiTimer, voteTimer);
   }
 
   useEffect(() => {
-    switch (status2) {
+    console.log('내가왕이야', status, 'status2', status2);
+    switch (status2 || status) {
       case 'voteDay':
         voteDay();
-        console.log('voteDay까지 들어왔나요?');
-        break;
-      case 'voteResultDay':
         break;
       case 'showResultDay':
+        showResultDay();
         break;
-      case 'isGameResult':
+      case 'isGameResult_1':
         break;
       case 'voteNightLawyer':
         break;
@@ -596,36 +591,106 @@ function Ingame(props) {
         break;
       case 'showResultNight':
         break;
+      case 'isGameResult_2':
+        break;
       default:
         console.log('실행안됨');
         break;
     }
-  }, [status2]);
+  }, [status, status2]);
 
   function voteDay() {
-    setIsDayTimeModalShowing(true);
-    setStatus2('voteResultDay');
-  }
-  ////////////////////////////////////////////////////////////////////
-  //프론트
-  useEffect(() => {
-    const getStatus = () => {
-      socket.emit('getStatus', roomId);
-    };
-    socket.on('getStatus', (status) => {
-      console.log(status);
-    }); 
-  })
- 
+    // setStatus2('voteResultDay');
+    function 이거먼저실행(나중) {
+      setIsDayTimeModalShowing(true);
+      setTimeout(() => {
+        나중();
+      }, 3000);
+    }
+    function 이게나중() {
+      setIsDayTimeModalShowing(false);
+      dispatch(voteActions.invalidVote(roomId, round));
+    }
+    이거먼저실행(function () {
+      이게나중();
+    });
+    const notiJobRoleTimer = setTimeout(() => {
+      console.log('게임스타트 안 모달 끄는 타이머');
+      // const people = roomUserList.filter((user) => user.isAi !== 'Y');
+      // const person = people.filter((user) => user.isEliminated !== 'Y');
+      // if (person[0].user.id === parseInt(userId)) {
+      //   console.log('제발부탁이야 제발.... 살려줘');
+      //   apis
+      //     .statusCheck2(roomId)
+      //     .then((res) => {
+      //       setStatus2(res.data.status);
+      //       console.log(res.data.status);
+      //     })
+      //     .catch((err) => console.log(err));
+      // }
+      sendStatus_2();
+    }, 5000);
 
-  //뺵
-  // socket.on('getStatus', async (data) => {
-  //   console.log(data.roomId);
-  //   let game = await GameStatus.findOne({ where: { roomId: data.roomId } });
-  //   console.log(game);
-  //   console.log(game.status);
-  //   socket.to(socket.id).emit('getStatus', game.status);
-  // });
+    return () => clearTimeout(notiJobRoleTimer);
+  }
+
+  function showResultDay() {
+    console.log('투표날');
+    console.log('----', roomId);
+    console.log('======', round);
+
+    dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
+
+    const notiJobRoleTimer = setTimeout(() => {
+      sendStatus_2();
+    }, 5000);
+
+    return () => clearTimeout(notiJobRoleTimer);
+  }
+
+  function sendStatus_2() {
+    const people = roomUserList.filter((user) => user.isAi !== 'Y');
+    const person = people.filter((user) => user.isEliminated !== 'Y');
+    if (person[0].user.id === parseInt(userId)) {
+      console.log('제발부탁이야 제발.... 살려줘');
+      apis
+        .statusCheck2(roomId)
+        .then((res) => {
+          setStatus2(res.data.status);
+          console.log(res.data.status);
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  function isGameResult() {
+    // 낮과 밤 모두 사용 가능
+  }
+
+  function voteNightLawyer() {
+    //변호사 투표
+  }
+
+  function showMsgLawyer() {
+    //변호사 투표 결과 보기
+  }
+
+  function voteNightDetective() {
+    //탐정 투표
+  }
+
+  function showMsgDetective() {
+    //변호사 투표 결과 보기
+  }
+
+  function voteNightSpy() {
+    //스파이 투표
+  }
+
+  function showResultNight() {
+    //밤 투표 결과
+  }
 
   ////////////////////////////////////////////////////////////////////
   return (
