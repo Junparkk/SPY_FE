@@ -98,6 +98,7 @@ const Main = (props) => {
       <EnterRoomBtn onClick={() => history.push('/makingroom')}>
         방 만들기
       </EnterRoomBtn>
+      <LoginButton onClick={() => history.push('/login')}>로그인</LoginButton>
     </>
   );
 };
@@ -162,6 +163,23 @@ const EnterRoomBtn = styled.button`
   position: fixed;
   bottom: 20px;
   right: 100px;
+
+  border: none;
+  border-radius: 16px;
+  background: royalblue;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const LoginButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 181px;
 
   border: none;
   border-radius: 16px;
