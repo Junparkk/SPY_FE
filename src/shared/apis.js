@@ -21,6 +21,8 @@ export const apis = {
     api.patch(`/room/${roomId}/changeMaxPlayer`, changeMaxLength),
   getRole: (roomId) => api.patch(`/room/${roomId}/role`),
   startCheck: (roomId) => api.get(`/room/${roomId}/isStart`),
+  statusCheck: (roomId) => api.get(`/room/${roomId}/status_1`),
+  statusCheck2: (roomId) => api.get(`/room/${roomId}/status_2`),
   // post: (postId) => api.get(`/api/posts/${postId}`),
   // add: (title, price, imgurl, content) =>
   //   api.post('/api/posts', title, price, imgurl, content),

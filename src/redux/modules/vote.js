@@ -52,9 +52,12 @@ const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId) => {
 //낮시간 투표 결과
 const resultDayTimeVoteAPI = (roomId, roundNo) => {
   return async function (dispatch, useState, { history }) {
+    console.log('이건 apis 밖------------------------');
     await apis
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
+        console.log('이건 apis 안------------------------');
+        window.alert(res.data.result);
         console.log(res);
       })
       .catch((err) => console.log(err));
