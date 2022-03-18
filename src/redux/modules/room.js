@@ -17,8 +17,9 @@ const ADD_ROOM = 'ADD_ROOM';
 const ENTER_USER = 'ENTER_USER';
 const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
+const GAME_START = 'GAME_START';
+const START_CHECK = 'START_CHECK';
 
-//병우추가
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
@@ -36,6 +37,9 @@ const privateRoom = createAction(PRIVATE_ROOM, (roomId, privateState) => ({
 const privateState = createAction(PRIVATE_STATE, (privateState) => ({
   privateState,
 }));
+const gameStart = createAction(GAME_START, (start) => ({ start }));
+
+const startCheck = createAction(START_CHECK, (Check) => ({ Check }));
 
 const initialState = {
   list: [],
@@ -47,19 +51,8 @@ const initialState = {
     privateState: false,
   },
   round: 0,
-};
-
-const initialPost = {
-  postId: 'aalasdf',
-  title: '아이폰 10',
-  content: '아이폰 팔아요',
-  price: 1000,
-  imgurl: 'https://gi.esmplus.com/dodomae/NAR/Monami/pluspen3000.jpg',
-  createdAt: '2022-02-22',
-  updatedAt: '2022-02-25',
-  nickname: 'fasdfasdf',
-  userId: 'id',
-  isSold: false,
+  gameStart: false,
+  // startCheck: Y or N,
 };
 
 //middleware
@@ -111,7 +104,7 @@ const leaveRoomDB = (nickname, roomId) => {
       });
   };
 };
-//방 만들기
+//병우 추가
 const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
   return function (dispatch, getState, { history }) {
     axios
@@ -127,7 +120,7 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
       })
       .catch((error) => {
         console.log(error.response.data.msg);
-        window.alert(error.response.data.msg);
+        window.alert(error.msg);
       });
   };
 };
@@ -186,7 +179,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
         console.log(res);
         // 정상 실행
         if (res.data.msg === '시작!') {
-          console.log(res);
+          dispatch(gameStart(true));
         } else {
           const firstCheck = window.confirm(res.data.msg);
           if (firstCheck) {
@@ -196,7 +189,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
               .then((res) => {
                 apis
                   .start(roomId)
-                  .then((res) => console.log(res))
+                  .then((res) => dispatch(gameStart(true)))
                   .catch((err) => console.log(err));
               })
               .catch((err) => console.log(err));
@@ -212,7 +205,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
               } else {
                 apis
                   .changeMaxPlayer(roomId, { maxPlayer: changeMaxLength })
-                  .then((res) => console.log(res))
+                  .then((res) => dispatch(gameStart(true)))
                   .catch((err) => console.log(err));
               }
             } else {
@@ -235,6 +228,22 @@ const roundNoAIP = (roomId) => {
     console.log(roomId);
     await apis
       .getGameRoundNo(roomId)
+      .then((res) => {
+        dispatch(roundNoInfo(res.data.roundNo));
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+};
+
+//게임시작확인 미완
+const startCheckAPI = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    console.log(roomId);
+    await apis
+      .startCheck(roomId)
       .then((res) => {
         dispatch(roundNoInfo(res.data.roundNo));
         console.log(res);
@@ -288,6 +297,10 @@ export default handleActions(
         console.log(action.payload.round_num);
         draft.round = action.payload.round_num;
       }),
+    [GAME_START]: (state, action) =>
+      produce(state, (draft) => {
+        draft.gameStart = action.payload.start;
+      }),
   },
   initialState
 );
@@ -304,6 +317,8 @@ const actionCreators = {
   doStartAPI,
   cancelReadyAPI,
   roundNoAIP,
+  gameStart,
+  startCheckAPI,
 };
 
 export { actionCreators };

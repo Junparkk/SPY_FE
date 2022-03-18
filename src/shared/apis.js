@@ -20,6 +20,9 @@ export const apis = {
   changeMaxPlayer: (roomId, changeMaxLength) =>
     api.patch(`/room/${roomId}/changeMaxPlayer`, changeMaxLength),
   getRole: (roomId) => api.patch(`/room/${roomId}/role`),
+  startCheck: (roomId) => api.get(`/room/${roomId}/isStart`),
+  statusCheck: (roomId) => api.get(`/room/${roomId}/status_1`),
+  statusCheck2: (roomId) => api.get(`/room/${roomId}/status_2`),
   // post: (postId) => api.get(`/api/posts/${postId}`),
   // add: (title, price, imgurl, content) =>
   //   api.post('/api/posts', title, price, imgurl, content),
@@ -33,19 +36,22 @@ export const apis = {
   lawyerAct: (roomId, userId) =>
     api.patch(`/room/${roomId}/lawyerAct`, { userId: userId }),
 
-  detectiveAct: (roomId,userId) =>
-    api.get(`/room/${roomId}/detectiveAct/${userId}` ),
+  detectiveAct: (roomId, userId) =>
+    api.get(`/room/${roomId}/detectiveAct/${userId}`),
 
-  spyAct: (roomId, userId) => api.patch(`/room/${roomId}/spyAct`, {userId: userId}),
+  spyAct: (roomId, userId) =>
+    api.patch(`/room/${roomId}/spyAct`, { userId: userId }),
 
   dayTimeVote: (roomId, userId, round, chosenId) =>
     api.patch(`/room/${roomId}/voter/${userId}/vote`, round, chosenId),
-  dayTimeVoteResult: (roomId) => api.get(`/room/${roomId}/voteResult`),
+  dayTimeVoteResult: (roomId, roundNo) =>
+    api.get(`/room/${roomId}/round/${roundNo}`),
   getGameRoundNo: (roomId) => api.get(`/room/${roomId}/roundNo`),
-
+  sendInvalidVote: (roomId, roundNo) =>
+    api.put(`/room/${roomId}/round/${roundNo}/invalidVote`),
   //AI 플레이어 생성
   makeAiPlayer: (roomId) => api.put(`room/${roomId}/ai`),
 
-  // role 부여 1-시민/2-의사/3-경찰/4-스파이 
-  role: (roomId) => api.patch(`/room/${roomId}/role`)
+  // role 부여 1-시민/2-의사/3-경찰/4-스파이
+  role: (roomId) => api.patch(`/room/${roomId}/role`),
 };

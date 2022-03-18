@@ -37,7 +37,6 @@ const VoteModal = (props) => {
       dispatch(
         voteActions.sendDayTimeVoteAPI(chosenRoomId, userId, round, chosenId)
       );
-      dispatch(voteActions.voteCheck(true));
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
@@ -45,13 +44,11 @@ const VoteModal = (props) => {
 
   const aiAutoVoting = () => {
     console.log(user_list);
-
     console.log(round);
     for (let i = 0; i < user_list.length; i++) {
       const chooseRandomPlayer = Math.floor(Math.random() * user_list.length);
       console.log(user_list[i]);
       if (user_list[i].isAi === 'Y') {
-        console.log(i);
         dispatch(
           voteActions.sendDayTimeVoteAPI(
             user_list[i].roomId,
@@ -62,21 +59,6 @@ const VoteModal = (props) => {
         );
       }
     }
-
-    // user_list.map((p, i) => {
-    //   if (p.isAi === 'Y') {
-    //     console.log(p.userId);
-    //     console.log(chooseRandomPlayer);
-    //     dispatch(
-    //       voteActions.sendDayTimeVoteAPI(
-    //         chosenRoomId,
-    //         p.userId,
-    //         round,
-    //         chooseRandomPlayer
-    //       )
-    //     );
-    //   }
-    // });
   };
 
   useEffect(() => {
@@ -93,7 +75,6 @@ const VoteModal = (props) => {
           가장 스파이로 의심되는 사람에게 투표하세요.
         </Contents>
 
-        
         {/* 롤을 부여받은대로 보여줘야함 */}
         {(() => {
           if (user_list.length <= 6) {
@@ -125,7 +106,7 @@ const VoteModal = (props) => {
                       ref={ref}
                       key={p.id}
                       opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked()}
+                      onClick={() => clicked(idx)}
                     >
                       <Contents>{p.nickname}</Contents>
                     </JobCheckImg>
@@ -152,7 +133,9 @@ const VoteModal = (props) => {
           }
         })()}
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn>선택 완료</SendBtn>
+        <SendBtn disabled={submit} onClick={() => submitClicked()}>
+          선택 완료
+        </SendBtn>
       </ModalBlock>
     </Container>,
     document.getElementById('VoteModal')
