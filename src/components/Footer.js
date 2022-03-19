@@ -5,13 +5,11 @@ import { useState, useEffect } from 'react';
 const Footer = () => {
   return (
     <Wrap>
-      
     </Wrap>
   )
 }
 
 const Wrap = styled.div`
-  display: flex;
   width: 100%;
   height: 140px;
   justify-content: space-between;

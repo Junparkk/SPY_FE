@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import blueDoor from '../images/blueDoor.png';
+import Header from '../components/Header';
 
 import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
@@ -13,6 +14,7 @@ import PasswordModal from '../components/PasswordModal';
 import { actionCreators as roomActions } from '../redux/modules/room';
 
 import { apis } from '../shared/apis';
+import Footer from '../components/Footer';
 
 const Main = (props) => {
   const dispatch = useDispatch();
@@ -32,9 +34,18 @@ const Main = (props) => {
     <>
       {/* 패스워드 모달 */}
       {_private ? <PasswordModal /> : null}
-
       {/* 대기실 화면 */}
       <Wrap>
+        <div
+          style={{
+            position: 'fixed',
+            width: '100%',
+            zIndex: '50',
+            boxShadow: '0px 5px 5px gray',
+          }}
+        >
+          <Header />
+        </div>
         <Container>
           {room_list &&
             room_list.map((p, idx) => {
@@ -67,12 +78,11 @@ const Main = (props) => {
               }
             })}
         </Container>
+        <Footer />
       </Wrap>
-
       <EnterRoomBtn onClick={() => history.push('/makingroom')}>
         방 만들기
       </EnterRoomBtn>
-      <LoginButton onClick={() => history.push('/login')}>로그인</LoginButton>
     </>
   );
 };
@@ -138,7 +148,6 @@ const LoginButton = styled.button`
   position: fixed;
   bottom: 20px;
   right: 181px;
-
   border: none;
   border-radius: 16px;
   background: royalblue;

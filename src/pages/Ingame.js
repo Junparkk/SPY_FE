@@ -15,6 +15,7 @@ import { RiArrowGoBackFill } from 'react-icons/ri';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
+import Header from '../components/Header';
 
 //컴포넌트
 import VoteModal from '../components/VoteModal';
@@ -719,7 +720,7 @@ function Ingame(props) {
       <Wrap>
         {isDayTimeModalShowing && <VoteModal isMe={findMe}></VoteModal>}
         {isRoleModalShowing && <JobCheckModal roomId={roomId}></JobCheckModal>}
-
+        <Header/>
         <div>
           <Video roomId={roomId} />
           {chatView ? (
@@ -762,7 +763,9 @@ function Ingame(props) {
               ) : (
                 <StartButton onClick={() => doStart()}>시작</StartButton>
               )}
-              <ChatButton onClick={Chatting}>채팅창</ChatButton>
+              {chatView ? <ChatButton onClick={Chatting}>채팅창닫기</ChatButton> : 
+              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+            }
             </ButtonContainer>
           )}
 
