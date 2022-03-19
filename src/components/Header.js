@@ -12,10 +12,10 @@ const Header = () => {
   const [showModal, setShowModal] = useState(false);
 
   const LogOut = () => {
-    localStorage.removeItem('nickname')
-    localStorage.removeItem('userid')
-    history.push('/')
-  }
+    localStorage.removeItem('nickname');
+    localStorage.removeItem('userid');
+    history.push('/');
+  };
 
   const openModal = () => {
     setShowModal(true);
@@ -55,7 +55,11 @@ const Header = () => {
   return (
     <React.Fragment>
       <Wrap>
-        <HeaderTitle src={HeaderTitleLogo}/>
+        <HeaderTitle
+          src={HeaderTitleLogo}
+          onClick={LogOut}
+          style={{ cursor: 'pointer' }}
+        />
         <div>
           <LogOutButton onClick={LogOut}>로그아웃</LogOutButton>
           <RiQuestionnaireLine
@@ -89,7 +93,7 @@ const LogOutButton = styled.button`
   right: 100px;
   border: none;
   border-radius: 24px;
-  background: white;
+  background: #eeeeee;
   color: #6164ce;
   padding: 12px;
   font-weight: bold;
