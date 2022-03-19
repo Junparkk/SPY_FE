@@ -92,6 +92,8 @@ const WhiteDoorImgArea = styled.div`
   height: 100%;
   top: 0;
   left: 0;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 5px ;
   background: url('${whiteDoor}') no-repeat 0 0 / 100% 100%;
   transform-style: preserve-3d;
   transform-origin: left;
@@ -115,6 +117,8 @@ const BlueDoorImgArea = styled.div`
   height: 100%;
   top: 0;
   left: 0;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 5px ;
   background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
   transform-style: preserve-3d;
   transform-origin: left;
@@ -138,6 +142,8 @@ const PinkDoorImgArea = styled.div`
   height: 100%;
   top: 0;
   left: 0;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 5px ;
   background: url('${pinkDoor}') no-repeat 0 0 / 100% 100%;
   transform-style: preserve-3d;
   transform-origin: left;

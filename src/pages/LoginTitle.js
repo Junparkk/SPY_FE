@@ -14,8 +14,8 @@ function LoginTitle() {
   //랜덤 닉네임
   const randomUser = useSelector((state) => state.user.randomNick);
   const clearNick = () => {
-    setNickname('')
-  }
+    setNickname('');
+  };
   //스크롤 업 애니매이션
   const [ScrollY, setScrollY] = useState(0);
 
@@ -53,7 +53,7 @@ function LoginTitle() {
   };
   const randomNick = () => {
     dispatch(userActions.RandomNickDB());
-    setNickname(randomUser)
+    setNickname(randomUser);
   };
 
   return (
@@ -69,28 +69,43 @@ function LoginTitle() {
                 style={{
                   border: 'solid 2px #888888',
                   borderRadius: '20px',
-                  width: '20%',
+                  width: '15%',
                   minWidth: '180px',
                   height: '50px',
                 }}
+                maxLength={18}
                 placeholder="닉네임"
                 onChange={(e) => {
                   setNickname(e.target.value);
                 }}
-                onClick = {clearNick}
+                onClick={clearNick}
               />
-              <GiPerspectiveDiceSixFacesRandom
-                style={{
-                  backgroundColor: '#9295FD',
-                  borderRadius: '56px',
-                  verticalAlign: 'middle',
-                  marginLeft: '10px',
-                }}
-                size={56}
-                onClick={randomNick}
-              />
+              <div style={{ marginTop: '10px', fontFamily: 'yg-jalnan' }}>
+                <span
+                  style={{
+                    marginLeft: '10px',
+                    fontSize: '21px',
+                    color: '#6164CE',
+                  }}
+                >
+                  랜덤 닉네임 생성
+                </span>
+                <GiPerspectiveDiceSixFacesRandom
+                  style={{
+                    backgroundColor: '#9295FD',
+                    borderRadius: '48px',
+                    verticalAlign: 'middle',
+                    marginLeft: '10px',
+                    color: '#ffffff',
+                    padding: '3px',
+                    boxShadow: '5px 5px 5px gray',
+                    cursor: 'pointer'
+                  }}
+                  size={48}
+                  onClick={randomNick}
+                />
+              </div>
             </InputNick>
-
             <br />
             <StartBt onClick={Login}>start!</StartBt>
           </div>
@@ -142,7 +157,7 @@ const HeaderTitle = styled.div`
 `;
 
 const InputNick = styled.div`
-  margin-top: 10%;
+  margin-top: 7%;
   @media screen and (max-width: 663px) {
     margin-top: -10%;
   }
@@ -152,7 +167,7 @@ const StartBt = styled.button`
   border: none;
   background-color: #9295fd;
   border-radius: 40px;
-  font-size: 31px;
+  font-size: 26px;
   color: #fff;
   height: 65px;
   width: 171px;
