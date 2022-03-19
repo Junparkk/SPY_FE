@@ -501,30 +501,55 @@ function Ingame(props) {
   const [status, setStatus] = useState('');
   const [status2, setStatus2] = useState('');
 
-  useEffect(() => {
-    const interval = setInterval(function () {
-      console.log('ji');
-      apis
-        .statusCheck(roomId)
-        .then((res) => {
-          setStatus(res.data.status);
-          console.log(res.data.status);
-          // if (res.data.status === 'showRole') {
-          //   clearInterval(interval);
-          // }
-        })
-        .catch((err) => console.log(err));
-    }, 1000);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(function () {
+  //     console.log('ji');
+  //     apis
+  //       .statusCheck(roomId)
+  //       .then((res) => {
+  //         setStatus(res.data.status);
+  //         console.log(res.data.status);
+  //         // if (res.data.status === 'showRole') {
+  //         //   clearInterval(interval);
+  //         // }
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }, 1000);
+  // }, []);
 
-  useEffect(() => {
-    const getStatus = () => {
-      socket.emit('getStatus', roomId);
-    };
-    socket.on('getStatus', (status) => {
-      console.log(status);
-    });
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(function () {
+  //     function sendRoomId() {
+  //       return socket.emit('getStatus', roomId);
+  //     }
+  //     socket.on('getStatus', (status) => {
+  //       setStatus(status);
+  //       console.log(status, '------------------------');
+  //     });
+  //     sendRoomId();
+  //   }, 1000);
+  // }, []);
+
+  // function sendRoomId() {
+  //   return socket.emit('getStatus', roomId);
+  // }
+  // socket.on('getStatus', (status) => {
+  //   setStatus(status);
+  //   console.log(status, '------------------------');
+  // });
+  // sendRoomId();
+
+  // function test() {
+  //   socket.on('news', (test) => {
+  //     console.log(test);
+  //   });
+  // }
+  // test();
+
+  // socket.on('news', function (data) {
+  //   console.log(data);
+  //   socket.emit('reply', 'Hello Node.JS');
+  // });
 
   useEffect(() => {
     switch (status) {
@@ -635,7 +660,7 @@ function Ingame(props) {
       setIsDayTimeModalShowing(true);
       setTimeout(() => {
         나중();
-      }, 3000);
+      }, 10000);
     }
     function 이게나중() {
       setIsDayTimeModalShowing(false);
