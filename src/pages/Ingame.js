@@ -518,6 +518,16 @@ function Ingame(props) {
     }, 1000);
   }, []);
 
+  function sendRoomId() {
+    return socket.emit('getStatus', roomId);
+  }
+
+  socket.on('getStatus', (status) => {
+    console.log(status)
+  })
+
+  sendRoomId();
+
   useEffect(() => {
     switch (status) {
       case 'isStart':
@@ -605,7 +615,7 @@ function Ingame(props) {
       setIsDayTimeModalShowing(true);
       setTimeout(() => {
         나중();
-      }, 3000);
+      }, 10000);
     }
     function 이게나중() {
       setIsDayTimeModalShowing(false);
