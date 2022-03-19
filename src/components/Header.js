@@ -1,14 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
+import { history } from '../redux/configureStore';
 
 import { RiQuestionnaireLine } from 'react-icons/ri';
-import Logo from '../images/Logo.png';
+import HeaderTitleLogo from '../images/HeaderTitleLogo.png';
 
 import RuleModal from './RuleModal';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
+
+  const LogOut = () => {
+    localStorage.removeItem('nickname');
+    localStorage.removeItem('userid');
+    history.push('/');
+  };
 
   const openModal = () => {
     setShowModal(true);
@@ -48,24 +55,54 @@ const Header = () => {
   return (
     <React.Fragment>
       <Wrap>
-        <div style={{display:"flex"}}>
-          <div>총모양</div>
-          <div src={Logo}>로고</div>
-        </div>
-        <RiQuestionnaireLine
-          onClick={openModal}
-          style={{
-            fontSize: '36px',
-            cursor: 'pointer',
-            padding: '16px',
-            // position: 'relative',
-          }}
+        <HeaderTitle
+          src={HeaderTitleLogo}
+          onClick={LogOut}
+          style={{ cursor: 'pointer' }}
         />
+        <div>
+          <LogOutButton onClick={LogOut}>로그아웃</LogOutButton>
+          <RiQuestionnaireLine
+            onClick={openModal}
+            style={{
+              fontSize: '36px',
+              cursor: 'pointer',
+              padding: '20px',
+              color: '#dddddd',
+              marginRight: '10px',
+            }}
+          />
+        </div>
         <RuleModal showModal={showModal} setShowModal={setShowModal} />
       </Wrap>
     </React.Fragment>
   );
 };
+
+const HeaderTitle = styled.div`
+  width: 200px;
+  margin: 10px 10px 10px 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+`;
+
+const LogOutButton = styled.button`
+  position: fixed;
+  top: 15px;
+  right: 100px;
+  border: none;
+  border-radius: 24px;
+  background: #eeeeee;
+  color: #6164ce;
+  padding: 12px;
+  font-weight: bold;
+  font-family: 'yg-jalnan';
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  :hover {
+    cursor: pointer;
+  }
+`;
 
 const Wrap = styled.div`
   display: flex;
@@ -76,6 +113,7 @@ const Wrap = styled.div`
   position: relative;
   top: 0;
   left: 0;
+  z-index: 50;
 `;
 
 export default Header;
