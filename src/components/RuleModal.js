@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { IoMdClose } from 'react-icons/io';
-
+import Slider from '../components/Slider/Slider';
 const RuleModal = ({ showModal, setShowModal }) => {
   // const [modal, setModal] = useState(true);
   const modalRef = useRef();
@@ -69,23 +69,11 @@ const RuleModal = ({ showModal, setShowModal }) => {
       {showModal ? (
         <ModalBg onClick={closeBtn} ref={modalRef}>
           <WrapModal showModal={showModal}>
-            <ModalContent>
-              <ModalTitle>총 인원에 따른 직업 수</ModalTitle>
-             <p>최대 6명 - 일반직원 3명, 변호사 1명, 스파이 2명</p>
-             <p>최대 7명 - 일반직원 3명, 변호사 1명, 탐정 1명, 스파이 2명</p>
-             <p>최대 8명 - 일반직원 4명, 변호사 1명, 탐정 1명, 스파이 2명</p>
-
-
-
-              <p>일반 시민 : 투표를 통해 스파이를 찾아 내세요!</p>
-              <p>변호사 : 매 라운드 마다 스파이가 지목한 직원의 강제 퇴사를 막아냅니다.</p>
-              <p>탐정: 매 라운드 마다 지목해 상대방의 직업을 파악 할 수 있습니다.</p>
-              <p>스파이 : 매 라운드 마다 한명을 지목해 강제 퇴사 시킬 수 있습니다.</p>
-
-              
-            </ModalContent>
+            <div>
+            <Slider/>
+            </div>
             <CloseModal onClick={() => setShowModal((prev) => !prev)}>
-              <IoMdClose style={{ fontSize: '32px' }} />
+              SKIP
             </CloseModal>
           </WrapModal>
         </ModalBg>
@@ -95,8 +83,8 @@ const RuleModal = ({ showModal, setShowModal }) => {
 };
 
 const WrapModal = styled.div`
-  width: 800px;
-  height: 500px;
+  width: 80%;
+  height: 80%;
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
   background: #fff;
   color: #000;
@@ -104,7 +92,6 @@ const WrapModal = styled.div`
   /* grid-template-columns: 1fr 1fr; */
   position: relative;
   z-index: 10;
-  border-radius: 10px;
   text-align: center;
   justify-content: center;
   align-items: center;
@@ -140,13 +127,19 @@ const ModalContent = styled.div`
 
 const CloseModal = styled.button`
   cursor: pointer;
+  border : none;
   position: absolute;
-  border: none;
-  background: none;
-  top: 20px;
-  right: 20px;
-  width: 32px;
-  height: 32px;
+  background-color: #9296FD;
+  top: 30px;
+  right: 60px;
+  width: 9%;
+  min-width: 100px;
+  height: 48px;
+  border-radius: 30px;
+  box-shadow: 3px 3px 3px #bbbbbbbb;
+  font-family: 'yg-jalnan';
+  color: #dddddd;
+  font-size: 22px;
   padding: 0;
   z-index: 10;
 `;

@@ -12,7 +12,7 @@ import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { GrClose } from 'react-icons/gr';
 import { current } from 'immer';
 
-const Slider = () => {
+const Slider = ({ showModal, setShowModal }) => {
   // const [slideIndex, setSlideIndex] = useState(1); // 18분 유튜브
   const history = useHistory();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -22,7 +22,7 @@ const Slider = () => {
   const tuto = useSelector((state) => state.room.tuto);
   console.log(tuto);
   console.log(dataSlider);
-  console.log(currentSlide)
+  console.log(currentSlide);
 
   useEffect(() => {
     setCurrentSlide(0);
@@ -55,7 +55,17 @@ const Slider = () => {
             {index === currentSlide && (
               <>
                 <img src={slide.image} alt="slide" />
-                <div className="content">
+                <div
+                  style={{
+                    width: "50%",
+                    fontSize: '18px',
+                    borderRadius: '10px',
+                    backgroundColor: '#00000000',
+                    lineHeight: '30px',
+                    fontWeight: '500',
+                  }}
+                  className="content"
+                >
                   <SlideTitle>{slide.heading}</SlideTitle>
                   <br />
                   <br />
@@ -66,31 +76,6 @@ const Slider = () => {
           </div>
         );
       })}
-
-      <button
-        className="skipBtn"
-        onClick={() => {
-          history.push('/');
-        }}
-      >
-        SKIP
-      </button>
-
-      {currentSlide > 1 ? (
-        <button
-          className="nextBtn"
-          onClick={() => {
-            history.push('/');
-          }}
-        >
-          시작하기
-        </button>
-      ) : (
-        <button className="nextBtn" onClick={nextSlide}>
-          넘기기
-        </button>
-      )}
-
       <div className="container-dots">
         {Array.from({ length: 3 }).map((item, index) => (
           <div
@@ -105,7 +90,9 @@ const Slider = () => {
 };
 
 const SlideTitle = styled.p`
-  font-size: 32px;
+  font-size: 36px;
+  color: #ffe179;
+  font-family: 'yg-jalnan';
 `;
 
 export default Slider;
