@@ -59,7 +59,7 @@ const LoginDB = (nickname) => {
         console.log(response);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid', response.data.user.id);
-        history.push('/lobby');
+        window.location.replace('/lobby');
       })
       .catch((error) => {
         window.alert(error);

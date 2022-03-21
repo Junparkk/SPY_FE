@@ -60,6 +60,7 @@ function Ingame(props) {
     setOpacity(false);
   };
 
+
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
     localStorage.getItem('userid');

@@ -19,31 +19,54 @@ const PasswordModal = (props) => {
   return createPortal(
     <>
       <PrivateModalContainer>
-        <PrivateModalDim></PrivateModalDim>
+        <PrivateModalDim />
         <PrivateModal>
-          <PrivateModalTop>
-            <p className="privateModal_top_title">입장하기</p>
-            <CgCloseO
-              style={{ cursor: 'pointer' }}
-              alt="닫기"
-              className="privateModal_top_close"
-              onClick={() => {
-                dispatch(roomActions.privateState(false));
-                window.location.replace('/lobby');
-              }}
-            />
-          </PrivateModalTop>
+          <CgCloseO
+            style={{ cursor: 'pointer', float:'right', marginTop:"25px", color: "#eee" }}
+            alt="닫기"
+            size={25}
+            className="privateModal_top_close"
+            onClick={() => {
+              dispatch(roomActions.privateState(false));
+              window.location.replace('/lobby');
+            }}
+            
+          />
+          <div
+            style={{
+              marginTop: '65px',
+              textAlign: 'center',
+              fontFamily: 'yg-jalnan',
+              color: '#FFF',
+            }}
+          >
+            비밀번호를 입력하세요
+          </div>
           <PrivateModalMid>
-            <p className="privateModal_mid_password">비밀번호</p>
             <input
+              style={{
+                margin: '30px 0px 0px 110px',
+                border: 'none',
+                height: '35px',
+                borderRadius: '20px',
+                width: '220px',
+              }}
               onChange={onChangePwd}
               value={pwd}
               type="password"
-              placeholder="4글자 이상의 비밀번호를 작성해주세요."
+              placeholder="4자 이상의 비밀번호"
             />
           </PrivateModalMid>
           <PrivateModalBot>
             <p
+              style={{
+                color: '#fff',
+                fontFamily: 'yg-jalnan',
+                borderRadius: '45px',
+                backgroundColor: '#6164ce',
+                boxShadow: "0px 3px 3px #666666",
+                cursor: 'pointer'
+              }}
               className="privateModal_bot_btn"
               onClick={() => {
                 if (pwd.length < 4) {
@@ -55,7 +78,7 @@ const PasswordModal = (props) => {
                 }
               }}
             >
-              입장하기
+              완료
             </p>
           </PrivateModalBot>
         </PrivateModal>
@@ -85,8 +108,9 @@ const PrivateModalDim = styled.div`
 const PrivateModal = styled.div`
   width: 28.54vw;
   height: 32.27vh;
-  background: #fff;
-  border-radius: 16px;
+  border: 5px solid #6164ce;
+  background: #9296fd;
+  border-radius: 70px;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -97,7 +121,6 @@ const PrivateModal = styled.div`
 const PrivateModalTop = styled.div`
   width: 100%;
   height: 7.68vh;
-  border-bottom: 1px solid #e7e7e7;
   position: relative;
   .privateModal_top_title {
     font-size: 1.84vh;
@@ -124,18 +147,19 @@ const PrivateModalMid = styled.div`
   }
 `;
 const PrivateModalBot = styled.div`
-  width: 100%;
+  width: 21%;
+  margin: auto;
   padding-top: 3.69vh;
   .privateModal_bot_btn {
     width: 100%;
-    height: 5.53vh;
+    height: 4.53vh;
     background: #889cf2;
     border-radius: 11px;
     color: #fff;
     font-size: 1.84vh;
     font-weight: 600;
     text-align: center;
-    line-height: 5.53vh;
+    line-height: 4.53vh;
   }
 `;
 

@@ -252,7 +252,6 @@ class Video extends Component {
               <div
                 style={{ display: 'flex' }}
                 key={i}
-                onClick={() => this.handleMainVideoStream(sub)}
               >
                 <UserVideoComponent streamManager={sub} />
               </div>
