@@ -60,6 +60,7 @@ const Markingroom = () => {
               console.log(e.target.value);
             }}
             typd="text"
+            maxLength={8}
             placeholder="방 이름"
           />
 
@@ -128,16 +129,10 @@ const Markingroom = () => {
 
 const Wrap = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   background-color: #ffe179;
 `;
-
-// const MidWrap = styled.div`
-//   width: 1104px;
-//   height: 707px;
-//   margin: 201px auto 116px auto;
-// `;
 
 const LeftArea = styled.div`
   width: 70%;

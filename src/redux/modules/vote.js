@@ -65,14 +65,14 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
 };
 
 //변호사 투표
-const lawyerActDB = (roomId, userId) => {
+const lawyerActDB = (roomId, userId, roundNo) => {
   return async function (dispatch, useState, { history }) {
     console.log(roomId, userId, '변호사');
     await apis
       .lawyerAct(
         roomId,
-        userId
-        // roundNo: roundNo,
+        userId,
+        roundNo,
       )
       .then(function (res) {
         console.log(res.data);
