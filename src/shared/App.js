@@ -10,6 +10,7 @@ import MakingRoom from '../pages/MakingRoom';
 import Result from '../pages/Result';
 import Ingame from '../pages/Ingame'
 import Tutorial from "../pages/Tutorial";
+import UserVideoComponent from '../UserVideoComponent';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/result" exact component={Result}></Route>
         <Route path="/room/:roomId" exact component={Ingame}></Route>
         <Route path="/tutorial" exact component={Tutorial}></Route>
+        <Route path="/abc" exact component={UserVideoComponent}></Route>
       </ConnectedRouter>
     </>
   );

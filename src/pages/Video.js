@@ -240,9 +240,7 @@ class Video extends Component {
       //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2
       <div>
         {this.state.session !== undefined ? (
-          <VideoContainer
-            
-          >
+          <VideoContainer>
             {this.state.mainStreamManager !== undefined ? (
               <div id="main-video">
                 <UserVideoComponent

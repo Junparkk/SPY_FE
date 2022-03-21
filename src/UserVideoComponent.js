@@ -3,6 +3,28 @@ import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
 import styled from 'styled-components';
 
+// function UserVideoComponent ({streamManager}) {
+//   console.log(streamManager)
+//   const getNicknameTag = () => {
+//     return JSON.parse(streamManager.stream.connection.data).clientData
+//   }
+
+//   return(
+//     <>
+//     {streamManager !== undefined ? (
+//           <VideoBox>
+//             <div className="streamcomponent">
+//               <OpenViduVideoComponent
+//                 streamManager={streamManager}
+//               />
+//               <Text>{getNicknameTag()}</Text>
+//             </div>
+//           </VideoBox>
+//         ) : null}
+//     </>
+//   )
+// }
+
 export default class UserVideoComponent extends Component {
   getNicknameTag() {
     // Gets the nickName of the user
@@ -11,30 +33,6 @@ export default class UserVideoComponent extends Component {
   }
 
   render() {
-    // return (
-    //   <>
-    //     {this.props.streamManager !== undefined ? (
-    //       <div>
-    //         <VideoBox>
-    //           <OpenViduVideoComponent
-    //             streamManager={this.props.streamManager}
-    //           />
-    //         </VideoBox>
-    //         <div
-    //           style={{
-    //             textAlign: 'center',
-    //             fontFamily: 'yg-jalnan',
-    //             color: '#7b7edb',
-    //             fontSize: '18px',
-    //           }}
-    //         >
-    //           {this.getNicknameTag()}
-    //         </div>
-    //       </div>
-    //     ) : null}
-    //   </>
-    // );
-    // }
     return (
       <>
         {this.props.streamManager !== undefined ? (
@@ -51,6 +49,8 @@ export default class UserVideoComponent extends Component {
     );
   }
 }
+
+// export default UserVideoComponent;
 
 const VideoBox = styled.div`
   width: 250px;

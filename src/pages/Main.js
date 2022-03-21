@@ -78,19 +78,19 @@ const Main = (props) => {
               }
             })}
         </Container>
+        <EnterRoomBtn onClick={() => history.push('/makingroom')}>
+          <span
+            style={{
+              fontSize: '18px',
+              fontFamily: 'yg-jalnan',
+              color: '#ffe179',
+            }}
+          >
+            방<br />만<br />들<br />기
+          </span>
+        </EnterRoomBtn>
+        <Footer />
       </Wrap>
-      <EnterRoomBtn onClick={() => history.push('/makingroom')}>
-        <span
-          style={{
-            fontSize: '18px',
-            fontFamily: 'yg-jalnan',
-            color: '#ffe179',
-          }}
-        >
-          방<br />만<br />들<br />기
-        </span>
-      </EnterRoomBtn>
-      <Footer />
     </>
   );
 };
@@ -150,6 +150,5 @@ const EnterRoomBtn = styled.button`
   }
   z-index: 50;
 `;
-
 
 export default Main;
