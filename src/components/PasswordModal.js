@@ -2,6 +2,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
+import { CgCloseO } from 'react-icons/cg';
 
 import { actionCreators as roomActions } from '../redux/modules/room';
 const PasswordModal = (props) => {
@@ -22,13 +23,13 @@ const PasswordModal = (props) => {
         <PrivateModal>
           <PrivateModalTop>
             <p className="privateModal_top_title">입장하기</p>
-            <img
-              //   src={Close}
+            <CgCloseO
+              style={{ cursor: 'pointer' }}
               alt="닫기"
               className="privateModal_top_close"
               onClick={() => {
                 dispatch(roomActions.privateState(false));
-                window.location.replace('/');
+                window.location.replace('/lobby');
               }}
             />
           </PrivateModalTop>

@@ -78,11 +78,19 @@ const Main = (props) => {
               }
             })}
         </Container>
-        <Footer />
       </Wrap>
       <EnterRoomBtn onClick={() => history.push('/makingroom')}>
-        방 만들기
+        <span
+          style={{
+            fontSize: '18px',
+            fontFamily: 'yg-jalnan',
+            color: '#ffe179',
+          }}
+        >
+          방<br />만<br />들<br />기
+        </span>
       </EnterRoomBtn>
+      <Footer />
     </>
   );
 };
@@ -97,7 +105,6 @@ const Cards = styled.div`
 `;
 const Wrap = styled.div`
   height: 100vh;
-  /* width: 100vw; */
   background-color: #ffe179;
   overflow: auto;
 `;
@@ -136,28 +143,13 @@ const EnterRoomBtn = styled.button`
   border-radius: 16px;
   background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
   color: white;
-
   font-weight: bold;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   :hover {
     cursor: pointer;
   }
+  z-index: 50;
 `;
 
-const LoginButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 181px;
-  border: none;
-  border-radius: 16px;
-  background: royalblue;
-  color: white;
-  padding: 12px;
-  font-weight: bold;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  :hover {
-    cursor: pointer;
-  }
-`;
 
 export default Main;

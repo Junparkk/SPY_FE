@@ -1,66 +1,96 @@
 import React from 'react';
 import styled from 'styled-components';
-import Grid from '../elements/Grid';
-// import socketio from 'socket.io-client';
+import Video from './Video';
+import IngameHeader from '../components/IngameHeader';
+import Footer from '../components/Footer';
+import blueDoor from '../images/blueDoor.png';
+import WinEffect from '../images/WinEffect.gif';
+import { useDispatch } from 'react-redux';
+import { actionCreators as roomActions } from '../redux/modules/room';
+import { history } from '../redux/configureStore';
+// 게임 결과 창
 
-//리액트 아이콘
-import { GiPartyPopper } from 'react-icons/gi';
-import { BsFillDoorClosedFill } from 'react-icons/bs';
 
-import Winner from '../components/Winner';
-
-// 게임 결과 창 
 
 const Result = () => {
- 
+  const dispatch = useDispatch()
+
+  const leaveRoom = () => {
+    history.push('/lobby')
+      // dispatch(roomActions.leaveRoomDB(userId, roomId));
+  }
+
+  //room Id 필요한지..?
+  const reStart = () => {
+    history.goBack()
+  }
+
+  const shared = () =>{
+
+  }
+
   return (
     <React.Fragment>
       <Wrap>
-        <H1 height="auto"> ~~ 의 승리!</H1>
-        <Grid height="auto" is_flex>
-          <Image1>
-            <GiPartyPopper style={{ fontSize: '200px' }} />
-          </Image1>
-          <Image2>
-            <GiPartyPopper style={{ fontSize: '200px' }} />
-          </Image2>
-        </Grid>
-      
-        {/* 승자 화면  Winner은 컴포넌트임*/}
-        <Win>
-         
-          <Winner/>
-          <Winner/>
-          <Winner/>
-          <Winner/>
-          
-
-          {/* </Room> */}
-        </Win>
-
-        {/* 축하멘트/ 퇴장버튼들 */}
-        <Grid is_flex height="500px" center>
-          <div>회장님 축사</div>
-          <Grid height="auto">
-            <button>
-              <BsFillDoorClosedFill style={{ fontSize: '180px' }} />
-            </button>
-            <button>
-              <BsFillDoorClosedFill style={{ fontSize: '180px' }} />
-            </button>
-            <button>
-              <BsFillDoorClosedFill style={{ fontSize: '180px' }} />
-            </button>
-          </Grid>
-        </Grid>
+        <div
+          style={{
+            width: '100%',
+            boxShadow: '0px 5px 5px gray',
+          }}
+        >
+          <IngameHeader />
+        </div>
+        <WinnerWrap>
+          <H1 height="auto"> ~~ 의 승리!</H1>
+          <Win src={WinEffect}>
+            <Winner>
+              <Video />
+            </Winner>
+          </Win>
+        </WinnerWrap>
       </Wrap>
+      <Footer />
+      <Restart onClick={reStart}>
+        <span
+          style={{
+            fontSize: '18px',
+            fontFamily: 'yg-jalnan',
+            color: '#ffe179',
+          }}
+        >
+          다<br />시<br />하<br />기
+        </span>
+      </Restart>
+      <LeaveRoom onClick={leaveRoom}>
+        <span
+          style={{
+            fontSize: '18px',
+            fontFamily: 'yg-jalnan',
+            color: '#ffe179',
+          }}
+        >
+          방<br />나<br />가<br />기
+        </span>
+      </LeaveRoom>
+      <Shared onClick={shared}>
+        <span
+          style={{
+            fontSize: '18px',
+            fontFamily: 'yg-jalnan',
+            color: '#ffe179',
+          }}
+        >
+          공<br />유<br />하<br />기
+        </span>
+      </Shared>
     </React.Fragment>
   );
 };
 
 const Wrap = styled.div`
   width: 100%;
-  height: 1117px;
+  height: 100vh;
+  background-color: #ffe179;
 `;
 
 const H1 = styled.p`
@@ -71,31 +101,76 @@ const H1 = styled.p`
   padding: 30px;
 `;
 
-const Win = styled.div`
-  height: 300px;
+const WinnerWrap = styled.div`
   width: 100%;
+  height: 100vh;
+`;
+
+const Win = styled.div`
+  width: 80%;
+  height: 100vh;
   margin: auto;
-  display: flex;
-  justify-content: center;
-  inline-size: auto;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
 `;
 
-// const Winner = styled.div`
-//   width: 270px;
-//   height: 270px;
-//   border: 1px solid black;
-//   border-radius: 50%;
-//   margin: 10px;
-//   /* overflow: hidden; */
-//   /* object-fit: cover; // 실패 */
-// `;
-
-const Image1 = styled.div`
-  /* align: left; */
+const Winner = styled.div`
+  margin: 0px 10% 0px 10%;
 `;
 
-const Image2 = styled.div`
-  /* align: right; */
+const LeaveRoom = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 150px;
+  width: 4rem;
+  height: 8rem;
+  border: none;
+  border-radius: 16px;
+  background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
+  color: white;
+  font-weight: bold;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  :hover {
+    cursor: pointer;
+  }
+  z-index: 50;
+`;
+
+const Restart = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 250px;
+  width: 4rem;
+  height: 8rem;
+  border: none;
+  border-radius: 16px;
+  background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
+  color: white;
+  font-weight: bold;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  :hover {
+    cursor: pointer;
+  }
+  z-index: 50;
+`;
+
+const Shared = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 50px;
+  width: 4rem;
+  height: 8rem;
+  border: none;
+  border-radius: 16px;
+  background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
+  color: white;
+  font-weight: bold;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  :hover {
+    cursor: pointer;
+  }
+  z-index: 50;
 `;
 
 export default Result;
