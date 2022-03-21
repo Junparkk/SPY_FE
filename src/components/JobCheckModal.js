@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import tam from '../images/tam.png';
+import basic from '../images/basic.png';
+import byun from '../images/byun.png';
+import spy from '../images/spy.png';
 import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const JobCheckModal = ({ roomId }, props) => {
@@ -35,25 +39,25 @@ const JobCheckModal = ({ roomId }, props) => {
       id: 1,
       role: '평사원',
       desc: '각박한 회사에서 최선을 다해 살아남으세요',
-      image: '',
+      image: basic,
     },
     {
       id: 2,
       role: '변호사',
       desc: '정의로운 통찰력으로 사원들의 무죄를 증명하세요',
-      image: '',
+      image: byun,
     },
     {
       id: 3,
       role: '탐정',
       desc: '남다른 추리력으로 사원들의 정체를  꿰뚫어보세요',
-      image: '',
+      image: tam,
     },
     {
       id: 4,
       role: '산업 스파이',
       desc: '정체를 들키지 않고 지원들의 퇴직서를 받아내세요',
-      image: '',
+      image: spy,
     },
   ];
 
@@ -65,48 +69,48 @@ const JobCheckModal = ({ roomId }, props) => {
           return (
             <>
               <Background />
-              <ModalBlock>
-                <JobCheckImg>{roles[0].image}</JobCheckImg>
-                <Contents size="80px">쉿!</Contents>
+              <ModalBasic>
+                <JobCheckImg src={roles[0].image}></JobCheckImg>
+                <Contents size="40px">쉿!</Contents>
                 <Contents size="40px">당신은 {roles[0].role}</Contents>
-                <Contents size="30px">{roles[0].desc}</Contents>
-              </ModalBlock>
+                <Contents size="20px">{roles[0].desc}</Contents>
+              </ModalBasic>
             </>
           );
         } else if (myRole && myRole === 2) {
           return (
             <>
               <Background />
-              <ModalBlock>
-                <JobCheckImg>{roles[1].image}</JobCheckImg>
-                <Contents size="80px">쉿!</Contents>
+              <ModalByun>
+                <JobCheckImg src={roles[1].image}></JobCheckImg>
+                <Contents size="40px">쉿!</Contents>
                 <Contents size="40px">당신은 {roles[1].role}</Contents>
-                <Contents size="30px">{roles[1].desc}</Contents>
-              </ModalBlock>
+                <Contents size="20px">{roles[1].desc}</Contents>
+              </ModalByun>
             </>
           );
         } else if (myRole && myRole === 3) {
           return (
             <>
               <Background />
-              <ModalBlock>
-                <JobCheckImg>{roles[2].image}</JobCheckImg>
-                <Contents size="80px">쉿!</Contents>
+              <ModalTam>
+                <JobCheckImg src={roles[2].image}></JobCheckImg>
+                <Contents size="40px">쉿!</Contents>
                 <Contents size="40px">당신은 {roles[2].role}</Contents>
-                <Contents size="30px">{roles[2].desc}</Contents>
-              </ModalBlock>
+                <Contents size="20px">{roles[2].desc}</Contents>
+              </ModalTam>
             </>
           );
         } else if (myRole && myRole === 4) {
           return (
             <>
               <Background />
-              <ModalBlock>
-                <JobCheckImg>{roles[3].image}</JobCheckImg>
-                <Contents size="80px">쉿!</Contents>
+              <ModalSpy>
+                <JobCheckImg src={roles[3].image}></JobCheckImg>
+                <Contents size="40px">쉿!</Contents>
                 <Contents size="40px">당신은 {roles[3].role}</Contents>
-                <Contents size="30px">{roles[3].desc}</Contents>
-              </ModalBlock>
+                <Contents size="20px">{roles[3].desc}</Contents>
+              </ModalSpy>
             </>
           );
         }
@@ -160,16 +164,109 @@ const Background = styled.div`
   }
 `;
 
-const ModalBlock = styled.div`
+const ModalBasic = styled.div`
   position: absolute;
   top: 15rem;
-  border-radius: 30px;
+  border-radius: 20px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  background-color: #2291e3;
+  width: 60rem;
+  @media (max-width: 1120px) {
+    width: 50rem;
+  }
+  @media (max-width: 50rem) {
+    width: 80%;
+  }
+  min-height: 35rem;
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+`;
+
+const ModalSpy = styled.div`
+  position: absolute;
+  top: 15rem;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #282828;
+  width: 60rem;
+  @media (max-width: 1120px) {
+    width: 50rem;
+  }
+  @media (max-width: 50rem) {
+    width: 80%;
+  }
+  min-height: 35rem;
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+`;
+
+const ModalByun = styled.div`
+  position: absolute;
+  top: 15rem;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #6a3da4;
+  width: 60rem;
+  @media (max-width: 1120px) {
+    width: 50rem;
+  }
+  @media (max-width: 50rem) {
+    width: 80%;
+  }
+  min-height: 35rem;
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+`;
+
+const ModalTam = styled.div`
+  position: absolute;
+  top: 15rem;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #bc814f;
   width: 60rem;
   @media (max-width: 1120px) {
     width: 50rem;
@@ -196,14 +293,19 @@ const Contents = styled.div`
   flex-direction: column;
   align-items: center;
   color: white;
+  margin-top: 20px;
+  font-family: 'yg-jalnan';
   font-size: ${(props) => props.size};
 `;
 
 const JobCheckImg = styled.div`
   width: 20rem;
   height: 20rem;
+  margin-bottom: 20px;
   border-radius: 50%;
-  background-color: blueviolet;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
 `;
 
 export default JobCheckModal;

@@ -1,6 +1,5 @@
 import '../components/Chat.css';
 import '../shared/App.css';
-import '../components/Video.css';
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
@@ -15,7 +14,7 @@ import { RiArrowGoBackFill } from 'react-icons/ri';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
-import Header from '../components/Header';
+import IngameHeader from '../components/IngameHeader';
 
 //컴포넌트
 import VoteModal from '../components/VoteModal';
@@ -741,7 +740,7 @@ function Ingame(props) {
       console.log('다음라운드');
     }
   }
-  // 1, 2 
+  // 반환 1, 2 
 
   // isGameResult();
 
@@ -786,63 +785,71 @@ function Ingame(props) {
     <>
       <Wrap>
         {isDayTimeModalShowing && <VoteModal isMe={findMe}></VoteModal>}
-        {isRoleModalShowing && <JobCheckModal roomId={roomId}></JobCheckModal>}
-        <Header />
-        <div>
-          <Video roomId={roomId} />
-          {chatView ? (
-            <Draggable
-              nodeRef={nodeRef}
-              onDrag={(e, data) => trackPos(data)}
-              onStart={handleStart}
-              onStop={handleEnd}
-            >
-              <ChatBox>
-                <Chat socket={socket} username={username} room={roomId} />
-              </ChatBox>
-            </Draggable>
-          ) : null}
-          {round >= 1 ? null : (
-            <ButtonContainer>
-              <RiArrowGoBackFill
-                style={{
-                  width: '30px',
-                  height: '30px',
-                  borderRadius: '30px',
-                  backgroundColor: '#9296fd',
-                  cursor: 'pointer',
-                  color: '#ffe179',
-                  padding: '10px',
-                  marginLeft: '100px',
-                  zIndex: '100000',
-                }}
-                onClick={leaveRoom}
-              />
-              {findMe[0] && findMe[0].isHost === 'N' ? (
-                isReady ? (
-                  <ReadyButton onClick={() => cancelReady()}>
-                    준비취소
-                  </ReadyButton>
-                ) : (
-                  <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
-                )
-              ) : (
-                <StartButton onClick={() => doStart()}>시작</StartButton>
-              )}
-              {chatView ? (
-                <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
-              ) : (
-                <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
-              )}
-            </ButtonContainer>
-          )}
-
-          {/* 변호사추가  + 탐정 추가 */}
-          {/* 근데 자연스럽게 뜨고 사라지는건 어떻게 구현? */}
-          {/* <LawyerVoteModal /> */}
-          {/* <DetectiveVoteModal/> */}
-          {/* <SpyVoteModal/> */}
+        {/* {isRoleModalShowing && <JobCheckModal roomId={roomId}></JobCheckModal>} */}
+        <div
+          style={{
+            width: '100%',
+            boxShadow: '0px 5px 5px gray',
+          }}
+        >
+          <IngameHeader />
         </div>
+        <VideoContainer>
+          <Video roomId={roomId} />
+        </VideoContainer>
+        {chatView ? (
+          <Draggable
+            nodeRef={nodeRef}
+            onDrag={(e, data) => trackPos(data)}
+            onStart={handleStart}
+            onStop={handleEnd}
+          >
+            <ChatBox>
+              <Chat socket={socket} username={username} room={roomId} />
+            </ChatBox>
+          </Draggable>
+        ) : null}
+        {round >= 1 ? null : (
+          <ButtonContainer>
+            <RiArrowGoBackFill
+              style={{
+                width: '35px',
+                minWidth: '35px',
+                height: '35px',
+                borderRadius: '35px',
+                backgroundColor: '#9296fd',
+                cursor: 'pointer',
+                color: '#ffe179',
+                padding: '10px',
+                marginLeft: '100px',
+                zIndex: '5',
+              }}
+              onClick={leaveRoom}
+            />
+            {findMe[0] && findMe[0].isHost === 'N' ? (
+              isReady ? (
+                <ReadyButton onClick={() => cancelReady()}>
+                  준비취소
+                </ReadyButton>
+              ) : (
+                <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
+              )
+            ) : (
+              <StartButton onClick={() => doStart()}>시작</StartButton>
+            )}
+            {chatView ? (
+              <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+            ) : (
+              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+            )}
+          </ButtonContainer>
+        )}
+
+        {/* 변호사추가  + 탐정 추가 */}
+        {/* 근데 자연스럽게 뜨고 사라지는건 어떻게 구현? */}
+        {/* <LawyerVoteModal /> */}
+        {/* <DetectiveVoteModal/> */}
+        {/* <SpyVoteModal/> */}
       </Wrap>
     </>
   );
@@ -860,57 +867,68 @@ const Wrap = styled.div`
 `;
 const ButtonContainer = styled.div`
   display: flex;
+  position: absolute;
+  left: 10%;
+  bottom: 50px;
+  @media screen and (max-width: 763px) {
+    left:0%;
+  }
+`;
+
+const VideoContainer = styled.div`
+  width: 100%;
 `;
 
 const ReadyButton = styled.div`
   width: 6.2%;
-  min-width: 60px;
+  min-width: 90px;
   height: 59px;
-  border-radius: 40px;
+  border-radius: 35px;
   background-color: #9296fd;
   text-align: center;
   line-height: 59px;
   font-family: 'yg-jalnan';
   color: white;
-  z-index: 100000;
+  z-index: 5;
   margin-left: 100px;
   cursor: pointer;
 `;
 const StartButton = styled.div`
   width: 6.2%;
-  min-width: 60px;
+  min-width: 90px;
   height: 59px;
-  border-radius: 40px;
+  border-radius: 35px;
   background-color: #9296fd;
   text-align: center;
   line-height: 59px;
   font-family: 'yg-jalnan';
   color: white;
-  z-index: 100000;
+  z-index: 5;
   margin-left: 100px;
   cursor: pointer;
 `;
 
 const ChatButton = styled.div`
   width: 6.2%;
-  min-width: 60px;
+  min-width: 90px;
   height: 59px;
-  border-radius: 40px;
+  border-radius: 35px;
   background-color: #9296fd;
   text-align: center;
   line-height: 59px;
   font-family: 'yg-jalnan';
   color: white;
-  z-index: 100000;
+  z-index: 5;
   margin-left: 100px;
   cursor: pointer;
 `;
 
 const ChatBox = styled.div`
   position: absolute;
+  right: 50px;
+  top: 50px;
   float: right;
-  z-index: 100000;
-  margin: -380px 50px 0px 70%;
+  z-index: 500;
 `;
 
 export default Ingame;
