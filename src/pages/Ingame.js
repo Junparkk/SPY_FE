@@ -15,6 +15,7 @@ import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
 import IngameHeader from '../components/IngameHeader';
+import { history } from '../redux/configureStore';
 
 //컴포넌트
 import VoteModal from '../components/VoteModal';
@@ -26,233 +27,12 @@ import { apis } from '../shared/apis';
 
 //socket 서버
 const socket = io.connect('https://mafia.milagros.shop');
-//openvidu 서버
-const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
-const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
 
 function Ingame(props) {
-  //화상 채팅
-  const [session, setSession] = useState(undefined);
-  const [mainStreamManager, setMainStreamManager] = useState(undefined);
-  const [publisher, setPublisher] = useState(undefined);
-  const [subscribers, setSubscribers] = useState([]);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined);
-
-  const onbeforeunload = () => {
-    leaveSession();
-  };
-
-  const handleMainVideoStream = (stream) => {
-    if (mainStreamManager !== stream) {
-      setMainStreamManager({
-        mainStreamManager: stream,
-      });
-    }
-  };
-
-  const deleteSubscriber = (streamManager) => {
-    let subscribers = subscribers;
-    let index = subscribers.indexOf(streamManager, 0);
-    if (index > -1) {
-      subscribers.splice(index, 1);
-      setSubscribers({
-        subscribers: subscribers,
-      });
-    }
-  };
-
-  function getToken(roomId) {
-    return createSession(roomId).then((sessionId) => createToken(sessionId));
-  }
-
-  function createSession(sessionId) {
-    return new Promise((resolve, reject) => {
-      var data = JSON.stringify({ customSessionId: sessionId });
-      axios
-        .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
-          headers: {
-            Authorization:
-              'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((response) => {
-          console.log('CREATE SESION', response);
-          resolve(response.data.id);
-        })
-        .catch((response) => {
-          var error = Object.assign({}, response);
-          if (error?.response?.status === 409) {
-            resolve(sessionId);
-          } else {
-            console.log(error);
-            console.warn(
-              'No connection to OpenVidu Server. This may be a certificate error at ' +
-                OPENVIDU_SERVER_URL
-            );
-            if (
-              window.confirm(
-                'No connection to OpenVidu Server. This may be a certificate error at "' +
-                  OPENVIDU_SERVER_URL +
-                  '"\n\nClick OK to navigate and accept it. ' +
-                  'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
-                  OPENVIDU_SERVER_URL +
-                  '"'
-              )
-            ) {
-              window.location.assign(
-                OPENVIDU_SERVER_URL + '/accept-certificate'
-              );
-            }
-          }
-        });
-    });
-  }
-
-  function createToken(sessionId) {
-    return new Promise((resolve, reject) => {
-      var data = {};
-      axios
-        .post(
-          OPENVIDU_SERVER_URL +
-            '/openvidu/api/sessions/' +
-            sessionId +
-            '/connection',
-          data,
-          {
-            headers: {
-              Authorization:
-                'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then((response) => {
-          console.log('TOKEN', response);
-          resolve(response.data.token);
-        })
-        .catch((error) => reject(error));
-    });
-  }
-
-  function joinSession() {
-    const OV = new OpenVidu();
-
-    setSession({ session: OV.initSession() }, () => {
-      var mySession = roomId;
-
-      mySession.on('streamCreates', (event) => {
-        var subscriber = mySession.subscribe(event.stream, undefined);
-        subscribers.push(subscriber);
-
-        setSubscribers(subscribers);
-      });
-
-      mySession.on('streamDestroyed', (event) => {
-        deleteSubscriber(event.stream.streamManager);
-      });
-
-      mySession.on('exception', (exception) => {
-        console.worn(exception);
-      });
-
-      getToken().then((token) => {
-        mySession
-          .connect(token, { clientData: userNick })
-          .then(async () => {
-            var devices = await OV.getDevices();
-            var videoDevices = devices.filter(
-              (device) => device.kind === 'videoinput'
-            );
-
-            let publisher = OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: '640x480', // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-              mirror: false, // Whether to mirror your local video or not
-            });
-
-            mySession.publish(publisher);
-
-            setCurrentVideoDevice(videoDevices[0]);
-            setMainStreamManager(publisher);
-            setPublisher(publisher);
-          })
-          .catch((err) => {
-            console.log(
-              'There was an error connecting to the session:',
-              err.code,
-              err.message
-            );
-          });
-      });
-    });
-  }
-
-  const leaveSession = () => {
-    const mySession = session;
-    const OV = new OpenVidu();
-
-    if (mySession) {
-      mySession.disconnect();
-    }
-
-    OV = null;
-    setSession(undefined);
-    setSubscribers([]);
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-  };
-
-  async function switchCamera() {
-    const OV = new OpenVidu();
-
-    try {
-      const devices = await OV.getDevices();
-      var videoDevices = devices.filter(
-        (device) => device.kind === 'videoinput'
-      );
-
-      if (videoDevices && videoDevices.length > 1) {
-        var newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
-
-        if (newVideoDevice.length > 0) {
-          // Creating a new publisher with specific videoSource
-          // In mobile devices the default and first camera is the front one
-          var newPublisher = OV.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: true,
-          });
-
-          //newPublisher.once("accessAllowed", () => {
-          await session.unpublish(mainStreamManager);
-
-          await session.publish(newPublisher);
-
-          setCurrentVideoDevice(newVideoDevice);
-          setMainStreamManager(newPublisher);
-          setPublisher(newPublisher);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   useEffect(() => {
-    window.addEventListener('beforeunload', onbeforeunload);
-    return () => {
-      window.removeEventListener('beforeunload', onbeforeunload);
-    };
-  }, []);
+    // window.location.reload()
+    return;
+  },[]);
 
   //채팅
   const dispatch = useDispatch();
@@ -805,7 +585,7 @@ const ButtonContainer = styled.div`
   left: 10%;
   bottom: 50px;
   @media screen and (max-width: 763px) {
-    left:0%;
+    left: 0%;
   }
 `;
 
