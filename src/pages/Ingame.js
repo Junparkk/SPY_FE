@@ -518,18 +518,18 @@ function Ingame(props) {
   //   }, 1000);
   // }, []);
 
-  // useEffect(() => {
-  //   const interval = setInterval(function () {
-  //     function sendRoomId() {
-  //       return socket.emit('getStatus', roomId);
-  //     }
-  //     socket.on('getStatus', (status) => {
-  //       setStatus(status);
-  //       console.log(status, '------------------------');
-  //     });
-  //     sendRoomId();
-  //   }, 1000);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(function () {
+      function sendRoomId() {
+        return socket.emit('getStatus', roomId);
+      }
+      socket.on('getStatus', (status) => {
+        setStatus(status);
+        console.log(status, '------------------------');
+      });
+      sendRoomId();
+    }, 1000);
+  }, []);
 
   // function sendRoomId() {
   //   return socket.emit('getStatus', roomId);
@@ -540,12 +540,12 @@ function Ingame(props) {
   // });
   // sendRoomId();
 
-  // function test() {
-  //   socket.on('news', (test) => {
-  //     console.log(test);
-  //   });
-  // }
-  // test();
+  function test() {
+    socket.on('news', (test) => {
+      console.log(test);
+    });
+  }
+  test();
 
   // socket.on('news', function (data) {
   //   console.log(data);
@@ -754,7 +754,7 @@ function Ingame(props) {
       <Wrap>
         {isDayTimeModalShowing && <VoteModal isMe={findMe}></VoteModal>}
         {isRoleModalShowing && <JobCheckModal roomId={roomId}></JobCheckModal>}
-        <Header/>
+        <Header />
         <div>
           <Video roomId={roomId} />
           {chatView ? (
@@ -797,9 +797,11 @@ function Ingame(props) {
               ) : (
                 <StartButton onClick={() => doStart()}>시작</StartButton>
               )}
-              {chatView ? <ChatButton onClick={Chatting}>채팅창닫기</ChatButton> : 
-              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
-            }
+              {chatView ? (
+                <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+              ) : (
+                <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+              )}
             </ButtonContainer>
           )}
 
