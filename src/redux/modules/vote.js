@@ -9,10 +9,12 @@ const SET_USERS = 'SET_USERS';
 // const SEND_VOTE = 'SEND_VOTE';
 const ROLE_GIVE = 'ROLE_GIVE';
 const VOTE_CHECK = 'VOTE_CHECK';
+const LAWYER_NULL_VOTE = 'LAYER_NULL_VOTE';
 
 const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
 // const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
 const giveUsers = createAction(ROLE_GIVE, (users) => ({ users }));
+const lawyerNullVote = createAction(LAWYER_NULL_VOTE, (vote) => ({ vote }));
 
 const initialState = {
   userList: [],
@@ -22,6 +24,7 @@ const initialState = {
   },
   userId: [],
   users: [],
+  isLawyerNull: true,
 };
 
 //middleware
@@ -57,8 +60,7 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
         console.log('이건 apis 안------------------------');
-        window.alert(res.data.result);
-        console.log(res);
+        console.log(res.data.result);
       })
       .catch((err) => console.log(err));
   };
@@ -76,7 +78,6 @@ const lawyerActDB = (roomId, userId) => {
       )
       .then(function (res) {
         console.log(res.data);
-        window.alert(res.data.msg);
       })
       .catch((err) => {
         console.log(err);
@@ -137,10 +138,10 @@ const divisionRole = (roomId) => {
 };
 
 // 아무 입력 없으면 자동으로 무효표 처리
-const invalidVote = (roomId, roundNo) => {
+const invalidVote = (roomId, roundNo, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .sendInvalidVote(roomId, roundNo)
+      .sendInvalidVote(roomId, roundNo, userId)
       .then(function (res) {
         console.log(res);
       })
@@ -168,6 +169,10 @@ export default handleActions(
         console.log(draft.users);
         console.log(action.payload);
       }),
+    [LAWYER_NULL_VOTE]: (state, action) =>
+      produce(state, (draft) => {
+        draft.isLawyerNull = !action.payload.vote;
+      }),
   },
   initialState
 );
@@ -181,6 +186,7 @@ const actionCreators = {
   spyActDB,
   divisionRole,
   invalidVote,
+  lawyerNullVote,
 };
 
 export { actionCreators };

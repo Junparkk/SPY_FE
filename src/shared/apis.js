@@ -50,11 +50,15 @@ export const apis = {
   dayTimeVoteResult: (roomId, roundNo) =>
     api.get(`/room/${roomId}/round/${roundNo}`),
   getGameRoundNo: (roomId) => api.get(`/room/${roomId}/roundNo`),
-  sendInvalidVote: (roomId, roundNo) =>
-    api.put(`/room/${roomId}/round/${roundNo}/invalidVote`),
+  sendInvalidVote: (roomId, roundNo, userId) =>
+    api.put(`/room/${roomId}/round/${roundNo}/user/${userId}/invalidAndAiVote`),
+
   //AI 플레이어 생성
   makeAiPlayer: (roomId) => api.put(`room/${roomId}/ai`),
 
   // role 부여 1-시민/2-의사/3-경찰/4-스파이
   role: (roomId) => api.patch(`/room/${roomId}/role`),
+  gameResult: (roomId) => api.get(`/room/${roomId}/result`),
+  aiLawyerAct: (roomId) => api.patch(`/room/${roomId}/aiLawyerAct`),
+  aiSpyAct: (roomId) => api.patch(`/room/${roomId}/aiSpyAct`),
 };
