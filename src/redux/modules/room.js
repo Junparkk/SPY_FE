@@ -179,6 +179,10 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
         console.log(res);
         // 정상 실행
         if (res.data.msg === '시작!') {
+          apis
+            .start(roomId)
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
           dispatch(gameStart(true));
         } else {
           const firstCheck = window.confirm(res.data.msg);
@@ -205,7 +209,12 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
               } else {
                 apis
                   .changeMaxPlayer(roomId, { maxPlayer: changeMaxLength })
-                  .then((res) => dispatch(gameStart(true)))
+                  .then((res) =>
+                    apis
+                      .start(roomId)
+                      .then((res) => console.log(res))
+                      .catch((err) => console.log(err))
+                  )
                   .catch((err) => console.log(err));
               }
             } else {

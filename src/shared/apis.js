@@ -22,7 +22,8 @@ export const apis = {
   getRole: (roomId) => api.patch(`/room/${roomId}/role`),
   startCheck: (roomId) => api.get(`/room/${roomId}/isStart`),
   statusCheck: (roomId) => api.get(`/room/${roomId}/status_1`),
-  statusCheck2: (roomId) => api.get(`/room/${roomId}/status_2`),
+  statusCheck2: (roomId, userId) =>
+    api.get(`/room/${roomId}/user/${userId}/status`),
   // post: (postId) => api.get(`/api/posts/${postId}`),
   // add: (title, price, imgurl, content) =>
   //   api.post('/api/posts', title, price, imgurl, content),
@@ -35,6 +36,8 @@ export const apis = {
   //vote
   lawyerAct: (roomId, userId) =>
     api.patch(`/room/${roomId}/lawyerAct`, { userId: userId }),
+  aiVote: (roomId, roundNo) =>
+    api.put(`/room/${roomId}/roundNo/${roundNo}/aiVote`),
 
   detectiveAct: (roomId, userId) =>
     api.get(`/room/${roomId}/detectiveAct/${userId}`),
