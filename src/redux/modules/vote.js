@@ -9,10 +9,12 @@ const SET_USERS = 'SET_USERS';
 // const SEND_VOTE = 'SEND_VOTE';
 const ROLE_GIVE = 'ROLE_GIVE';
 const VOTE_CHECK = 'VOTE_CHECK';
+const LAWYER_NULL_VOTE = 'LAYER_NULL_VOTE';
 
 const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
 // const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
 const giveUsers = createAction(ROLE_GIVE, (users) => ({ users }));
+const lawyerNullVote = createAction(LAWYER_NULL_VOTE, (vote) => ({ vote }));
 
 const initialState = {
   userList: [],
@@ -22,6 +24,7 @@ const initialState = {
   },
   userId: [],
   users: [],
+  isLawyerNull: true,
 };
 
 //middleware
@@ -49,7 +52,7 @@ const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId) => {
       .catch((err) => console.log(err));
   };
 };
-//낮시간 투표 결과
+//낮시간 투표 결과,  밤도 같이사용
 const resultDayTimeVoteAPI = (roomId, roundNo) => {
   return async function (dispatch, useState, { history }) {
     console.log('이건 apis 밖------------------------');
@@ -65,14 +68,14 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
 };
 
 //변호사 투표
-const lawyerActDB = (roomId, userId, roundNo) => {
+const lawyerActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     console.log(roomId, userId, '변호사');
     await apis
       .lawyerAct(
         roomId,
-        userId,
-        roundNo,
+        userId
+        // roundNo: roundNo,
       )
       .then(function (res) {
         console.log(res.data);
@@ -109,7 +112,6 @@ const spyActDB = (roomId, userId) => {
       .spyAct(
         roomId,
         userId
-        // roundNo: roundNo,
       )
       .then(function (res) {
         console.log(res.data);
@@ -137,10 +139,10 @@ const divisionRole = (roomId) => {
 };
 
 // 아무 입력 없으면 자동으로 무효표 처리
-const invalidVote = (roomId, roundNo) => {
+const invalidVote = (roomId, roundNo, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .sendInvalidVote(roomId, roundNo)
+      .sendInvalidVote(roomId, roundNo, userId)
       .then(function (res) {
         console.log(res);
       })
@@ -168,6 +170,10 @@ export default handleActions(
         console.log(draft.users);
         console.log(action.payload);
       }),
+    [LAWYER_NULL_VOTE]: (state, action) =>
+      produce(state, (draft) => {
+        draft.isLawyerNull = !action.payload.vote;
+      }),
   },
   initialState
 );
@@ -181,6 +187,7 @@ const actionCreators = {
   spyActDB,
   divisionRole,
   invalidVote,
+  lawyerNullVote,
 };
 
 export { actionCreators };

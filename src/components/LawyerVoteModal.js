@@ -11,7 +11,7 @@ const LawyerVoteModal = (props) => {
   console.log(props);
   const dispatch = useDispatch();
   const round = useSelector((state) => state.room.round);
-  console.log(round)
+  console.log(round);
   const user_list = useSelector((state) => state.vote.userList);
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
@@ -30,7 +30,7 @@ const LawyerVoteModal = (props) => {
     console.log(chosen);
     console.log(chosen.user.id, '유저 아이디');
     console.log(chosen.roomId, '룸 아이디');
-    console.log(chosen.user, "제발");
+    console.log(chosen.user, '제발');
   };
 
   const submitClicked = () => {
@@ -43,6 +43,29 @@ const LawyerVoteModal = (props) => {
     console.log(chosenId);
     console.log(chosenRoomId);
   };
+
+  // const submitClicked = () => {
+  //   if (voteBtnClicked === null) {
+  //     for (let i = 0; i < user_list.length; i++) {
+  //       const chooseRandomPlayer = Math.floor(Math.random() * user_list.length);
+  //       console.log(user_list[chooseRandomPlayer], '선택받은 아이');
+  //       if (user_list[i].role === 2 || user_li) {
+  //         dispatch(
+  //           voteActions.lawyerActDB(
+  //             // user_list[i].roomId,
+  //             // user_list[i].userId,
+  //             // round,
+  //             chosenRoomId,
+  //             user_list[chooseRandomPlayer].userId
+  //           )
+  //         );
+  //       }
+  //     }
+  //     setSubmit(true);
+  //   } else {
+  //     window.alert('해고 당할거 같은 직원을 선택해주세요 :)');
+  //   }
+  // };
 
   console.log(submit);
   return createPortal(
