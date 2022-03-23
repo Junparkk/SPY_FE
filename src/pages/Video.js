@@ -20,6 +20,7 @@ class Video extends Component {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      speaking: false,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -92,6 +93,25 @@ class Video extends Component {
       () => {
         var mySession = this.state.session;
         console.log(mySession);
+
+        this.state.session.on('publisherStartSpeaking', (event) => {
+          this.setState({ speaking: true });
+          console.log(
+            'User ' +
+              event.connection.connectionId +
+              ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
+            this.state.speaking
+          );
+        });
+
+        this.state.session.on('publisherStopSpeaking', (event) => {
+          this.setState({ speaking: false });
+          console.log(
+            'User ' +
+              event.connection.connectionId +
+              ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
+          );
+        });
 
         // --- 3) Specify the actions when events take place in the session ---
 
@@ -240,23 +260,21 @@ class Video extends Component {
       //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2
       <div>
         {this.state.session !== undefined ? (
-          <VideoContainer
-            
-          >
+          <VideoContainer>
             {this.state.mainStreamManager !== undefined ? (
               <div id="main-video">
                 <UserVideoComponent
                   streamManager={this.state.mainStreamManager}
+                  speaking={this.state.speaking}
                 />
               </div>
             ) : null}
             {this.state.subscribers.map((sub, i) => (
-              <div
-                style={{ display: 'flex' }}
-                key={i}
-                onClick={() => this.handleMainVideoStream(sub)}
-              >
-                <UserVideoComponent streamManager={sub} />
+              <div style={{ display: 'flex' }} key={i}>
+                <UserVideoComponent
+                  speaking={this.state.speaking}
+                  streamManager={sub}
+                />
               </div>
             ))}
           </VideoContainer>

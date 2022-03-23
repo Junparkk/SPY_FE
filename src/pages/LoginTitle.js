@@ -12,6 +12,18 @@ import { useSelector } from 'react-redux';
 
 function LoginTitle() {
   //랜덤 닉네임
+
+  //카메라 마이크 권한 획득
+  async function getMedia() {
+    let stream = null;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      });
+    } catch (err) {}
+  }
+
   const randomUser = useSelector((state) => state.user.randomNick);
   const clearNick = () => {
     setNickname('');
@@ -43,6 +55,10 @@ function LoginTitle() {
     console.log('Scroll is', ScrollY);
   }, [ScrollY]);
 
+  useEffect(() => {
+    getMedia();
+  });
+
   //닉네임 서버 전달
   const dispatch = useDispatch();
 
@@ -57,7 +73,7 @@ function LoginTitle() {
   };
   useEffect(() => {
     randomNick();
-    setNickname('')
+    setNickname('');
   }, []);
 
   return (
@@ -103,7 +119,7 @@ function LoginTitle() {
                     color: '#ffffff',
                     padding: '3px',
                     boxShadow: '5px 5px 5px gray',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                   }}
                   size={48}
                   onClick={randomNick}

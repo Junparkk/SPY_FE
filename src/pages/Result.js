@@ -10,24 +10,35 @@ import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
 // 게임 결과 창
 
-
-
 const Result = () => {
-  const dispatch = useDispatch()
+  //방 버튼 스크롤 컨트롤
+  const [ScrollY, setScrollY] = React.useState(0);
+
+  const handleFollow = () => {
+    setScrollY(window.scrollY);
+  };
+
+  React.useEffect(() => {
+    const watch = () => {
+      window.addEventListener('scroll', handleFollow);
+    };
+    watch();
+    return () => window.removeEventListener('scroll', handleFollow);
+  });
+
+  const dispatch = useDispatch();
 
   const leaveRoom = () => {
-    history.push('/lobby')
-      // dispatch(roomActions.leaveRoomDB(userId, roomId));
-  }
+    history.push('/lobby');
+    // dispatch(roomActions.leaveRoomDB(userId, roomId));
+  };
 
   //room Id 필요한지..?
   const reStart = () => {
-    history.goBack()
-  }
+    history.goBack();
+  };
 
-  const shared = () =>{
-
-  }
+  const shared = () => {};
 
   return (
     <React.Fragment>
@@ -50,46 +61,45 @@ const Result = () => {
         </WinnerWrap>
       </Wrap>
       <Footer />
-      <Restart onClick={reStart}>
-        <span
-          style={{
-            fontSize: '18px',
-            fontFamily: 'yg-jalnan',
-            color: '#ffe179',
-          }}
-        >
-          다<br />시<br />하<br />기
-        </span>
-      </Restart>
-      <LeaveRoom onClick={leaveRoom}>
-        <span
-          style={{
-            fontSize: '18px',
-            fontFamily: 'yg-jalnan',
-            color: '#ffe179',
-          }}
-        >
-          방<br />나<br />가<br />기
-        </span>
-      </LeaveRoom>
-      <Shared onClick={shared}>
-        <span
-          style={{
-            fontSize: '18px',
-            fontFamily: 'yg-jalnan',
-            color: '#ffe179',
-          }}
-        >
-          공<br />유<br />하<br />기
-        </span>
-      </Shared>
+        <Restart className={ScrollY > 0 ? "Change_Button" : ""} onClick={reStart}>
+          <span
+            style={{
+              fontFamily: 'yg-jalnan',
+              color: '#ffe179',
+            }}
+          >
+            다<br />시<br />하<br />기
+          </span>
+        </Restart>
+        <LeaveRoom className={ScrollY > 0 ? "Change_Button" : ""} onClick={leaveRoom}>
+          <span
+            style={{
+              fontFamily: 'yg-jalnan',
+              color: '#ffe179',
+            }}
+          >
+            방<br />나<br />가<br />기
+          </span>
+        </LeaveRoom>
+        <Shared className={ScrollY > 0 ? "Change_Button" : ""} onClick={shared}>
+          <span
+            style={{
+              fontFamily: 'yg-jalnan',
+              color: '#ffe179',
+            }}
+          >
+            공<br />유<br />하<br />기
+          </span>
+        </Shared>
     </React.Fragment>
   );
 };
 
 const Wrap = styled.div`
   width: 100%;
+  min-width: 380px;
   height: 100vh;
+  min-height: 670px;
   background-color: #ffe179;
 `;
 
@@ -130,9 +140,19 @@ const LeaveRoom = styled.button`
   background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
   color: white;
   font-weight: bold;
+  font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  &.Change_Button{
+    position: absolute;
+  }
   :hover {
     cursor: pointer;
+  }
+  @media (max-width: 763px) {
+    width: 3rem;
+    height: 6rem;
+    right: 90px;
+    font-size: 14px;
   }
   z-index: 50;
 `;
@@ -148,12 +168,23 @@ const Restart = styled.button`
   background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
   color: white;
   font-weight: bold;
+  font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  &.Change_Button{
+    position: absolute;
+  }
   :hover {
     cursor: pointer;
   }
+  @media (max-width: 763px) {
+    width: 3rem;
+    height: 6rem;
+    right: 150px;
+    font-size: 14px;
+  }
   z-index: 50;
 `;
+
 
 const Shared = styled.button`
   position: fixed;
@@ -166,9 +197,19 @@ const Shared = styled.button`
   background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
   color: white;
   font-weight: bold;
+  font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  &.Change_Button{
+    position: absolute;
+  }
   :hover {
     cursor: pointer;
+  }
+  @media (max-width: 763px) {
+    width: 3rem;
+    height: 6rem;
+    right: 30px;
+    font-size: 14px;
   }
   z-index: 50;
 `;

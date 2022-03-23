@@ -60,7 +60,11 @@ const Markingroom = () => {
       </div>
       <Wrap>
         <LeftArea bg="yellow" height="700">
-          <Door><RiQuestionMark size={150} style={{padding:"33% 10% 10% 10%", color:"#FFE179"}}/></Door>
+          <Door>
+            <Icon>
+              <RiQuestionMark style={{ color: '#FFE179' }} />
+            </Icon>
+          </Door>
           <Title>새로운 방을 생성해보세요!</Title>
 
           <RoomTitle
@@ -96,16 +100,11 @@ const Markingroom = () => {
           <RoomSet>
             <TopText>
               <SetTitle>인원</SetTitle>
-              <p
-                style={{ padding: '13px', color: '#eeeeee', fontWeight: '600' }}
-              >
-                클릭 해 인원을 조정해 보세요!
-              </p>
-              <p
-                style={{ padding: '13px', color: '#eeeeee', fontWeight: '600' }}
-              >
+              <Comment>
+                <br/>
+                클릭 해 인원을 조정해 보세요!<br/><br/>     
                 인원수에 따라 방의 모양이 자동으로 설정됩니다.
-              </p>
+              </Comment>
             </TopText>
 
             <AntDiv>
@@ -152,17 +151,28 @@ const Wrap = styled.div`
   height: 100vh;
   display: flex;
   background-color: #ffe179;
-  @media screen and (max-width: 986px) {
-    display: block;
+  @media screen and (max-width: 763px) {
+    display: inline-block;
   }
 `;
 
 const Door = styled.div`
   width: 193px;
+  max-width: 193px;
+  min-width: 173px;
   height: 269px;
   background-color: #7b7edb;
   border-radius: 10px;
   box-shadow: 5px 5px 5px gray;
+  @media screen and (max-width: 763px) {
+    width: 30rem;
+    height: 16rem;
+  }
+  @media screen and (max-height: 800px) {
+    margin-top: 100px;
+    height: 169px;
+    width: 173px;
+  }
 `;
 
 const LeftArea = styled.div`
@@ -173,8 +183,8 @@ const LeftArea = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  @media screen and (max-width: 986px) {
-    margin: auto;
+  @media screen and (max-width: 931px) {
+    margin: 0px auto auto auto;
   }
 `;
 
@@ -183,17 +193,35 @@ const Title = styled.h1`
   font-family: 'yg-jalnan';
   color: #6164ce;
   margin: 50px 0px 40px 10px;
+  @media screen and (max-height: 800px) {
+    font-size: 20px;
+    margin: 30px 0px 20px 10px;
+  }
 `;
 
 const RoomTitle = styled.input`
   width: 375px;
+  min-width: 200px;
   height: 50px;
   border: 1px solid #aaaaaaaa;
   border-radius: 45px;
   margin: 10px;
   font-size: 24px;
   padding: 0px 10px;
+  @media screen and (max-width: 763px) {
+    width: 50%;
+  }
 `;
+
+const Comment = styled.div`
+  width: 100%;
+  color: #fefef4;
+  word-break: break-all;
+  font-family: 'yg-jalnan';
+  @media screen and (max-width: 763px) {
+    font-size: 14px;
+  }
+`
 
 const RoomPW = styled.input`
   width: 220px;
@@ -232,19 +260,21 @@ const RoomBtn = styled.button`
 //오른쪽 부분
 const RightArea = styled.div`
   width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  @media screen and (max-width: 986px) {
+  @media screen and (max-width: 931px) {
     background-color: #ffe179;
-    margin-top: -10%;
   }
 `;
 
 const RoomSet = styled.div`
   width: 66%;
+  max-width: 654px;
+  min-width: 330px;
   height: 707px;
   border-radius: 95px;
   border: 5px solid #787edb;
@@ -257,7 +287,6 @@ const RoomSet = styled.div`
 `;
 
 const TopText = styled.div`
-  width: inherit;
   height: auto;
   margin: 50px auto;
   @media screen and (max-width: 1173px) {
@@ -297,7 +326,7 @@ const Ant = styled.img`
 
 const DoorDiv = styled.div`
   border-radius: 100px solid black;
-  width: 70%;
+  width: 60%;
   height: 150px;
   display: flex;
   justify-content: center;
@@ -305,14 +334,24 @@ const DoorDiv = styled.div`
   margin: auto;
   clear: both;
   @media screen and (max-width: 986px) {
-    margin: 10% auto
+    margin: 10% auto;
   }
 `;
 
 const DoorImg = styled.img`
   width: 30%;
+  min-width: 80px;
   height: 145.69px;
-  padding: 0px 20px 0px 20px;
+  padding: 0px 10px 0px 10px;
+`;
+
+const Icon = styled.div`
+  text-align: center;
+  margin-top: 25%;
+  font-size: 10rem;
+  @media screen and (max-height: 800px) {
+    font-size: 5rem;
+  }
 `;
 
 const BackBt = styled.div`
