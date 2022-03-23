@@ -60,8 +60,7 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
         console.log('이건 apis 안------------------------');
-        window.alert(res.data.result);
-        console.log(res);
+        console.log(res.data.result);
       })
       .catch((err) => console.log(err));
   };
@@ -79,7 +78,6 @@ const lawyerActDB = (roomId, userId) => {
       )
       .then(function (res) {
         console.log(res.data);
-        window.alert(res.data.msg);
       })
       .catch((err) => {
         console.log(err);

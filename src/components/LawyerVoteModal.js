@@ -7,19 +7,18 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 변호사 모달
 const LawyerVoteModal = (props) => {
-  const { isMe, roomId, _handleModal, children, ...rest } = props;
+  const { isMe, roomId, _handleModal, showing, children, ...rest } = props;
   console.log(props);
   const dispatch = useDispatch();
   const round = useSelector((state) => state.room.round);
   console.log(round);
   const user_list = useSelector((state) => state.vote.userList);
+
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
   const ref = useRef();
-
-  console.log('투표모달안에 몇명?', user_list.length);
 
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
@@ -36,6 +35,7 @@ const LawyerVoteModal = (props) => {
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       dispatch(voteActions.lawyerActDB(chosenRoomId, chosenId));
+      dispatch(voteActions.lawyerNullVote(false));
       setSubmit(true);
     } else {
       window.alert('해고 당할거 같은 직원을 선택해주세요 :)');
@@ -66,7 +66,6 @@ const LawyerVoteModal = (props) => {
   //     window.alert('해고 당할거 같은 직원을 선택해주세요 :)');
   //   }
   // };
-
   console.log(submit);
   return createPortal(
     <Container>

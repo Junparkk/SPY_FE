@@ -55,6 +55,10 @@ function LoginTitle() {
     dispatch(userActions.RandomNickDB());
     setNickname(randomUser);
   };
+  useEffect(() => {
+    randomNick();
+    setNickname('')
+  }, []);
 
   return (
     <>
@@ -110,7 +114,7 @@ function LoginTitle() {
             <StartBt onClick={Login}>start!</StartBt>
           </div>
         </TitleWrap>
-        <div>{ScrollY > 2375 ? handleTop() : ''}</div>
+        <div>{ScrollY > 2376 ? handleTop() : ''}</div>
         <LoginBackground src={Building} />
       </Wrap>
     </>

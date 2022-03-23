@@ -8,8 +8,8 @@ import SignUp from '../pages/SignUp';
 // import Header from '../components/Header';
 import MakingRoom from '../pages/MakingRoom';
 import Result from '../pages/Result';
-import Ingame from '../pages/Ingame'
-import Tutorial from "../pages/Tutorial";
+import Ingame from '../pages/Ingame';
+import Tutorial from '../pages/Tutorial';
 
 function App() {
   return (

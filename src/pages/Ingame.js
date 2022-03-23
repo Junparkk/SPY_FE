@@ -324,7 +324,7 @@ function Ingame(props) {
   );
 
   //////////////////////////////////////소켓////////////////////////////////////////////////////////////
-  socket.on('getStatus', (status) => {
+  socket.on('getStatus', (roomId) => {
     setStatus(status);
     console.log(status, '------------------------');
   });
