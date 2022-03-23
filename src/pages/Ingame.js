@@ -791,17 +791,27 @@ function Ingame(props) {
     dispatch(voteActions.getUserDB(roomId));
   }, [status]);
 
+  // useEffect(() => {
+  //   const interval = setInterval(function () {
+  //     apis
+  //       .statusCheck(roomId)
+  //       .then((res) => {
+  //         setStatus(res.data.status);
+  //         console.log(res.data.status);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }, 1000);
+  // }, []);
+  const [msg, setMsg] = useState('');
   useEffect(() => {
-    const interval = setInterval(function () {
-      apis
-        .statusCheck(roomId)
-        .then((res) => {
-          setStatus(res.data.status);
-          console.log(res.data.status);
-        })
-        .catch((err) => console.log(err));
-    }, 1000);
+    socket.emit('getStatus', roomId);
+    socket.on('getStatus', async (status, msg) => {
+      console.log('socket=================', status, msg);
+      setStatus(status);
+      setMsg(msg);
+    });
   }, []);
+  console.log(msg);
 
   useEffect(() => {
     switch (status) {
