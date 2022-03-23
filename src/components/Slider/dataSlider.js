@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import Tutorial1 from '../../images/Tutorial1.png'
-import Tutorial2 from '../../images/Tutorial2.png'
-import Tutorial3 from '../../images/Tutorial3.png'
+import Tutorial1 from '../../images/Tutorial1.png';
+import Tutorial2 from '../../images/Tutorial2.png';
+import Tutorial3 from '../../images/Tutorial3.png';
 // import slider1 from '../images/slide1.png'
 
 const dataSlider = [

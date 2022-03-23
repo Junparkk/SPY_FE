@@ -26,7 +26,9 @@ import JobCheckModal from '../components/JobCheckModal';
 import { apis } from '../shared/apis';
 
 //socket 서버
-const socket = io.connect('https://mafia.milagros.shop');
+// const socket = io.connect('https://mafia.milagros.shop');
+const socket = io.connect('http://localhost:3001');
+
 
 function Ingame(props) {
   //채팅
@@ -80,25 +82,11 @@ function Ingame(props) {
   const leaveRoom = () => {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
-  ///////////////////////////////////////////////////////////
-  const start = useSelector((state) => state.room.gameStart);
-  const roomUserList = useSelector((state) => state.vote.userList);
+  ////////////////////////////////////////////////////////////////////
   const round = useSelector((state) => state.room.round);
-  console.log(round, '현재라운드');
-
-  const [state, setState] = useState('preStart');
-  const [isDayTimeModalShowing, setIsDayTimeModalShowing] = useState(false);
-  const [isRoleModalShowing, setIsRoleModalShowing] = useState(true);
-  // const [isLawyerModalShowing, setIsLawyerModalShowing] = useState(false); //변호사
-  // const [isDetectiveModalShowing, setIsDetectiveModalShowing] = useState(false); // 탐정
-  // const [isSpyModalShowing, setIsSpyModalShowing] = useState(false);  // 스파이
-
   const [isReady, setIsReady] = useState(false);
+  const roomUserList = useSelector((state) => state.vote.userList);
   const changeMaxLength = roomUserList.length;
-  // 유저리스트에서 본인 정보만 뽑아 내기
-  const findMe = roomUserList.filter(
-    (user) => user.userId === parseInt(userId)
-  );
 
   const doReady = () => {
     dispatch(roomActions.doReadyAPI(roomId, userId));
@@ -111,232 +99,315 @@ function Ingame(props) {
   const doStart = () => {
     dispatch(roomActions.doStartAPI(roomId, userId, changeMaxLength));
   };
+  // 유저리스트에서 본인 정보만 뽑아 내기
+  const findMe = roomUserList.filter(
+    (user) => user.userId === parseInt(userId)
+  );
 
-  ///////////////////////////////////////////////////////////////
-
-  //시작 여부 확인 1초마다 반복 실행하도록
-
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('isStart');
   const [status2, setStatus2] = useState('');
 
-  useEffect(() => {
-    const interval = setInterval(function () {
-      console.log('ji');
+  const [isDayTimeModalShowing, setIsDayTimeModalShowing] = useState(false);
+  const [isRoleModalShowing, setIsRoleModalShowing] = useState(false);
+  const [isLawyerModalShowing, setIsLawyerModalShowing] = useState(false); //변호사
+  const [isDetectiveModalShowing, setIsDetectiveModalShowing] = useState(false); // 탐정
+  const [isSpyModalShowing, setIsSpyModalShowing] = useState(false); // 스파이
+
+  const host = roomUserList.filter((user) => user.isHost === 'Y');
+  const isLawyer = roomUserList.filter((user) => user.role === 2);
+  const isDetective = roomUserList.filter((user) => user.role === 3);
+  const isSpy = roomUserList.filter((user) => user.role === 4);
+
+  const nullVote = useSelector((state) => state.vote.isLawyerNull);
+
+  console.log(nullVote, '========= null Vote ============');
+
+  const updateStatus = () => {
+    if (host[0].userId === parseInt(userId)) {
       apis
-        .statusCheck(roomId)
+        .statusCheck2(roomId, userId)
         .then((res) => {
-          setStatus(res.data.status);
-          console.log(res.data.status);
-          // if (res.data.status === 'showRole') {
-          //   clearInterval(interval);
-          // }
+          setStatus(res.data.nextStatus);
+          console.log(res.data.nextStatus, 'status2 값임');
         })
         .catch((err) => console.log(err));
-    }, 1000);
-  }, []);
-
-  useEffect(() => {
-    switch (status) {
-      case 'isStart':
-        isStart();
-        //게임이 시작되엇습니다 알려주기
-        console.log('isStart');
-        break;
-      case 'roleGive':
-        roleGive();
-        console.log('roleGive');
-        break;
-      case 'showRole':
-        showRole();
-        console.log('쇼롤!');
-        break;
-
-      // case 'voteDay':
-      //   voteDay();
-      //   console.log('voteDay까지 들어왔나요?');
-      //   break;
-      // case 'voteResultDay':
-      //   break;
-      // case 'showResultDay':
-      //   break;
-      // case 'isGameResult':
-      //   break;
-      // case 'voteNightLawyer':
-      //   break;
-      // case 'showMsgLawyer':
-      //   break;
-      // case 'voteNightDetective':
-      //   break;
-      // case 'showMsgDetective':
-      //   break;
-      // case 'voteNightSpy':
-      //   break;
-      // case 'showResultNight':
-      //   break;
-      default:
-        console.log('실행안됨');
     }
-  }, [status]);
+  };
 
-  //state가 바뀔 때 마다 새로운 유저리스트 db에서 불러오기
+  const nextState = () => {
+    voteDay();
+    updateStatus();
+  };
+
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
   }, [status]);
 
-  function isStart() {
-    dispatch(roomActions.roundNoAIP(roomId));
-  }
-
-  function roleGive() {
-    dispatch(voteActions.divisionRole(roomId));
-    const notiTimer = setTimeout(() => {}, 1000);
-    return () => clearTimeout(notiTimer);
-  }
-
-  function showRole() {
-    setIsRoleModalShowing(true);
-
-    const notiTimer = setTimeout(() => {
-      setIsRoleModalShowing(false);
-    }, 3000);
-
-    const voteTimer = setTimeout(() => {
-      sendStatus_2();
-      console.log('voteTimer');
-    }, 5000);
-    return () => clearTimeout(notiTimer, voteTimer);
-  }
+  // useEffect(() => {
+  //   const interval = setInterval(function () {
+  //     apis
+  //       .statusCheck(roomId)
+  //       .then((res) => {
+  //         setStatus(res.data.status);
+  //         console.log(res.data.status);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }, 1000);
+  // }, []);
+  const [msg, setMsg] = useState('');
+  useEffect(() => {
+    socket.emit('getStatus', roomId);
+    socket.on('getStatus', async (status, msg) => {
+      console.log('socket=================', status, msg);
+      setStatus(status);
+      setMsg(msg);
+    });
+  }, []);
+  console.log(msg);
 
   useEffect(() => {
-    console.log('내가왕이야', status, 'status2', status2);
-    switch (status2 || status) {
+    switch (status) {
+      case 'isStart':
+        //게임이 시작되엇습니다 알려주기
+        break;
+      case 'roleGive':
+        roleGive();
+        break;
+      case 'showRole':
+        showRole();
+        break;
+      case 'dayTime':
+        dayTime();
+        break;
       case 'voteDay':
         voteDay();
+        break;
+      case 'invailedVoteCnt':
+        invailedVoteCnt();
         break;
       case 'showResultDay':
         showResultDay();
         break;
-      case 'isGameResult_1':
-        break;
       case 'voteNightLawyer':
-        break;
-      case 'showMsgLawyer':
+        voteNightLawyer();
         break;
       case 'voteNightDetective':
+        voteNightDetective();
         break;
       case 'showMsgDetective':
+        showMsgDetective();
         break;
       case 'voteNightSpy':
-        break;
-      case 'showResultNight':
+        voteNightSpy();
         break;
       case 'isGameResult_2':
+        isGameResult_2();
+        break;
+      case 'showResultNight':
+        showResultNight();
         break;
       default:
         console.log('실행안됨');
-        break;
     }
-  }, [status, status2]);
+  }, [status]);
 
-  function voteDay() {
-    // setStatus2('voteResultDay');
-    function 이거먼저실행(나중) {
-      setIsDayTimeModalShowing(true);
-      setTimeout(() => {
-        나중();
-      }, 3000);
-    }
-    function 이게나중() {
-      setIsDayTimeModalShowing(false);
-      dispatch(voteActions.invalidVote(roomId, round));
-    }
-    이거먼저실행(function () {
-      이게나중();
-    });
+  //롤부여하기
+  const roleGive = () => {
+    dispatch(voteActions.divisionRole(roomId));
+  };
+
+  //롤보여주기
+  const showRole = () => {
+    setIsRoleModalShowing(true);
+
+    const notiTimer = setTimeout(() => {
+      setIsRoleModalShowing(false);
+      // updateStatus();
+    }, 3000);
+    return () => clearTimeout(notiTimer);
+  };
+
+  //토론시간
+  const dayTime = () => {
+    console.log('dayTime 지금은 낮 토론시간입니다.');
+    dispatch(roomActions.roundNoAIP(roomId));
+    const 효쥰 = setTimeout(() => {
+      console.log('daytime 끄으으으읏');
+    }, 10000);
+    return () => clearTimeout(효쥰);
+  };
+
+  //투표시간
+  const voteDay = () => {
+    console.log('voteDay 지금은 투표시간 !!@!~@~@~!@~!@');
+    setIsDayTimeModalShowing(true);
+
     const notiJobRoleTimer = setTimeout(() => {
-      console.log('게임스타트 안 모달 끄는 타이머');
-      // const people = roomUserList.filter((user) => user.isAi !== 'Y');
-      // const person = people.filter((user) => user.isEliminated !== 'Y');
-      // if (person[0].user.id === parseInt(userId)) {
-      //   console.log('제발부탁이야 제발.... 살려줘');
-      //   apis
-      //     .statusCheck2(roomId)
-      //     .then((res) => {
-      //       setStatus2(res.data.status);
-      //       console.log(res.data.status);
-      //     })
-      //     .catch((err) => console.log(err));
-      // }
-      sendStatus_2();
-    }, 5000);
-
+      setIsDayTimeModalShowing(false);
+      updateStatus();
+    }, 10000);
     return () => clearTimeout(notiJobRoleTimer);
-  }
+  };
 
+  const invailedVoteCnt = () => {
+    console.log(roomId, round, userId);
+    dispatch(voteActions.invalidVote(roomId, round, userId));
+  };
+
+  //낮 투표 결과 확인
   function showResultDay() {
     console.log('투표날');
     console.log('----', roomId);
     console.log('======', round);
 
-    dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
+    console.log(host[0].userId);
+    // console.log(userId);
+    //호스트만 보내고 값 전체가 받는거 나중
+    if (host[0].userId === parseInt(userId)) {
+      dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
 
-    const notiJobRoleTimer = setTimeout(() => {
-      sendStatus_2();
-    }, 5000);
-
-    return () => clearTimeout(notiJobRoleTimer);
-  }
-
-  function sendStatus_2() {
-    const people = roomUserList.filter((user) => user.isAi !== 'Y');
-    const person = people.filter((user) => user.isEliminated !== 'Y');
-    if (person[0].user.id === parseInt(userId)) {
-      console.log('제발부탁이야 제발.... 살려줘');
-      apis
-        .statusCheck2(roomId)
-        .then((res) => {
-          setStatus2(res.data.status);
-          console.log(res.data.status);
-        })
-        .catch((err) => console.log(err));
+      const Timer = setTimeout(() => {
+        apis
+          .gameResult(roomId)
+          .then((res) => {
+            if (res.data.result === 0) {
+              updateStatus();
+            } else if (res.data.result === 1) {
+              window.replace('/result');
+            } else if (res.data.result === 2) {
+              window.replace('/result');
+            }
+          })
+          .catch((err) => console.log(err));
+      }, 10000);
+      return () => clearTimeout(Timer);
     }
   }
+  //변호사 투표
+  async function voteNightLawyer() {
+    console.log(isLawyer[0].userId, '---------------------------');
+    if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
+      setIsLawyerModalShowing(true);
+      await apis
+        .aiLawyerAct(roomId)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    } else {
+      setIsRoleModalShowing(true);
+    }
 
-  ////////////////////////////////////////////////////////////////////
-  function isGameResult() {
-    // 낮과 밤 모두 사용 가능
+    const Timer = setTimeout(() => {
+      setIsLawyerModalShowing(false);
+      setIsRoleModalShowing(false);
+      if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
+        if (nullVote === true) {
+          dispatch(voteActions.lawyerActDB(roomId, null));
+        }
+      }
+      if (isLawyer[0] && isLawyer[0].isAi === 'Y') {
+        if (nullVote === true) {
+          dispatch(voteActions.lawyerActDB(roomId, null));
+        }
+      }
+
+      updateStatus();
+      // voteNightDetective();
+    }, 10000);
+    return () => clearTimeout(Timer);
   }
-
-  function voteNightLawyer() {
-    //변호사 투표
-  }
-
-  function showMsgLawyer() {
-    //변호사 투표 결과 보기
-  }
-
+  //탐정 투표
   function voteNightDetective() {
-    //탐정 투표
+    if (nullVote === false) {
+      dispatch(voteActions.lawyerNullVote(true));
+    }
+    const Timer = setTimeout(() => {
+      if (isDetective[0] && isDetective[0].userId === parseInt(userId)) {
+        setIsDetectiveModalShowing(true);
+      } else {
+        setIsRoleModalShowing(true);
+      }
+    }, 1000);
+    const Timer1 = setTimeout(() => {
+      setIsDetectiveModalShowing(false);
+      setIsRoleModalShowing(false);
+      updateStatus();
+    }, 10000);
+    return () => clearTimeout(Timer, Timer1);
   }
 
+  // 탐정 투표결과 보여주기
   function showMsgDetective() {
-    //변호사 투표 결과 보기
+    // 탐정 투표 결과
+    updateStatus();
   }
 
+  // 스파이 투표
   function voteNightSpy() {
-    //스파이 투표
+    const Timer = setTimeout(() => {
+      if (isSpy[0] && isSpy[0].userId === parseInt(userId)) {
+        setIsSpyModalShowing(true);
+        apis
+          .aiSpyAct(roomId)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      } else {
+        setIsRoleModalShowing(true);
+      }
+    }, 1000);
+    const Timer1 = setTimeout(() => {
+      setIsSpyModalShowing(false);
+      setIsRoleModalShowing(false);
+      if (isSpy[0] && isSpy[0].isAi === 'Y') {
+        if (nullVote === true) {
+          dispatch(voteActions.spyActDB(roomId, null));
+        }
+      }
+    }, 10000);
+    return () => clearTimeout(Timer, Timer1);
+  }
+  //밤 투표결과 확인 요청 (버튼으로 동작)
+  function isGameResult_2() {
+    if (nullVote === false) {
+      dispatch(voteActions.lawyerNullVote(true));
+    }
+    apis.gameResult(roomId).then((res) => {
+      if (res.data.result === 0) {
+        updateStatus();
+      } else if (res.data.result === 1) {
+        window.replace('/result');
+      } else if (res.data.result === 2) {
+        window.replace('/result');
+      }
+    });
   }
 
+  //아침에 최종 결과 공지 (버튼으로 동작)
   function showResultNight() {
-    //밤 투표 결과
-  }
+    if (host[0].userId === parseInt(userId)) {
+      console.log(round, ' : showResultNight 라운드! ');
+      dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
+    }
+    const Timer = setTimeout(() => {
+      console.log('여기는 showResult Night');
 
-  ////////////////////////////////////////////////////////////////////
+      apis
+        .gameResult(roomId)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+      updateStatus();
+      console.log(round, ': 라운드 ');
+    }, 10000);
+    return () => clearTimeout(Timer);
+  }
+  //////////////////////////////////////////////////////////////////////
   return (
     <>
       <Wrap>
-        {isDayTimeModalShowing && <VoteModal isMe={findMe}></VoteModal>}
-        {/* {isRoleModalShowing && <JobCheckModal roomId={roomId}></JobCheckModal>} */}
+        {isDayTimeModalShowing && <VoteModal isMe={findMe} />}
+        {isRoleModalShowing && <JobCheckModal roomId={roomId} />}
+        {isLawyerModalShowing && <LawyerVoteModal />}
+        {isDetectiveModalShowing && <DetectiveVoteModal />}
+        {isSpyModalShowing && <SpyVoteModal />}
         <div
           style={{
             width: '100%',
@@ -372,7 +443,6 @@ function Ingame(props) {
                 cursor: 'pointer',
                 color: '#ffe179',
                 padding: '10px',
-                cursor: 'pointer',
                 marginLeft: '100px',
                 zIndex: '5',
               }}
@@ -389,19 +459,16 @@ function Ingame(props) {
             ) : (
               <StartButton onClick={() => doStart()}>시작</StartButton>
             )}
-            {chatView ? (
-              <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
-            ) : (
-              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
-            )}
           </ButtonContainer>
         )}
 
-        {/* 변호사추가  + 탐정 추가 */}
-        {/* 근데 자연스럽게 뜨고 사라지는건 어떻게 구현? */}
-        {/* <LawyerVoteModal /> */}
-        {/* <DetectiveVoteModal/> */}
-        {/* <SpyVoteModal/> */}
+        {chatView ? (
+          <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+        ) : (
+          <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+        )}
+
+        <ChatButton onClick={nextState}>다음 state</ChatButton>
       </Wrap>
     </>
   );
