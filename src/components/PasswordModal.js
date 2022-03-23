@@ -22,22 +22,26 @@ const PasswordModal = (props) => {
         <PrivateModalDim />
         <PrivateModal>
           <CgCloseO
-            style={{ cursor: 'pointer', float:'right', marginTop:"25px", color: "#eee" }}
-            alt="닫기"
+            style={{
+              position: 'absolute',
+              right: '40px',
+              top: '25px',
+              cursor: 'pointer',
+              color: '#f4f4fe',
+            }}
             size={25}
             className="privateModal_top_close"
             onClick={() => {
               dispatch(roomActions.privateState(false));
               window.location.replace('/lobby');
             }}
-            
           />
           <div
             style={{
               marginTop: '65px',
               textAlign: 'center',
               fontFamily: 'yg-jalnan',
-              color: '#FFF',
+              color: '#f4f4fe',
             }}
           >
             비밀번호를 입력하세요
@@ -45,11 +49,13 @@ const PasswordModal = (props) => {
           <PrivateModalMid>
             <input
               style={{
-                margin: '30px 0px 0px 110px',
+                margin: '30px auto 0px auto',
                 border: 'none',
                 height: '35px',
                 borderRadius: '20px',
-                width: '220px',
+                width: '60%',
+                minWidth: '200px',
+                color: '#f4f4fe',
               }}
               onChange={onChangePwd}
               value={pwd}
@@ -60,12 +66,12 @@ const PasswordModal = (props) => {
           <PrivateModalBot>
             <p
               style={{
-                color: '#fff',
+                color: '#f4f4fe',
                 fontFamily: 'yg-jalnan',
                 borderRadius: '45px',
-                backgroundColor: '#6164ce',
-                boxShadow: "0px 3px 3px #666666",
-                cursor: 'pointer'
+                backgroundColor: '#9296fd',
+                boxShadow: '0px 3px 3px #666666',
+                cursor: 'pointer',
               }}
               className="privateModal_bot_btn"
               onClick={() => {
@@ -108,8 +114,8 @@ const PrivateModalDim = styled.div`
 const PrivateModal = styled.div`
   width: 28.54vw;
   height: 32.27vh;
-  border: 5px solid #6164ce;
-  background: #9296fd;
+  border: 5px solid #7b7edb;
+  background: #b4b6f4;
   border-radius: 70px;
   position: fixed;
   top: 50%;
@@ -117,6 +123,7 @@ const PrivateModal = styled.div`
   transform: translate(-50%, -50%);
   padding: 0 2.29vw;
   box-sizing: border-box;
+  min-width: 300px;
 `;
 const PrivateModalTop = styled.div`
   width: 100%;
@@ -141,6 +148,7 @@ const PrivateModalTop = styled.div`
 `;
 const PrivateModalMid = styled.div`
   width: 100%;
+  text-align: center;
   .privateModal_mid_password {
     margin: 3.69vh 0 0.82vh 0.73vw;
     font-size: 1.43vh;

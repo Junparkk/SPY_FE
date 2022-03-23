@@ -20,6 +20,7 @@ class Video extends Component {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      speaking: false,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -92,6 +93,25 @@ class Video extends Component {
       () => {
         var mySession = this.state.session;
         console.log(mySession);
+
+        this.state.session.on('publisherStartSpeaking', (event) => {
+          this.setState({ speaking: true });
+          console.log(
+            'User ' +
+              event.connection.connectionId +
+              ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
+            this.state.speaking
+          );
+        });
+
+        this.state.session.on('publisherStopSpeaking', (event) => {
+          this.setState({ speaking: false });
+          console.log(
+            'User ' +
+              event.connection.connectionId +
+              ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
+          );
+        });
 
         // --- 3) Specify the actions when events take place in the session ---
 
@@ -245,15 +265,16 @@ class Video extends Component {
               <div id="main-video">
                 <UserVideoComponent
                   streamManager={this.state.mainStreamManager}
+                  speaking={this.state.speaking}
                 />
               </div>
             ) : null}
             {this.state.subscribers.map((sub, i) => (
-              <div
-                style={{ display: 'flex' }}
-                key={i}
-              >
-                <UserVideoComponent streamManager={sub} />
+              <div style={{ display: 'flex' }} key={i}>
+                <UserVideoComponent
+                  speaking={this.state.speaking}
+                  streamManager={sub}
+                />
               </div>
             ))}
           </VideoContainer>

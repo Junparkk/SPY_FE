@@ -17,6 +17,25 @@ import { apis } from '../shared/apis';
 import Footer from '../components/Footer';
 
 const Main = (props) => {
+  //방버튼 스크롤 이벤트
+  const [ScrollY, setScrollY] = useState(0);
+
+  const handleFollow = () => {
+    setScrollY(window.scrollY);
+  };
+
+  useEffect(() => {
+    const watch = () => {
+      window.addEventListener('scroll', handleFollow);
+    };
+    watch();
+    return () => window.removeEventListener('scroll', handleFollow);
+  });
+
+  //모든 브라우저 스크롤 맥스값
+  const maxScroll = document.body.scrollHeight - window.scrollY;
+  console.log(maxScroll);
+
   const dispatch = useDispatch();
   const islogin = localStorage.getItem('nickname');
   const userId = localStorage.getItem('userid');
@@ -31,7 +50,7 @@ const Main = (props) => {
   }, []);
 
   return (
-    <>
+    <React.Fragment>
       {/* 패스워드 모달 */}
       {_private ? <PasswordModal /> : null}
       {/* 대기실 화면 */}
@@ -78,10 +97,13 @@ const Main = (props) => {
               }
             })}
         </Container>
-        <EnterRoomBtn onClick={() => history.push('/makingroom')}>
+        <EnterRoomBtn
+          //이게 왜 안되는지 모르겠네
+          className={ScrollY > maxScroll - 300 ? 'change' : ''}
+          onClick={() => history.push('/makingroom')}
+        >
           <span
             style={{
-              fontSize: '18px',
               fontFamily: 'yg-jalnan',
               color: '#ffe179',
             }}
@@ -91,7 +113,7 @@ const Main = (props) => {
         </EnterRoomBtn>
         <Footer />
       </Wrap>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -144,11 +166,21 @@ const EnterRoomBtn = styled.button`
   background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
   color: white;
   font-weight: bold;
+  font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  &.change {
+    position: absolute;
+  }
   :hover {
     cursor: pointer;
   }
   z-index: 50;
+  @media (max-width: 763px) {
+    width: 3rem;
+    height: 6rem;
+    right: 30px;
+    font-size: 14px;
+  }
 `;
 
 export default Main;

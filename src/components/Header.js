@@ -68,7 +68,7 @@ const Header = () => {
               fontSize: '36px',
               cursor: 'pointer',
               padding: '20px',
-              color: '#dddddd',
+              color: '#f4f4fe',
               marginRight: '10px',
             }}
           />
@@ -85,6 +85,10 @@ const HeaderTitle = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 763px) {
+    width: 100px;
+   margin-top: 23px;
+  }
 `;
 
 const LogOutButton = styled.button`

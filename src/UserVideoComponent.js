@@ -28,6 +28,7 @@ import styled from 'styled-components';
 export default class UserVideoComponent extends Component {
   getNicknameTag() {
     // Gets the nickName of the user
+    console.log(this.props.streamManager)
     return JSON.parse(this.props.streamManager.stream.connection.data)
       .clientData;
   }
@@ -36,12 +37,14 @@ export default class UserVideoComponent extends Component {
     return (
       <>
         {this.props.streamManager !== undefined ? (
-          <VideoBox>
+          <VideoBox className={this.props.speaking ? 'speaking' : ''}>
             <div className="streamcomponent">
               <OpenViduVideoComponent
                 streamManager={this.props.streamManager}
               />
-              <Text>{this.getNicknameTag()}</Text>
+              <Text>
+                {this.getNicknameTag()}
+              </Text>
             </div>
           </VideoBox>
         ) : null}
@@ -65,12 +68,15 @@ const VideoBox = styled.div`
     border-radius: 200px;
     margin: 30px auto 0px auto;
   }
+  &.speaking {
+    border: 5px solid green;
+  }
 `;
 
 const Text = styled.div`
   margin: 0px 0px 0px 20px;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 1251px) {
-    margin: -55px 0px 0px 0px
+    margin: -55px 0px 0px 0px;
   }
 `;

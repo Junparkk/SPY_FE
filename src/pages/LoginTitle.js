@@ -48,7 +48,7 @@ function LoginTitle() {
   });
 
   useEffect(() => {
-    document.documentElement.scroll(0, 2477);
+    document.documentElement.scroll(0, 3000);
   }, []);
 
   useEffect(() => {

@@ -73,7 +73,7 @@ const RuleModal = ({ showModal, setShowModal }) => {
             <Slider/>
             </div>
             <CloseModal onClick={() => setShowModal((prev) => !prev)}>
-              SKIP
+              닫기
             </CloseModal>
           </WrapModal>
         </ModalBg>
@@ -95,6 +95,9 @@ const WrapModal = styled.div`
   text-align: center;
   justify-content: center;
   align-items: center;
+    @media (max-width: 600) {
+    width: 50rem
+  }
 `;
 
 const ModalBg = styled.div`
@@ -107,23 +110,6 @@ const ModalBg = styled.div`
   align-items: center;
 `;
 
-const ModalContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  line-height: 1.8;
-  color: #141414;
-  p {
-    margin-bottom: 1rem;
-  }
-  /* button {
-    padding: 10px 24px;
-    background: #141414;
-    color: #fff;
-    border: none;
-  } */
-`;
 
 const CloseModal = styled.button`
   cursor: pointer;
@@ -133,22 +119,17 @@ const CloseModal = styled.button`
   top: 30px;
   right: 60px;
   width: 9%;
-  min-width: 100px;
+  min-width: 60px;
   height: 48px;
   border-radius: 30px;
   box-shadow: 3px 3px 3px #bbbbbbbb;
   font-family: 'yg-jalnan';
   color: #dddddd;
-  font-size: 22px;
+  font-size: 1.2rem;
   padding: 0;
   z-index: 10;
 `;
 
-const ModalTitle = styled.h1`
-  font-weight: 800;
-  font-size: 32px;
-  margin-bottom: 24px;
-`;
 
 
 export default RuleModal;

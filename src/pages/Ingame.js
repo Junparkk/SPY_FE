@@ -76,7 +76,7 @@ function Ingame(props) {
     socket.emit('join_room', roomId, userNick);
     setShowChat(true);
   };
-
+  
   const leaveRoom = () => {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
