@@ -95,7 +95,7 @@ export default handleActions(
       }),
     [RANDOM_NICK]: (state, action) =>
       produce(state, (draft) => {
-        draft.randomNick = action.payload
+        draft.randomNick = action.payload;
       }),
   },
   initialState
