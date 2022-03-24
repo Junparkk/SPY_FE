@@ -70,11 +70,12 @@
 
   전체크기
 .slider {
-  width: 1440px;
-  height: 1024px;
+  width: 190%;
+  height: 100%;
   position: relative;
   overflow: hidden;
   margin: auto;
+  background-color: #212121;
 }
 
 .slide {

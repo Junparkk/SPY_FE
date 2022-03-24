@@ -26,44 +26,6 @@ const RuleModal = ({ showModal, setShowModal }) => {
     return () => document.removeEventListener('keydown', keyPress);
   }, [keyPress]);
 
-//모달속 표 데이터
-//   const columnData = [
-//     {
-//       maxPlayer: 6,
-//       employee: 3,
-//       lawyer: 0,
-//       detective: 1,
-//       spy: 2
-//     },
-//     {
-//       maxPlayer: 7,
-//       employee: 3,
-//       lawyer: 1,
-//       detective: 1,
-//       spy: 2
-//     },
-//     {
-//       maxPlayer: 8,
-//       employee: 4,
-//       lawyer: 1,
-//       detective: 1,
-//       spy: 2
-//     },
-//     {
-//       maxPlayer: 9,
-//       employee: 4,
-//       lawyer: 1,
-//       detective: 1,
-//       spy: 3
-//     },
-//     {
-//       maxPlayer: 10,
-//       employee: 5,
-//       lawyer: 1,
-//       detective: 1,
-//       spy: 3
-//     },
-// ]
   return (
     <>
       {showModal ? (
@@ -83,10 +45,10 @@ const RuleModal = ({ showModal, setShowModal }) => {
 };
 
 const WrapModal = styled.div`
-  width: 80%;
+  width: 65%;
   height: 80%;
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
-  background: #fff;
+  background: #212121;
   color: #000;
   display: flex;
   /* grid-template-columns: 1fr 1fr; */

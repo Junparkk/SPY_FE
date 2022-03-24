@@ -18,6 +18,10 @@ import Header from '../components/Header';
 import { FaLock, FaLockOpen } from 'react-icons/fa';
 import { RiArrowGoBackFill, RiQuestionMark } from 'react-icons/ri';
 
+//토스트 알림
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Markingroom = () => {
   const dispatch = useDispatch();
   const hostName = localStorage.getItem('nickname');
@@ -39,15 +43,25 @@ const Markingroom = () => {
   // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
     if (roomName === '') {
-      window.alert('방 제목을 입력해주세요.');
+      toast.error('방 제목을 입력해주세요', {
+        draggable: true,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
       return;
+    } else {
+      dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
+      toast.success('방 생성완료', {
+        draggable: true,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
     }
-    dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
-    window.alert('방 생성 완료');
   };
 
   return (
     <React.Fragment>
+      <ToastContainer />
       <div
         style={{
           position: 'fixed',
@@ -101,8 +115,10 @@ const Markingroom = () => {
             <TopText>
               <SetTitle>인원</SetTitle>
               <Comment>
-                <br/>
-                클릭 해 인원을 조정해 보세요!<br/><br/>     
+                <br />
+                클릭 해 인원을 조정해 보세요!
+                <br />
+                <br />
                 인원수에 따라 방의 모양이 자동으로 설정됩니다.
               </Comment>
             </TopText>
@@ -221,7 +237,7 @@ const Comment = styled.div`
   @media screen and (max-width: 763px) {
     font-size: 14px;
   }
-`
+`;
 
 const RoomPW = styled.input`
   width: 220px;
