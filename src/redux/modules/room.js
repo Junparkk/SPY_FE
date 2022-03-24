@@ -3,6 +3,9 @@ import { immerable, produce } from 'immer';
 
 import axios from 'axios';
 import { apis } from '../../shared/apis';
+import io from 'socket.io-client';
+
+const socket = io.connect('https://mafia.milagros.shop');
 
 // post
 const SET_ROOM = 'SET_ROOM';
@@ -25,11 +28,7 @@ const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
 const enterUser = createAction(ENTER_USER, (enter_room) => ({ enter_room }));
 const leaveUser = createAction(LEAVE_USER, (leave_room) => ({ leave_room }));
 const roundNoInfo = createAction(ROUND_NUM, (round_num) => ({ round_num }));
-// const addPost = createAction(ADD_POST, (post) => ({ post }));
-// const editPost = createAction(EDIT_POST, (post_id, post) => ({
-//   post_id,
-//   post,
-// }));
+
 const privateRoom = createAction(PRIVATE_ROOM, (roomId, privateState) => ({
   roomId,
   privateState,
@@ -37,9 +36,8 @@ const privateRoom = createAction(PRIVATE_ROOM, (roomId, privateState) => ({
 const privateState = createAction(PRIVATE_STATE, (privateState) => ({
   privateState,
 }));
-const gameStart = createAction(GAME_START, (start) => ({ start }));
 
-const startCheck = createAction(START_CHECK, (Check) => ({ Check }));
+const startCheck = createAction(START_CHECK, (check) => ({ check }));
 
 const initialState = {
   list: [],
@@ -51,8 +49,7 @@ const initialState = {
     privateState: false,
   },
   round: 0,
-  gameStart: false,
-  // startCheck: Y or N,
+  startCheck: false,
 };
 
 //middleware
@@ -172,77 +169,49 @@ const cancelReadyAPI = (roomId, userId) => {
 };
 //방 시작하기
 const doStartAPI = (roomId, userId, changeMaxLength) => {
-  return async function (dispatch, useState, { history }) {
-    await apis
+  return function (dispatch, useState, { history }) {
+    apis
+      //시작 전 조건확인
       .checkStart(roomId, userId)
       .then((res) => {
-        console.log(res);
-        // 정상 실행
+        console.log(res, '==============₩=======');
+        // max = cur 바로 실행
         if (res.data.msg === '시작!') {
           apis
             .start(roomId)
-            .then((res) => console.log(res))
+            .then(
+              () => dispatch(startCheck(true)),
+              setTimeout(() => {
+                socket.emit('getStatus', roomId);
+              }, 500)
+            )
             .catch((err) => console.log(err));
-          dispatch(gameStart(true));
         } else {
-          const firstCheck = window.confirm(res.data.msg);
-          if (firstCheck) {
-            //AI로 실행
-            apis
-              .makeAiPlayer(roomId)
-              .then((res) => {
-                apis
-                  .start(roomId)
-                  .then((res) => dispatch(gameStart(true)))
-                  .catch((err) => console.log(err));
-              })
-              .catch((err) => console.log(err));
-          } else {
-            //AI로 실행 거절
-            const secondCheck = window.confirm(
-              '바로 시작 가능 인원으로 시작 하시겠습니까?'
-            );
-            if (secondCheck) {
-              //인원수 줄여서 시작
-              if (changeMaxLength < 6) {
-                window.alert('최소 플레이 가능 인원은 6명입니다.');
-              } else {
-                apis
-                  .changeMaxPlayer(roomId, { maxPlayer: changeMaxLength })
-                  .then((res) =>
-                    apis
-                      .start(roomId)
-                      .then((res) => console.log(res))
-                      .catch((err) => console.log(err))
-                  )
-                  .catch((err) => console.log(err));
-              }
-            } else {
-              //대기실로 돌아가기
-              window.alert('대기실로 돌아갑니다.');
-            }
-          }
+          //api가 추가되어 빈 인원 수 대체
+          apis
+            .makeAiPlayer(roomId)
+            .then(() => {
+              apis
+                .start(roomId)
+                .then(
+                  (res) => dispatch(startCheck(true)),
+
+                  setTimeout(() => {
+                    socket.emit('getStatus', roomId);
+                  }, 500)
+
+                  // socket.on('getStatus', (status, msg) => {
+                  //   console.log('socket=================', status, msg);
+                  // });
+                )
+                .catch(() => {});
+            })
+            .catch((err) => console.log(err));
         }
       })
       .catch((error) => {
         console.log(error);
         window.confirm(error.response.data.msg);
-      });
-  };
-};
-
-//방 라운드 정보
-const roundNoAIP = (roomId) => {
-  return async function (dispatch, useState, { history }) {
-    console.log(roomId);
-    await apis
-      .getGameRoundNo(roomId)
-      .then((res) => {
-        dispatch(roundNoInfo(res.data.roundNo));
-        console.log(res);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   };
 };
@@ -271,27 +240,7 @@ export default handleActions(
         console.log(draft.list);
         console.log(action.payload);
       }),
-    // [ONE_POST]: (state, action) =>
-    //   produce(state, (draft) => {
-    //     draft.post = action.payload.post;
-    //     draft.post.comments = action.payload.comments;
-    //   }),
-    // [ADD_POST]: (state, action) =>
-    //   produce(state, (draft) => {
-    //     draft.list.unshift(action.payload.post);
-    //   }),
-    // [EDIT_POST]: (state, action) =>
-    //   produce(state, (draft) => {
-    //     draft.list = action.payload;
-    //   }),
 
-    //병우추가
-    // [ADD_ROOM]: (state, action) =>
-    //   produce(state, (draft) => {
-    //     draft.room = action.payload.game_room;
-    //     // console.log(action, '넘어오니?');
-    //     console.log(draft.list);
-    //   }),
     [PRIVATE_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.roomState.roomId = action.payload.roomId;
@@ -310,6 +259,10 @@ export default handleActions(
       produce(state, (draft) => {
         draft.gameStart = action.payload.start;
       }),
+    [START_CHECK]: (state, action) =>
+      produce(state, (draft) => {
+        draft.startCheck = action.payload.check;
+      }),
   },
   initialState
 );
@@ -325,9 +278,8 @@ const actionCreators = {
   doReadyAPI,
   doStartAPI,
   cancelReadyAPI,
-  roundNoAIP,
-  gameStart,
   startCheckAPI,
+  roundNoInfo,
 };
 
 export { actionCreators };

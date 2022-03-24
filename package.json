@@ -21,6 +21,7 @@
     "react-router-dom": "5.2.1",
     "react-scripts": "5.0.0",
     "react-scroll-to-bottom": "^4.2.0",
+    "react-toastify": "^8.2.0",
     "redux": "^4.1.2",
     "redux-actions": "^2.6.5",
     "redux-logger": "^3.0.6",
