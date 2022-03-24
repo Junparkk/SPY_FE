@@ -28,7 +28,7 @@ import styled from 'styled-components';
 export default class UserVideoComponent extends Component {
   getNicknameTag() {
     // Gets the nickName of the user
-    console.log(this.props.streamManager)
+    // console.log(this.props.streamManager)
     return JSON.parse(this.props.streamManager.stream.connection.data)
       .clientData;
   }

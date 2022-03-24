@@ -5,6 +5,10 @@ import { produce } from 'immer';
 import { apis } from '../../shared/apis';
 import io from 'socket.io-client';
 
+// Toast alert
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const socket = io.connect('https://mafia.milagros.shop');
 
 // post
@@ -91,6 +95,13 @@ const lawyerActDB = (roomId, userId) => {
       })
       .catch((err) => {
         console.log(err.data.msg);
+        toast.error(err.data.msg, {
+          draggable: true,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
       });
   };
 };
@@ -124,6 +135,13 @@ const spyActDB = (roomId, userId) => {
       })
       .catch((err) => {
         console.log(err);
+        toast.error(err.data.msg, {
+          draggable: true,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
       });
   };
 };
@@ -131,7 +149,9 @@ const spyActDB = (roomId, userId) => {
 //룰 부여
 const divisionRole = (roomId) => {
   return async function (dispatch, useState, { history }) {
-    await apis
+    await apis;
+    console
+      .log('vote.js의 룸 아이디', roomId)
       .role(roomId)
       .then((res) => {
         console.log('api 요청 후 DB 삽입됨', res, Date().toString());

@@ -26,6 +26,9 @@ import DetectiveVoteModal from '../components/DetectiveVoteModal';
 import SpyVoteModal from '../components/SpyVoteModal';
 import JobCheckModal from '../components/JobCheckModal';
 import { apis } from '../shared/apis';
+import VoteDetective from '../components/VoteWaitingModal/VoteDetective';
+import VoteSpy from '../components/VoteWaitingModal/VoteSpy';
+import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
 
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -37,229 +40,6 @@ const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
 
 function Ingame(props) {
-  //화상 채팅
-  const [session, setSession] = useState(undefined);
-  const [mainStreamManager, setMainStreamManager] = useState(undefined);
-  const [publisher, setPublisher] = useState(undefined);
-  const [subscribers, setSubscribers] = useState([]);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined);
-
-  const onbeforeunload = () => {
-    leaveSession();
-  };
-
-  const handleMainVideoStream = (stream) => {
-    if (mainStreamManager !== stream) {
-      setMainStreamManager({
-        mainStreamManager: stream,
-      });
-    }
-  };
-
-  const deleteSubscriber = (streamManager) => {
-    let subscribers = subscribers;
-    let index = subscribers.indexOf(streamManager, 0);
-    if (index > -1) {
-      subscribers.splice(index, 1);
-      setSubscribers({
-        subscribers: subscribers,
-      });
-    }
-  };
-
-  function getToken(roomId) {
-    return createSession(roomId).then((sessionId) => createToken(sessionId));
-  }
-
-  function createSession(sessionId) {
-    return new Promise((resolve, reject) => {
-      var data = JSON.stringify({ customSessionId: sessionId });
-      axios
-        .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
-          headers: {
-            Authorization:
-              'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((response) => {
-          console.log('CREATE SESION', response);
-          resolve(response.data.id);
-        })
-        .catch((response) => {
-          var error = Object.assign({}, response);
-          if (error?.response?.status === 409) {
-            resolve(sessionId);
-          } else {
-            console.log(error);
-            console.warn(
-              'No connection to OpenVidu Server. This may be a certificate error at ' +
-                OPENVIDU_SERVER_URL
-            );
-            if (
-              window.confirm(
-                'No connection to OpenVidu Server. This may be a certificate error at "' +
-                  OPENVIDU_SERVER_URL +
-                  '"\n\nClick OK to navigate and accept it. ' +
-                  'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
-                  OPENVIDU_SERVER_URL +
-                  '"'
-              )
-            ) {
-              window.location.assign(
-                OPENVIDU_SERVER_URL + '/accept-certificate'
-              );
-            }
-          }
-        });
-    });
-  }
-
-  function createToken(sessionId) {
-    return new Promise((resolve, reject) => {
-      var data = {};
-      axios
-        .post(
-          OPENVIDU_SERVER_URL +
-            '/openvidu/api/sessions/' +
-            sessionId +
-            '/connection',
-          data,
-          {
-            headers: {
-              Authorization:
-                'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then((response) => {
-          console.log('TOKEN', response);
-          resolve(response.data.token);
-        })
-        .catch((error) => reject(error));
-    });
-  }
-
-  function joinSession() {
-    const OV = new OpenVidu();
-
-    setSession({ session: OV.initSession() }, () => {
-      var mySession = roomId;
-
-      mySession.on('streamCreates', (event) => {
-        var subscriber = mySession.subscribe(event.stream, undefined);
-        subscribers.push(subscriber);
-
-        setSubscribers(subscribers);
-      });
-
-      mySession.on('streamDestroyed', (event) => {
-        deleteSubscriber(event.stream.streamManager);
-      });
-
-      mySession.on('exception', (exception) => {
-        console.worn(exception);
-      });
-
-      getToken().then((token) => {
-        mySession
-          .connect(token, { clientData: userNick })
-          .then(async () => {
-            var devices = await OV.getDevices();
-            var videoDevices = devices.filter(
-              (device) => device.kind === 'videoinput'
-            );
-
-            let publisher = OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: '640x480', // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-              mirror: false, // Whether to mirror your local video or not
-            });
-
-            mySession.publish(publisher);
-
-            setCurrentVideoDevice(videoDevices[0]);
-            setMainStreamManager(publisher);
-            setPublisher(publisher);
-          })
-          .catch((err) => {
-            console.log(
-              'There was an error connecting to the session:',
-              err.code,
-              err.message
-            );
-          });
-      });
-    });
-  }
-
-  const leaveSession = () => {
-    const mySession = session;
-    const OV = new OpenVidu();
-
-    if (mySession) {
-      mySession.disconnect();
-    }
-
-    OV = null;
-    setSession(undefined);
-    setSubscribers([]);
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-  };
-
-  async function switchCamera() {
-    const OV = new OpenVidu();
-
-    try {
-      const devices = await OV.getDevices();
-      var videoDevices = devices.filter(
-        (device) => device.kind === 'videoinput'
-      );
-
-      if (videoDevices && videoDevices.length > 1) {
-        var newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
-
-        if (newVideoDevice.length > 0) {
-          // Creating a new publisher with specific videoSource
-          // In mobile devices the default and first camera is the front one
-          var newPublisher = OV.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: true,
-          });
-
-          //newPublisher.once("accessAllowed", () => {
-          await session.unpublish(mainStreamManager);
-
-          await session.publish(newPublisher);
-
-          setCurrentVideoDevice(newVideoDevice);
-          setMainStreamManager(newPublisher);
-          setPublisher(newPublisher);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('beforeunload', onbeforeunload);
-    return () => {
-      window.removeEventListener('beforeunload', onbeforeunload);
-    };
-  }, []);
-
   //채팅
   const dispatch = useDispatch();
   const userId = localStorage.getItem('userid');
@@ -324,6 +104,10 @@ function Ingame(props) {
   const [isLawyerModalShowing, setIsLawyerModalShowing] = useState(false); //변호사
   const [isDetectiveModalShowing, setIsDetectiveModalShowing] = useState(false); // 탐정
   const [isSpyModalShowing, setIsSpyModalShowing] = useState(false); // 스파이
+  const [isVotingLawyer, setIsVotingLawyer] = useState(false); // 변호사 투표 시
+  const [isVotingDetective, setIsVotingDetective] = useState(false); // 탐정 투표 시
+  const [iVotingSpy, setIsVotingSpy] = useState(false); // 스파이 투표 시
+
   //본인 확인 용도
   const host = roomUserList.filter((user) => user.isHost === 'Y');
   const isLawyer = roomUserList.filter((user) => user.role === 2);
@@ -353,29 +137,24 @@ function Ingame(props) {
   };
 
   //업데이트 상태값
-  const updateStatus = () => {
+  const updateStatus = async () => {
     if (host[0].userId === parseInt(userId)) {
-      apis
+      await apis
         .statusCheck2(roomId, userId)
         .then((res) => {
           setStatus(res.data.nextStatus);
-          console.log(
-            res.data.nextStatus,
-            '#######updateStatus 넥스트 스테이터스'
-          );
+          setTimeout(() => {
+            socket.emit('getStatus', roomId);
+          }, 500);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err, 'catch'));
     }
   };
-  //버튼 클릭시 상태 업데이트와 투표날 함수 실행
-  const voteDayStart = () => {
-    voteDay();
-    updateStatus();
-  };
+
   //상태가 바뀔 때 마다 유저의 리스트를 받아옴
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
-  }, [status]);
+  }, [dispatch, roomId, status]);
 
   useEffect(() => {
     // 이 당시 status는 DB 상으로 roleGive
@@ -391,7 +170,7 @@ function Ingame(props) {
       setMsg(gameStatus.msg);
       dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
     });
-  }, [isStart, status]); // false -> true
+  }, [dispatch, isStart, status]); // false -> true
 
   // 로직 흐름
   useEffect(() => {
@@ -404,7 +183,6 @@ function Ingame(props) {
       detectiveVote,
       spyVoteCnt,
       endOfTheDayResult,
-      detectiveMsg,
       modalSpyResult;
 
     switch (status) {
@@ -418,13 +196,13 @@ function Ingame(props) {
         break;
       case 'showRole':
         console.log('######역할 불러오기 요청', Date().toString());
-        showRoleSetTimeOut = setTimeout(showRole, 3000);
+        showRoleSetTimeOut = setTimeout(showRole, 5000);
         break;
       case 'dayTime':
         console.log('######데이 시작 요청', Date().toString());
         clearTimeout(modalSpyResult);
         clearTimeout(showRoleSetTimeOut);
-        dayTimeSetTimeOut = setTimeout(dayTime, 2000);
+        dayTimeSetTimeOut = setTimeout(dayTime, 10000);
         break;
       case 'voteDay':
         console.log('######투표 시작 요청', Date().toString());
@@ -434,18 +212,20 @@ function Ingame(props) {
       case 'invalidVoteCnt':
         console.log('######무효표 처리 시작 요청', Date().toString());
         clearTimeout(voteDaySetTimeOut);
-        invalidAndAiVoteCnt = setTimeout(invalidVoteCnt, 1000);
+        invalidAndAiVoteCnt = setTimeout(invalidVoteCnt, 10000);
         break;
       case 'showResultDay':
         console.log('######낮투표 결과 요청', Date().toString());
-        dayVoteResult = setTimeout(showResultDay, 1000);
+        dayVoteResult = setTimeout(showResultDay, 10000);
         clearTimeout(invalidAndAiVoteCnt);
         break;
       case 'voteNightLawyer':
         toast.success(msg, {
           draggable: true,
           position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
         });
         console.log('######변호사 투표 시작 요청', Date().toString());
         lawyerVote = setTimeout(voteNightLawyer, 8000);
@@ -456,15 +236,10 @@ function Ingame(props) {
         detectiveVote = setTimeout(voteNightDetective, 8000);
         clearTimeout(lawyerVote);
         break;
-      case 'showMsgDetective': // 모달로 보여줄 예정
-        console.log('######탐정 답변확인 요청', Date().toString());
-        detectiveMsg = setTimeout(showMsgDetective, 3000);
-        clearTimeout(detectiveVote);
-        break;
       case 'voteNightSpy':
         console.log('######스파이 투표 요청', Date().toString());
         spyVoteCnt = setTimeout(voteNightSpy, 8000);
-        clearTimeout(detectiveMsg);
+        clearTimeout(detectiveVote);
         break;
       case 'isGameResult_2':
         console.log('######밤 투표 결과 요청', Date().toString());
@@ -484,13 +259,16 @@ function Ingame(props) {
 
   //롤부여하기
   const roleGive = () => {
-    dispatch(voteActions.divisionRole(roomId));
-    //백엔드에서 api 호출을 받고 showRole로 바꿔줌
-
+    if (host[0].userId === parseInt(userId)) {
+      dispatch(voteActions.divisionRole(roomId));
+      //백엔드에서 api 호출을 받고 showRole로 바꿔줌
+    }
     toast.success('게임이 시작했습니다', {
       draggable: true,
       position: toast.POSITION.TOP_CENTER,
       autoClose: 2000,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
     });
   };
 
@@ -521,7 +299,7 @@ function Ingame(props) {
 
     const notiJobRoleTimer = setTimeout(() => {
       setIsDayTimeModalShowing(false);
-      if (!isVote) updateStatus();
+      updateStatus();
     }, 10000);
     return () => clearTimeout(notiJobRoleTimer);
   };
@@ -554,49 +332,69 @@ function Ingame(props) {
         .then((res) => console.log(res))
         .catch((err) => console.log(err));
     } else {
-      setIsRoleModalShowing(true);
+      setIsVotingLawyer(true);
     }
-   
+
     const Timer = setTimeout(() => {
       setIsLawyerModalShowing(false);
-      setIsRoleModalShowing(false);
-      if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
+      setIsVotingLawyer(false);
+
+      if (
+        isLawyer[0] &&
+        isLawyer[0].isAi === 'N' &&
+        isLawyer[0].userId === parseInt(userId)
+      ) {
         if (lawyerNullVote === true) {
           dispatch(voteActions.lawyerActDB(roomId, null));
-        }
-      }
-      if (isLawyer[0] && isLawyer[0].isAi === 'Y') {
-        if (lawyerNullVote === true) {
-          dispatch(voteActions.lawyerActDB(roomId, null));
+          toast.success(msg, {
+            draggable: true,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
         }
       }
 
+      if (isLawyer[0] && isLawyer[0].isAi === 'Y') {
+        if (host[0] && host[0].userId === parseInt(userId)) {
+          dispatch(voteActions.lawyerActDB(roomId, null));
+        }
+      }
       // voteNightDetective();
     }, 10000);
     return () => clearTimeout(Timer);
   }
   //탐정 투표
   function voteNightDetective() {
+    toast.success(msg, {
+      draggable: true,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 2000,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+    });
+    //변호사 투표여부 초기화
     if (lawyerNullVote === false) {
       dispatch(voteActions.lawyerNullVote(true));
     }
-    const Timer = setTimeout(() => {
-      if (isDetective[0] && isDetective[0].userId === parseInt(userId)) {
-        setIsDetectiveModalShowing(true);
-      } else {
-        setIsRoleModalShowing(true);
+
+    if (isDetective[0] && isDetective[0].userId === parseInt(userId)) {
+      setIsDetectiveModalShowing(true);
+    } else {
+      setIsVotingDetective(true);
+    }
+    if (isDetective[0] && isDetective[0].isAi === 'Y') {
+      if (host[0] && host[0].userId === parseInt(userId)) {
+        updateStatus();
       }
-    }, 1000);
+    }
+
     const Timer1 = setTimeout(() => {
       setIsDetectiveModalShowing(false);
-      setIsRoleModalShowing(false);
+      setIsVotingDetective(false);
     }, 10000);
-    return () => clearTimeout(Timer, Timer1);
-  }
-
-  // 탐정 투표결과 보여주기
-  function showMsgDetective() {
-    // 탐정 투표 결과
+    return () => clearTimeout(Timer1);
   }
 
   // 스파이 투표
@@ -609,14 +407,32 @@ function Ingame(props) {
           .then((res) => console.log(res))
           .catch((err) => console.log(err));
       } else {
-        setIsRoleModalShowing(true);
+        setIsVotingSpy(true);
       }
     }, 1000);
     const Timer1 = setTimeout(() => {
       setIsSpyModalShowing(false);
-      setIsRoleModalShowing(false);
-      if (isSpy[0] && isSpy[0].isAi === 'Y') {
+      setIsVotingSpy(false);
+
+      if (
+        isSpy[0] &&
+        isSpy[0].isAi === 'N' &&
+        isSpy[0].userId === parseInt(userId)
+      ) {
         if (spyNullVote === true) {
+          dispatch(voteActions.spyActDB(roomId, null));
+          toast.success(msg, {
+            draggable: true,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        }
+      }
+
+      if (isSpy[0] && isSpy[0].isAi === 'Y') {
+        if (host[0] && host[0].userId === parseInt(userId)) {
           dispatch(voteActions.spyActDB(roomId, null));
         }
       }
@@ -625,6 +441,7 @@ function Ingame(props) {
   }
   //밤 투표결과 확인 요청 (버튼으로 동작)
   function isGameResult_2() {
+    //스파이 투표여부 초기화
     if (spyNullVote === false) {
       dispatch(voteActions.spyNullVote(true));
     }
@@ -667,6 +484,9 @@ function Ingame(props) {
         {isLawyerModalShowing && <LawyerVoteModal />}
         {isDetectiveModalShowing && <DetectiveVoteModal />}
         {isSpyModalShowing && <SpyVoteModal />}
+        {isVotingLawyer && <VoteLawyer />}
+        {isVotingDetective && <VoteDetective />}
+        {iVotingSpy && <VoteSpy />}
         <div
           style={{
             width: '100%',
@@ -726,8 +546,6 @@ function Ingame(props) {
         ) : (
           <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
         )}
-
-        <ChatButton onClick={voteDayStart}>다음 state</ChatButton>
       </Wrap>
     </>
   );
@@ -810,3 +628,5 @@ const ChatBox = styled.div`
 `;
 
 export default Ingame;
+
+

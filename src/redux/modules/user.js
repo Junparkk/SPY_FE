@@ -1,6 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 import { produce } from 'immer';
 import axios from 'axios';
+// toast
+import { toast } from 'react-toastify';
 
 //액션
 const SET_USER = 'SET_USER';
@@ -55,7 +57,8 @@ const LoginDB = (nickname) => {
         nickname: nickname,
       })
       .then((response) => {
-        window.alert(`${nickname} 님 반가워요`);
+        toast.success(`${nickname} 님 반가워요`);
+        toast.success('테스트');
         console.log(response);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid', response.data.user.id);

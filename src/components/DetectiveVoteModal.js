@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -41,13 +41,13 @@ const DetectiveVoteModal = (props) => {
     }
   };
 
-  // 본인명단은 제외하기 
+  // 본인명단은 제외하기 아직 미완 0315
   const userId = localStorage.getItem('userid');
+  // const user_list = _user_list.filter(
+  //   (user) => user.userId !== parseInt(userId)
+  // );
 
-  //필터할때 현재userID와 같은것만 빼고 노출하도록 !==
-  const user_list = _user_list.filter((user) => user.userId !== parseInt(userId));
-  console.log(user_list)
-  
+  console.log(submit);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
@@ -59,11 +59,11 @@ const DetectiveVoteModal = (props) => {
 
         {/* 롤을 부여받은대로 보여줘야함 */}
         {(() => {
-          if (user_list.length <= 6) {
+          if (_user_list.length <= 6) {
             return (
               <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
+                {_user_list &&
+                  _user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
                         pointerEvents={submit ? 'none' : ''}
@@ -78,10 +78,10 @@ const DetectiveVoteModal = (props) => {
                   })}
               </VotePlayerWrap>
             );
-          } else if (user_list.length <= 8) {
+          } else if (_user_list.length <= 8) {
             <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
+              {_user_list &&
+                _user_list.map((p, idx) => {
                   return (
                     <JobCheckImg
                       pointerEvents={submit ? 'none' : ''}
@@ -95,10 +95,10 @@ const DetectiveVoteModal = (props) => {
                   );
                 })}
             </VotePlayerWrap>;
-          } else if (user_list.length <= 10) {
+          } else if (_user_list.length <= 10) {
             <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
+              {_user_list &&
+                _user_list.map((p, idx) => {
                   return (
                     <JobCheckImg
                       pointerEvents={submit ? 'none' : ''}

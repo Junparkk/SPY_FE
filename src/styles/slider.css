@@ -168,6 +168,9 @@
   z-index: 99;
   bottom: 50%;
 }
+/* @media screen and (max-width: 763px) {
+  font-size: 1.5rem;
+} */
 
 .arrow:hover {
   background-color: #fff;
