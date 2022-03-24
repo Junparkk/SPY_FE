@@ -16,7 +16,7 @@ const initialState = {
   user: null,
   randomNick: null,
 };
-
+//이건 사용 안하는듯? 확인 후 수정 22-03-24
 const LoginCheckDB = () => {
   return function (dispatch, getState, { history }) {
     axios
