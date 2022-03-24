@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { actionCreators as voteActions } from '../redux/modules/vote';
+import room from '../redux/modules/room';
 
 const VoteModal = (props) => {
   const { isMe, roomId, _handleModal, children, ...rest } = props;
@@ -35,7 +36,13 @@ const VoteModal = (props) => {
       setSubmit(true);
       //디스패치로 넘겨주기 넣기
       dispatch(
-        voteActions.sendDayTimeVoteAPI(chosenRoomId, userId, round, chosenId)
+        voteActions.sendDayTimeVoteAPI(
+          chosenRoomId,
+          userId,
+          round,
+          chosenId,
+          roomId
+        )
       );
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
@@ -97,25 +104,6 @@ const VoteModal = (props) => {
               </VotePlayerWrap>
             );
           } else if (user_list.length <= 8) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
-                        <Contents>{p.nickname}</Contents>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          } else if (user_list.length <= 10) {
             return (
               <VotePlayerWrap>
                 {user_list &&
