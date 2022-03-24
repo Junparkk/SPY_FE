@@ -154,7 +154,7 @@ function Ingame(props) {
   //상태가 바뀔 때 마다 유저의 리스트를 받아옴
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
-  }, [status]);
+  }, [dispatch, roomId, status]);
 
   useEffect(() => {
     // 이 당시 status는 DB 상으로 roleGive
@@ -170,7 +170,7 @@ function Ingame(props) {
       setMsg(gameStatus.msg);
       dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
     });
-  }, [isStart, status]); // false -> true
+  }, [dispatch, isStart, status]); // false -> true
 
   // 로직 흐름
   useEffect(() => {
@@ -340,6 +340,13 @@ function Ingame(props) {
         if (lawyerNullVote === true) {
           console.log('----내가 변호사고 아무것도 누르지 않았을때----');
           dispatch(voteActions.lawyerActDB(roomId, null));
+          toast.success(msg, {
+            draggable: true,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
         }
       }
 
@@ -371,7 +378,6 @@ function Ingame(props) {
       pauseOnFocusLoss: false,
       pauseOnHover: false,
     });
-
     //변호사 투표여부 초기화
     if (lawyerNullVote === false) {
       dispatch(voteActions.lawyerNullVote(true));
@@ -413,6 +419,19 @@ function Ingame(props) {
         isSpy[0].userId === parseInt(userId)
       ) {
         if (spyNullVote === true) {
+          dispatch(voteActions.spyActDB(roomId, null));
+          toast.success(msg, {
+            draggable: true,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        }
+      }
+
+      if (isSpy[0] && isSpy[0].isAi === 'Y') {
+        if (host[0] && host[0].userId === parseInt(userId)) {
           dispatch(voteActions.spyActDB(roomId, null));
         }
       }
@@ -632,3 +651,5 @@ const ChatBox = styled.div`
 `;
 
 export default Ingame;
+
+

@@ -304,7 +304,7 @@ class Video extends Component {
 
   createSession(sessionId) {
     //var sessionId = this.state.mySessionId
-    console.log(sessionId);
+    // console.log(sessionId);
     return new Promise((resolve, reject) => {
       let data = JSON.stringify({ customSessionId: sessionId });
       axios
@@ -316,7 +316,7 @@ class Video extends Component {
           },
         })
         .then((response) => {
-          console.log('CREATE SESION', response);
+          // console.log('CREATE SESION', response);
           resolve(response.data.id);
         })
         .catch((response) => {
@@ -365,7 +365,7 @@ class Video extends Component {
           }
         )
         .then((response) => {
-          console.log('TOKEN', response);
+          // console.log('TOKEN', response);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));

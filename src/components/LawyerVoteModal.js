@@ -51,7 +51,7 @@ const LawyerVoteModal = (props) => {
       <ModalBlock {...rest}>
         <Contents size="4rem">투표</Contents>
         <Contents margin="1rem" size="2rem">
-          해고 당할 거 같은 직원에게 투표하세요.
+          해고 당할 거 같은 직원에게 투표하세요.\n 단 투표를 안하게 되면 무효표 처리 되어 랜덤 선택 됩니다.
         </Contents>
 
         {/* 롤을 부여받은대로 보여줘야함 */}

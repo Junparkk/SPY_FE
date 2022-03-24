@@ -21,9 +21,9 @@ const JobCheckModal = ({ roomId }, props) => {
   // console.log(userId, '아이디!!!');
 
   // 게임 시작 하고 바로 적용 될수 있도록 로직짜기
-  // useEffect(() => {
-  //   dispatch(voteActions.divisionRole(room_id));
-  // }, []);
+  useEffect(() => {
+    dispatch(voteActions.divisionRole(room_id));
+  }, []);
 
   const user_list = useSelector((state) => state.vote.userList);
   // console.log(user_list[0].id);
