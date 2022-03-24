@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
-import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 //이미지
 import Logo from '../images/Logo.png';
 import Null from '../images/Null.png';
