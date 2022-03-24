@@ -12,7 +12,7 @@ import SecretBlueDoor from '../images/SecretBlueDoor.png';
 const RoomCard = (props) => {
   console.log('hi', props);
   const secret = props.roomPwd;
-  console.log(secret)
+  console.log(secret);
   const testImg = React.useRef(null);
   const openDoor = () => {
     testImg.current.style.transform = 'rotateY(-90deg)';
@@ -58,7 +58,7 @@ const RoomCard = (props) => {
         {secret ? (
           <Cards onClick={() => openDoor()}>
             <InsideDoor>
-              <PinkDoorImgArea ref={testImg}></PinkDoorImgArea>
+              <SecretPinkDoorImgArea ref={testImg}></SecretPinkDoorImgArea>
             </InsideDoor>
             <TextArea>
               <PinkTitle>{props.roomName}</PinkTitle>
@@ -70,7 +70,7 @@ const RoomCard = (props) => {
         ) : (
           <Cards onClick={() => openDoor()}>
             <InsideDoor>
-              <SecretPinkDoorImgArea ref={testImg}></SecretPinkDoorImgArea>
+              <PinkDoorImgArea ref={testImg}></PinkDoorImgArea>
             </InsideDoor>
             <TextArea>
               <PinkTitle>{props.roomName}</PinkTitle>
@@ -90,7 +90,7 @@ const RoomCard = (props) => {
         {secret ? (
           <Cards onClick={() => openDoor()}>
             <InsideDoor>
-              <WhiteDoorImgArea ref={testImg}></WhiteDoorImgArea>
+              <SecretWhiteDoorImgArea ref={testImg}></SecretWhiteDoorImgArea>
             </InsideDoor>
             <TextArea>
               <WhiteTitle>{props.roomName}</WhiteTitle>
@@ -102,7 +102,7 @@ const RoomCard = (props) => {
         ) : (
           <Cards onClick={() => openDoor()}>
             <InsideDoor>
-              <SecretWhiteDoorImgArea ref={testImg}></SecretWhiteDoorImgArea>
+              <WhiteDoorImgArea ref={testImg}></WhiteDoorImgArea>
             </InsideDoor>
             <TextArea>
               <WhiteTitle>{props.roomName}</WhiteTitle>

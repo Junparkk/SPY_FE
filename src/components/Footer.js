@@ -70,6 +70,7 @@ const Footer = () => {
 
 const Wrap = styled.div`
   width: 100%;
+  min-width: 380px;
   height: 280px;
   justify-content: space-between;
   background-color: #6164cedd;
@@ -86,6 +87,10 @@ const Introduce = styled.div`
   letter-spacing: 1px;
   line-height: 23px;
   color: #dedede;
+  @media (max-width:763px) {
+    grid-template-columns: repeat(2, 1fr);
+
+  }
 `;
 const Name = styled.div`
   margin: 20px 0px 0px 15%;
@@ -94,7 +99,7 @@ const Name = styled.div`
 
 const Url = styled.div`
   margin: 68px 0px 0px -10%;
-  @media screen and (max-width: 667px) { margin: 68px 0px 0px 100px;
+  @media screen and (max-width: 667px) { margin: 68px 0px 0px -20px;
   }
 `;
 

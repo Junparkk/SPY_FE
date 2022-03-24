@@ -55,22 +55,12 @@ const Slider = ({ showModal, setShowModal }) => {
             {index === currentSlide && (
               <>
                 <img src={slide.image} alt="slide" />
-                <div
-                  style={{
-                    width: "50%",
-                    fontSize: '18px',
-                    borderRadius: '10px',
-                    backgroundColor: '#00000000',
-                    lineHeight: '30px',
-                    fontWeight: '500',
-                  }}
-                  className="content"
-                >
+                <Desc className="content">
                   <SlideTitle>{slide.heading}</SlideTitle>
                   <br />
                   <br />
-                  <p>{slide.desc}</p>
-                </div>
+                  <div style={{ textAlign: 'start' }}>{slide.desc}</div>
+                </Desc>
               </>
             )}
           </div>
@@ -93,6 +83,22 @@ const SlideTitle = styled.p`
   font-size: 36px;
   color: #ffe179;
   font-family: 'yg-jalnan';
+  @media screen and (max-width: 763px) {
+    font-size: 24px;
+  }
+`;
+
+const Desc = styled.div`
+  margin: auto;
+  width: '50%';
+  font-size: 20px;
+  background-color: #00000000;
+  line-height: 30px;
+  font-family: 'yg-jalnan';
+  @media screen and (max-width: 763px) {
+    font-size: 16px;
+    line-height: 25px;
+  }
 `;
 
 export default Slider;
