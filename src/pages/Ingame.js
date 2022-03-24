@@ -18,7 +18,6 @@ import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
 import IngameHeader from '../components/IngameHeader';
-import { history } from '../redux/configureStore';
 
 //컴포넌트
 import VoteModal from '../components/VoteModal';
@@ -32,8 +31,10 @@ import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 //socket 서버
-// const socket = io.connect('https://mafia.milagros.shop');
-const socket = io.connect('http://localhost:3001');
+const socket = io.connect('https://mafia.milagros.shop');
+//openvidu 서버
+const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
+const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
 
 function Ingame(props) {
   //채팅
@@ -46,16 +47,14 @@ function Ingame(props) {
   const [chatView, setChatView] = useState(false);
   const userNick = localStorage.getItem('nickname');
 
+  const Chatting = () => {
+    setChatView(!chatView);
+  };
+
   //채팅창 드레그
   const nodeRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [Opacity, setOpacity] = useState(false);
-
-  //채팅
-  const Chatting = () => {
-    setChatView(!chatView);
-  };
-  //채팅창 드레그
   const trackPos = (data) => {
     setPosition({ x: data.x, y: data.y });
   };
