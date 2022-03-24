@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import voteLawyer from '../../images/voteLawyer.png';
+import { createPortal } from 'react-dom';
 
 const VoteLawyer = () => {
-  return (
+  return createPortal(
     <Container>
-      <>
-        <Background />
-        <VoteModal src={voteLawyer}></VoteModal>
-      </>
-    </Container>
+      <Background />
+      <VoteModal src={voteLawyer}></VoteModal>
+    </Container>,
+    document.getElementById('VoteLawyer')
   );
 };
 

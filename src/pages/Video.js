@@ -96,21 +96,21 @@ class Video extends Component {
 
         this.state.session.on('publisherStartSpeaking', (event) => {
           this.setState({ speaking: true });
-          console.log(
-            'User ' +
-              event.connection.connectionId +
-              ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-            this.state.speaking
-          );
+          // console.log(
+          //   'User ' +
+          //     event.connection.connectionId +
+          //     ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
+          //   this.state.speaking
+          // );
         });
 
         this.state.session.on('publisherStopSpeaking', (event) => {
           this.setState({ speaking: false });
-          console.log(
-            'User ' +
-              event.connection.connectionId +
-              ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
-          );
+          // console.log(
+          //   'User ' +
+          //     event.connection.connectionId +
+          //     ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
+          // );
         });
 
         // --- 3) Specify the actions when events take place in the session ---
@@ -137,7 +137,7 @@ class Video extends Component {
 
         // On every asynchronous exception...
         mySession.on('exception', (exception) => {
-          console.warn(exception);
+          // console.warn(exception);
         });
 
         // --- 4) Connect to the session with a valid user token ---

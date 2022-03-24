@@ -76,39 +76,43 @@ const LawyerVoteModal = (props) => {
               </VotePlayerWrap>
             );
           } else if (user_list.length <= 8) {
-            <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked()}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked()}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
           } else if (user_list.length <= 10) {
-            <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked(idx)}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked(idx)}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
           }
         })()}
 
@@ -118,7 +122,7 @@ const LawyerVoteModal = (props) => {
         </SendBtn>
       </ModalBlock>
     </Container>,
-    document.getElementById('VoteModal')
+    document.getElementById('LawyerVoteModal')
   );
 };
 

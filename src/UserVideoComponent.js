@@ -42,9 +42,7 @@ export default class UserVideoComponent extends Component {
               <OpenViduVideoComponent
                 streamManager={this.props.streamManager}
               />
-              <Text>
-                {this.getNicknameTag()}
-              </Text>
+              <Text>{this.getNicknameTag()}</Text>
             </div>
           </VideoBox>
         ) : null}

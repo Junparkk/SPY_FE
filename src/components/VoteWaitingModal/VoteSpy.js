@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import voteSpy from '../../images/voteSpy.png';
+import { createPortal } from 'react-dom';
 
 const VoteSpy = () => {
-  return (
+  return createPortal(
     <Container>
-      <>
-        <Background />
-        <VoteModal src={voteSpy}></VoteModal>
-      </>
-    </Container>
+      <Background />
+      <VoteModal src={voteSpy}></VoteModal>
+    </Container>,
+    document.getElementById('VoteSpy')
   );
 };
 

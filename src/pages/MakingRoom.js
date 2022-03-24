@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
-
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 //이미지
 import Logo from '../images/Logo.png';
 import Null from '../images/Null.png';
@@ -48,10 +49,12 @@ const Markingroom = () => {
   // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
     if (roomName === '') {
-      toast.error('방 제목을 입력해주세요', {
+      toast.error('방 제목을 입력해주세요!', {
         draggable: true,
         position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
+        autoClose: 2000,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
       });
       return;
     } else {
@@ -62,12 +65,19 @@ const Markingroom = () => {
         autoClose: 3000,
       });
     }
+    dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
+    toast.success('방 생성 완료!', {
+      draggable: true,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 2000,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+    });
   };
 
   return (
     <React.Fragment>
       <ToastContainer />
-      {/* {open && <VoteWaitingModal/> } */}
       <div
         style={{
           position: 'fixed',
@@ -138,9 +148,14 @@ const Markingroom = () => {
                     key={index}
                     onClick={() => {
                       // if (index + 1 < 6) {
-                      //   window.alert(
-                      //     '게임 최소 인원은 6명입니다. 다시 설정해주세요.'
-                      //   );
+                      //   toast.error('게임 최소 인원은 6명입니다. 다시 설정해주세요.', {
+                      //     draggable: true,
+                      //     position: toast.POSITION.TOP_CENTER,
+                      //     autoClose: 2000,
+                      //     pauseOnFocusLoss: false,
+                      //     pauseOnHover: false,
+                      //   });
+
                       //   return;
                       // }
                       setCount(index + 1);

@@ -74,9 +74,15 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
     await apis
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
-        setTimeout(() => {
-          socket.emit('getStatus', roomId);
-        }, 500);
+        if (res.data.result === 0) {
+          setTimeout(() => {
+            socket.emit('getStatus', roomId);
+          }, 500);
+        } else if (res.data.result === 1) {
+          history.push('/result');
+        } else if (res.data.result === 2) {
+          history.push('/result');
+        }
         console.log('이건 apis 안------------------------');
         console.log(res.data.result);
       })
@@ -92,6 +98,9 @@ const lawyerActDB = (roomId, userId) => {
       .lawyerAct(roomId, userId)
       .then(function (res) {
         console.log(res.data);
+        setTimeout(() => {
+          socket.emit('getStatus', roomId);
+        }, 500);
       })
       .catch((err) => {
         console.log(err.data.msg);
@@ -112,9 +121,8 @@ const detectiveActDB = (roomId, userId) => {
     console.log(userId, '탐정 리듀서');
     await apis
       .detectiveAct(roomId, userId)
-      .then(function (res) {
-        console.log(res.data);
-        window.alert(res.data.msg);
+      .then((res) => {
+        console.log(res.data.msg);
         // dispatch(answerUsers(res.data.userId));
       })
       .catch((err) => {
@@ -131,7 +139,9 @@ const spyActDB = (roomId, userId) => {
       .spyAct(roomId, userId)
       .then(function (res) {
         console.log(res.data);
-        window.alert(res.data.msg);
+        setTimeout(() => {
+          socket.emit('getStatus', roomId);
+        }, 500);
       })
       .catch((err) => {
         console.log(err);
