@@ -53,6 +53,8 @@ export const apis = {
   sendInvalidVote: (roomId, roundNo, userId) =>
     api.put(`/room/${roomId}/round/${roundNo}/user/${userId}/invalidAndAiVote`),
 
+  isVote: (roomId) => api.get(`/room/${roomId}/isZeroVote`),
+
   //AI 플레이어 생성
   makeAiPlayer: (roomId) => api.put(`room/${roomId}/ai`),
 
