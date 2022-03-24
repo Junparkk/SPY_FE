@@ -44,28 +44,6 @@ const LawyerVoteModal = (props) => {
     console.log(chosenRoomId);
   };
 
-  // const submitClicked = () => {
-  //   if (voteBtnClicked !== null) {
-  //     for (let i = 0; i < user_list.length; i++) {
-  //       const chooseRandomPlayer = Math.floor(Math.random() * user_list.length);
-  //       console.log(user_list[chooseRandomPlayer], '선택받은 아이');
-  //       if (user_list[i].role === 2 || ) {
-  //         dispatch(
-  //           voteActions.lawyerActDB(
-  //             // user_list[i].roomId,
-  //             // user_list[i].userId,
-  //             // round,
-  //             chosenRoomId,
-  //             user_list[chooseRandomPlayer].userId
-  //           )
-  //         );
-  //       }
-  //     }
-  //     setSubmit(true);
-  //   } else {
-  //     window.alert('해고 당할거 같은 직원을 선택해주세요 :)');
-  //   }
-  // };
   console.log(submit);
   return createPortal(
     <Container>
@@ -98,39 +76,43 @@ const LawyerVoteModal = (props) => {
               </VotePlayerWrap>
             );
           } else if (user_list.length <= 8) {
-            <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked()}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked()}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
           } else if (user_list.length <= 10) {
-            <VotePlayerWrap>
-              {user_list &&
-                user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked(idx)}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked(idx)}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
           }
         })()}
 
@@ -140,7 +122,7 @@ const LawyerVoteModal = (props) => {
         </SendBtn>
       </ModalBlock>
     </Container>,
-    document.getElementById('VoteModal')
+    document.getElementById('LawyerVoteModal')
   );
 };
 

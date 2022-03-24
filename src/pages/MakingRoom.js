@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
-
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 //이미지
 import Logo from '../images/Logo.png';
 import Null from '../images/Null.png';
@@ -39,15 +40,28 @@ const Markingroom = () => {
   // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
     if (roomName === '') {
-      window.alert('방 제목을 입력해주세요.');
+      toast.error('방 제목을 입력해주세요!', {
+        draggable: true,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+      });
       return;
     }
     dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
-    window.alert('방 생성 완료');
+    toast.success('방 생성 완료!', {
+      draggable: true,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 2000,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+    });
   };
 
   return (
     <React.Fragment>
+      <ToastContainer />
       <div
         style={{
           position: 'fixed',
@@ -101,8 +115,10 @@ const Markingroom = () => {
             <TopText>
               <SetTitle>인원</SetTitle>
               <Comment>
-                <br/>
-                클릭 해 인원을 조정해 보세요!<br/><br/>     
+                <br />
+                클릭 해 인원을 조정해 보세요!
+                <br />
+                <br />
                 인원수에 따라 방의 모양이 자동으로 설정됩니다.
               </Comment>
             </TopText>
@@ -114,9 +130,14 @@ const Markingroom = () => {
                     key={index}
                     onClick={() => {
                       // if (index + 1 < 6) {
-                      //   window.alert(
-                      //     '게임 최소 인원은 6명입니다. 다시 설정해주세요.'
-                      //   );
+                      //   toast.error('게임 최소 인원은 6명입니다. 다시 설정해주세요.', {
+                      //     draggable: true,
+                      //     position: toast.POSITION.TOP_CENTER,
+                      //     autoClose: 2000,
+                      //     pauseOnFocusLoss: false,
+                      //     pauseOnHover: false,
+                      //   });
+
                       //   return;
                       // }
                       setCount(index + 1);
@@ -227,7 +248,7 @@ const Comment = styled.div`
   @media screen and (max-width: 763px) {
     font-size: 14px;
   }
-`
+`;
 
 const RoomPW = styled.input`
   width: 220px;

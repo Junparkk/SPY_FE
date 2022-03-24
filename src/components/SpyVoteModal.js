@@ -23,8 +23,7 @@ const SpyVoteModal = (props) => {
   const spyId = localStorage.getItem('userid');
 
   console.log(voteSpy[0]);
-  console.log(spyId)
- 
+  console.log(spyId);
 
   // 투표 사람 클릭
   const clicked = (idx) => {
@@ -45,7 +44,6 @@ const SpyVoteModal = (props) => {
   };
 
   console.log(submit);
-
 
   return createPortal(
     <Container>
@@ -80,39 +78,43 @@ const SpyVoteModal = (props) => {
                 </VotePlayerWrap>
               );
             } else if (user_list.length <= 8) {
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked()}
-                      >
-                        <Contents>{p.nickname}</Contents>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>;
+              return (
+                <VotePlayerWrap>
+                  {user_list &&
+                    user_list.map((p, idx) => {
+                      return (
+                        <JobCheckImg
+                          pointerEvents={submit ? 'none' : ''}
+                          ref={ref}
+                          key={p.id}
+                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                          onClick={() => clicked()}
+                        >
+                          <Contents>{p.nickname}</Contents>
+                        </JobCheckImg>
+                      );
+                    })}
+                </VotePlayerWrap>
+              );
             } else if (user_list.length <= 10) {
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
-                        <Contents>{p.nickname}</Contents>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>;
+              return (
+                <VotePlayerWrap>
+                  {user_list &&
+                    user_list.map((p, idx) => {
+                      return (
+                        <JobCheckImg
+                          pointerEvents={submit ? 'none' : ''}
+                          ref={ref}
+                          key={p.id}
+                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                          onClick={() => clicked(idx)}
+                        >
+                          <Contents>{p.nickname}</Contents>
+                        </JobCheckImg>
+                      );
+                    })}
+                </VotePlayerWrap>
+              );
             }
           })()}
 
@@ -123,7 +125,7 @@ const SpyVoteModal = (props) => {
         </ModalBlock>
       ) : null}
     </Container>,
-    document.getElementById('VoteModal')
+    document.getElementById('SpyVoteModal')
   );
 };
 

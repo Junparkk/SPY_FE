@@ -92,25 +92,25 @@ class Video extends Component {
       },
       () => {
         var mySession = this.state.session;
-        console.log(mySession);
+        // console.log(mySession);
 
         this.state.session.on('publisherStartSpeaking', (event) => {
           this.setState({ speaking: true });
-          console.log(
-            'User ' +
-              event.connection.connectionId +
-              ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-            this.state.speaking
-          );
+          // console.log(
+          //   'User ' +
+          //     event.connection.connectionId +
+          //     ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
+          //   this.state.speaking
+          // );
         });
 
         this.state.session.on('publisherStopSpeaking', (event) => {
           this.setState({ speaking: false });
-          console.log(
-            'User ' +
-              event.connection.connectionId +
-              ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
-          );
+          // console.log(
+          //   'User ' +
+          //     event.connection.connectionId +
+          //     ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
+          // );
         });
 
         // --- 3) Specify the actions when events take place in the session ---
@@ -137,7 +137,7 @@ class Video extends Component {
 
         // On every asynchronous exception...
         mySession.on('exception', (exception) => {
-          console.warn(exception);
+          // console.warn(exception);
         });
 
         // --- 4) Connect to the session with a valid user token ---
@@ -145,7 +145,7 @@ class Video extends Component {
         // 'getToken' method is simulating what your server-side should do.
         // 'token' parameter should be retrieved and returned by your own backend
         this.getToken().then((token) => {
-          console.log(token);
+          // console.log(token);
           // First param is the token got from OpenVidu Server. Second param can be retrieved by every user on event
           // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
           mySession
@@ -184,11 +184,11 @@ class Video extends Component {
               });
             })
             .catch((error) => {
-              console.log(
-                'There was an error connecting to the session:',
-                error.code,
-                error.message
-              );
+              // console.log(
+              //   'There was an error connecting to the session:',
+              //   error.code,
+              //   error.message
+              // );
             });
         });
       }
