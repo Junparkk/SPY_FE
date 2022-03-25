@@ -25,10 +25,8 @@ import SpyVoteModal from '../components/SpyVoteModal';
 import JobCheckModal from '../components/JobCheckModal';
 import { apis } from '../shared/apis';
 
-//socket 서버
-// const socket = io.connect('https://mafia.milagros.shop');
-const socket = io.connect('http://localhost:3001');
-
+const socket = io.connect('https://mafia.milagros.shop');
+// const socket = io.connect('http://localhost:3001');
 
 function Ingame(props) {
   //채팅
@@ -40,13 +38,12 @@ function Ingame(props) {
   const [showChat, setShowChat] = useState(false);
   const [chatView, setChatView] = useState(false);
   const userNick = localStorage.getItem('nickname');
-  
+
   //채팅창 드레그
   const nodeRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [Opacity, setOpacity] = useState(false);
 
-  
   //채팅
   const Chatting = () => {
     setChatView(!chatView);
@@ -61,7 +58,6 @@ function Ingame(props) {
   const handleEnd = () => {
     setOpacity(false);
   };
-
 
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
@@ -78,7 +74,7 @@ function Ingame(props) {
     socket.emit('join_room', roomId, userNick);
     setShowChat(true);
   };
-  
+
   const leaveRoom = () => {
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };

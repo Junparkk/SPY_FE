@@ -3,49 +3,75 @@ import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
 import styled from 'styled-components';
 
-// function UserVideoComponent ({streamManager}) {
-//   console.log(streamManager)
-//   const getNicknameTag = () => {
-//     return JSON.parse(streamManager.stream.connection.data).clientData
-//   }
-
-//   return(
-//     <>
-//     {streamManager !== undefined ? (
-//           <VideoBox>
-//             <div className="streamcomponent">
-//               <OpenViduVideoComponent
-//                 streamManager={streamManager}
-//               />
-//               <Text>{getNicknameTag()}</Text>
-//             </div>
-//           </VideoBox>
-//         ) : null}
-//     </>
-//   )
-// }
-
 export default class UserVideoComponent extends Component {
+  state = { subspeaking: false };
+  
+  componentDidnmount = () => {};
+
+  componentWillUnmount = () => {};
+
+  componentDidUpdate = (prevProps, prevState) => {
+    console.log('===========update===========');
+    if (this.props.speaking !== prevProps.speaking) {
+      console.log('변화중 ');
+      this.setState({
+        subspeaking: !this.state.subspeaking,
+      });
+    }
+  };
+  Change() {
+    this.setState({ subspeaking: !this.state.subspeaking });
+  }
+
   getNicknameTag() {
     // Gets the nickName of the user
-    console.log(this.props.streamManager)
     return JSON.parse(this.props.streamManager.stream.connection.data)
       .clientData;
   }
 
   render() {
+    const mySession = this.props.session;
+    const publisher = this.props.publisher;
+    console.log(publisher);
+
+    // mySession.on('publisherStartSpeaking', (event) => {
+    //   this.setState({ subspeaking: true });
+    //   // this.Change();
+    // });
+    // mySession.on('publisherStopSpeaking', (event) => {
+    //   this.setState({ subspeaking: false });
+    //   // this.Change();
+    // });
+
+    // mySession.on('streamCreated', (event) => {
+    //   var subscriber = mySession.subscribe(event.stream, undefined);
+
+    //   subscriber.on('publisherStartSpeaking', (event) => {
+    //     this.setState({ subspeaking: true });
+    //     // this.Change();
+    //   });
+    //   subscriber.on('publisherStopSpeaking', (event) => {
+    //     this.setState({ subspeaking: false });
+    //     // this.Change();
+    //   });
+    // });
     return (
       <>
         {this.props.streamManager !== undefined ? (
-          <VideoBox className={this.props.speaking ? 'speaking' : ''}>
+          <VideoBox className={this.state.subspeaking ? 'speaking' : ''}>
             <div className="streamcomponent">
               <OpenViduVideoComponent
                 streamManager={this.props.streamManager}
               />
-              <Text>
-                {this.getNicknameTag()}
-              </Text>
+              <Text>{this.getNicknameTag()}</Text>
             </div>
+            <Button
+              onClick={() => {
+                this.Change();
+              }}
+            >
+              속상한 버튼
+            </Button>
           </VideoBox>
         ) : null}
       </>
@@ -79,4 +105,9 @@ const Text = styled.div`
   @media screen and (max-width: 1251px) {
     margin: -55px 0px 0px 0px;
   }
+`;
+
+const Button = styled.button`
+  position: absolute;
+  top: 500px;
 `;

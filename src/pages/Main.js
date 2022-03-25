@@ -70,7 +70,7 @@ const Main = (props) => {
             room_list.map((p, idx) => {
               if (p.roomPwd === null) {
                 return (
-                  <Cards
+                  <Cards key={idx}
                     onClick={() => {
                       console.log('비번 없는 방 입장');
                       const moveTimer = setTimeout(() => {

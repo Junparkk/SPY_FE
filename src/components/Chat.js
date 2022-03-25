@@ -54,12 +54,13 @@ function Chat({ socket, username, room }) {
       </div>
       <div className={change ? 'chat-Longbody' : 'chat-body'}>
         <ScrollToBottom className="message-container">
-          {messageList.map((messageContent) => {
+          {messageList.map((messageContent, i) => {
             return (
               <>
                 <div
                   className="message"
                   id={userNick === messageContent.author ? 'you' : 'other'}
+                  key={i}
                 >
                   <div>
                     <div className="message-meta">

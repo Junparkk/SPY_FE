@@ -3,24 +3,26 @@ import { OpenVidu } from 'openvidu-browser';
 import React, { Component } from 'react';
 import UserVideoComponent from '../UserVideoComponent';
 import styled from 'styled-components';
-//const { DOMAIN_OR_PUBLIC_IP, OPENVIDU_SECRET } = process.env
-// console.log(DOMAIN_OR_PUBLIC_IP)
-// console.log(OPENVIDU_SECRET)
+import PubVideoComponent from '../PubVideoComponent';
+
 const OPENVIDU_SERVER_URL = 'https://wawoong.shop';
 const OPENVIDU_SERVER_SECRET = 'INDUSTRIAL_SPY';
 const userNick = localStorage.getItem('nickname');
 
 class Video extends Component {
-  constructor({ roomId }, props) {
+  constructor(props) {
     super(props);
     this.state = {
-      mySessionId: roomId,
+      mySessionId: this.props.roomId,
       myUserName: userNick,
       session: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
-      speaking: false,
+      pubspeaking: false,
+      subspeaking: false,
+      speakingId: undefined,
+      id: undefined,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -92,36 +94,25 @@ class Video extends Component {
       },
       () => {
         var mySession = this.state.session;
-        console.log(mySession);
-
-        this.state.session.on('publisherStartSpeaking', (event) => {
-          this.setState({ speaking: true });
-          console.log(
-            'User ' +
-              event.connection.connectionId +
-              ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-            this.state.speaking
-          );
-        });
-
-        this.state.session.on('publisherStopSpeaking', (event) => {
-          this.setState({ speaking: false });
-          console.log(
-            'User ' +
-              event.connection.connectionId +
-              ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
-          );
-        });
 
         // --- 3) Specify the actions when events take place in the session ---
 
         // On every new Stream received...
         mySession.on('streamCreated', (event) => {
-          // Subscribe to the Stream to receive it. Second parameter is undefined
+          // Subscribe to the Stream to receive it. Second parameter is undefineㅇ
           // so OpenVidu doesn't create an HTML video by its own
           var subscriber = mySession.subscribe(event.stream, undefined);
           var subscribers = this.state.subscribers;
           subscribers.push(subscriber);
+
+          subscriber.on('publisherStartSpeaking', (event) => {
+            this.setState({ subspeaking: true });
+          });
+
+          subscriber.on('publisherStopSpeaking', (event) => {
+            this.setState({ subspeaking: false });
+            console.log(event.connection.connectionId)
+          });
 
           // Update the state with the new subscribers
           this.setState({
@@ -145,7 +136,6 @@ class Video extends Component {
         // 'getToken' method is simulating what your server-side should do.
         // 'token' parameter should be retrieved and returned by your own backend
         this.getToken().then((token) => {
-          console.log(token);
           // First param is the token got from OpenVidu Server. Second param can be retrieved by every user on event
           // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
           mySession
@@ -170,6 +160,16 @@ class Video extends Component {
                 frameRate: 30, // The frame rate of your video
                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                 mirror: true, // Whether to mirror your local video or not
+              });
+
+              publisher.on('publisherStartSpeaking', (event) => {
+                this.setState({ pubspeaking: true });
+                // console.log(this.state.pubspeaking);
+              });
+
+              publisher.on('publisherStopSpeaking', (event) => {
+                this.setState({ pubspeaking: false });
+                // console.log(this.state.pubspeaking);
               });
 
               // --- 6) Publish your stream ---
@@ -253,7 +253,6 @@ class Video extends Component {
       console.error(e);
     }
   }
-
   render() {
     return (
       //////////////////////////////////////////////////////////////
@@ -261,22 +260,27 @@ class Video extends Component {
       <div>
         {this.state.session !== undefined ? (
           <VideoContainer>
-            {this.state.mainStreamManager !== undefined ? (
-              <div id="main-video">
-                <UserVideoComponent
-                  streamManager={this.state.mainStreamManager}
-                  speaking={this.state.speaking}
+            {this.state.publisher !== undefined ? (
+              <div>
+                <PubVideoComponent
+                  streamManager={this.state.publisher}
+                  speaking={this.state.pubspeaking}
                 />
               </div>
             ) : null}
-            {this.state.subscribers.map((sub, i) => (
-              <div style={{ display: 'flex' }} key={i}>
-                <UserVideoComponent
-                  speaking={this.state.speaking}
-                  streamManager={sub}
-                />
-              </div>
-            ))}
+            {this.state.subscribers.map(
+              (sub, i) => (
+                <div key={i}>
+                  <UserVideoComponent
+                    streamManager={sub}
+                    speaking={this.state.subspeaking}
+                    session={this.state.session}
+                    publisher={this.state.publisher}
+                  />
+                </div>
+              ),
+              console.log(this.state.subscribers)
+            )}
           </VideoContainer>
         ) : null}
       </div>
@@ -367,6 +371,7 @@ class Video extends Component {
         .then((response) => {
           console.log('TOKEN', response);
           resolve(response.data.token);
+          this.setState({ id: response.data.id });
         })
         .catch((error) => reject(error));
     });

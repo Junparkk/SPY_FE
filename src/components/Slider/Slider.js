@@ -89,15 +89,17 @@ const SlideTitle = styled.p`
 `;
 
 const Desc = styled.div`
-  margin: auto;
-  width: '50%';
-  font-size: 20px;
-  background-color: #00000000;
+  justify-content: center;
+  width: 50%;
+  max-height: 500px;
+  font-size: 18px;
+  background-color: #33330000;
   line-height: 30px;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 763px) {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 25px;
+    width: 35%;
   }
 `;
 

@@ -8,7 +8,7 @@ const dataSlider = [
   {
     id: uuidv4(),
     image: Tutorial1,
-    heading: '산업 스파이의 룰',
+    heading: '산업스파이의 룰',
     desc: `"Work To Life"의 기밀문서를 훔쳐가기 위해 "Without Working"에서 잠입한 스파이입니다.
     
     사원들을 속여서 서로에게 과반수 득표를 하게 만든 후 다득표를 한 사원의 퇴직서를 받아낸다.
