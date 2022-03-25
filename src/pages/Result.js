@@ -8,9 +8,14 @@ import WinEffect from '../images/WinEffect.gif';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
+import click from '../sound/Click Sound.mp3';
+
 // 게임 결과 창
 
 const Result = () => {
+  //클릭 효과음
+  const sound = new Audio(click);
+
   //방 버튼 스크롤 컨트롤
   const [ScrollY, setScrollY] = React.useState(0);
 
@@ -30,15 +35,19 @@ const Result = () => {
 
   const leaveRoom = () => {
     history.push('/lobby');
+    sound.play();
     // dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
 
   //room Id 필요한지..?
   const reStart = () => {
+    sound.play();
     history.goBack();
   };
 
-  const shared = () => {};
+  const shared = () => {
+    sound.play();
+  };
 
   return (
     <React.Fragment>
@@ -61,36 +70,39 @@ const Result = () => {
         </WinnerWrap>
       </Wrap>
       <Footer />
-        <Restart className={ScrollY > 0 ? "Change_Button" : ""} onClick={reStart}>
-          <span
-            style={{
-              fontFamily: 'yg-jalnan',
-              color: '#ffe179',
-            }}
-          >
-            다<br />시<br />하<br />기
-          </span>
-        </Restart>
-        <LeaveRoom className={ScrollY > 0 ? "Change_Button" : ""} onClick={leaveRoom}>
-          <span
-            style={{
-              fontFamily: 'yg-jalnan',
-              color: '#ffe179',
-            }}
-          >
-            방<br />나<br />가<br />기
-          </span>
-        </LeaveRoom>
-        <Shared className={ScrollY > 0 ? "Change_Button" : ""} onClick={shared}>
-          <span
-            style={{
-              fontFamily: 'yg-jalnan',
-              color: '#ffe179',
-            }}
-          >
-            공<br />유<br />하<br />기
-          </span>
-        </Shared>
+      <Restart className={ScrollY > 0 ? 'Change_Button' : ''} onClick={reStart}>
+        <span
+          style={{
+            fontFamily: 'yg-jalnan',
+            color: '#ffe179',
+          }}
+        >
+          다<br />시<br />하<br />기
+        </span>
+      </Restart>
+      <LeaveRoom
+        className={ScrollY > 0 ? 'Change_Button' : ''}
+        onClick={leaveRoom}
+      >
+        <span
+          style={{
+            fontFamily: 'yg-jalnan',
+            color: '#ffe179',
+          }}
+        >
+          방<br />나<br />가<br />기
+        </span>
+      </LeaveRoom>
+      <Shared className={ScrollY > 0 ? 'Change_Button' : ''} onClick={shared}>
+        <span
+          style={{
+            fontFamily: 'yg-jalnan',
+            color: '#ffe179',
+          }}
+        >
+          공<br />유<br />하<br />기
+        </span>
+      </Shared>
     </React.Fragment>
   );
 };
@@ -142,7 +154,7 @@ const LeaveRoom = styled.button`
   font-weight: bold;
   font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  &.Change_Button{
+  &.Change_Button {
     position: absolute;
   }
   :hover {
@@ -170,7 +182,7 @@ const Restart = styled.button`
   font-weight: bold;
   font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  &.Change_Button{
+  &.Change_Button {
     position: absolute;
   }
   :hover {
@@ -185,7 +197,6 @@ const Restart = styled.button`
   z-index: 50;
 `;
 
-
 const Shared = styled.button`
   position: fixed;
   bottom: 20px;
@@ -199,7 +210,7 @@ const Shared = styled.button`
   font-weight: bold;
   font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  &.Change_Button{
+  &.Change_Button {
     position: absolute;
   }
   :hover {

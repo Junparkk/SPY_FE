@@ -6,14 +6,21 @@ import { history } from '../redux/configureStore';
 import { RiQuestionnaireLine } from 'react-icons/ri';
 import HeaderTitleLogo from '../images/HeaderTitleLogo.png';
 
+//효과음
+import click from '../sound/Click Sound.mp3';
+
 import RuleModal from './RuleModal';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
+  //클릭 효과음
+  const sound = new Audio(click);
 
   const openModal = () => {
     setShowModal(true);
+    sound.play();
   };
+
   // function Sound() {
   //   const [volume, setVolume] = useState(1);
   //   const [muted, setMuted] = useState(false);
@@ -49,9 +56,7 @@ const Header = () => {
   return (
     <React.Fragment>
       <Wrap>
-        <HeaderTitle
-          src={HeaderTitleLogo}
-        />
+        <HeaderTitle src={HeaderTitleLogo} />
         <div>
           <RiQuestionnaireLine
             onClick={openModal}

@@ -19,6 +19,9 @@ import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
 import IngameHeader from '../components/IngameHeader';
 
+//효과음
+import click from '../sound/Click Sound.mp3';
+
 //컴포넌트
 import VoteModal from '../components/VoteModal';
 import LawyerVoteModal from '../components/LawyerVoteModal';
@@ -48,6 +51,9 @@ function Ingame(props) {
   const [chatView, setChatView] = useState(false);
   const userNick = localStorage.getItem('nickname');
 
+  //클릭 효과음
+  const sound = new Audio(click);
+
   //채팅창 드레그
   const nodeRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -56,6 +62,7 @@ function Ingame(props) {
   //채팅
   const Chatting = () => {
     setChatView(!chatView);
+    sound.play();
   };
   //채팅창 드레그
   const trackPos = (data) => {
@@ -85,6 +92,7 @@ function Ingame(props) {
   };
 
   const leaveRoom = () => {
+    sound.play();
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
   ////////////////////////////////////////////////////////////////////
@@ -126,14 +134,17 @@ function Ingame(props) {
 
   const doReady = () => {
     dispatch(roomActions.doReadyAPI(roomId, userId));
+    sound.play();
     setIsReady(!isReady);
   };
   const cancelReady = () => {
     dispatch(roomActions.cancelReadyAPI(roomId, userId));
     setIsReady(!isReady);
+    sound.play();
   };
   const doStart = () => {
     dispatch(roomActions.doStartAPI(roomId, userId, changeMaxLength));
+    sound.play();
   };
 
   //업데이트 상태값
@@ -651,5 +662,3 @@ const ChatBox = styled.div`
 `;
 
 export default Ingame;
-
-

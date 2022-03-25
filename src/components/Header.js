@@ -5,6 +5,7 @@ import { history } from '../redux/configureStore';
 
 import { RiQuestionnaireLine } from 'react-icons/ri';
 import HeaderTitleLogo from '../images/HeaderTitleLogo.png';
+import click from '../sound/Click Sound.mp3';
 
 import RuleModal from './RuleModal';
 
@@ -14,11 +15,16 @@ const Header = () => {
   const LogOut = () => {
     localStorage.removeItem('nickname');
     localStorage.removeItem('userid');
+    sound.play();
     history.push('/');
   };
 
+  //클릭효과음
+  const sound = new Audio(click);
+
   const openModal = () => {
     setShowModal(true);
+    sound.play();
   };
   // function Sound() {
   //   const [volume, setVolume] = useState(1);
@@ -87,7 +93,7 @@ const HeaderTitle = styled.div`
   background-image: url('${(props) => props.src}');
   @media screen and (max-width: 763px) {
     width: 100px;
-   margin-top: 23px;
+    margin-top: 23px;
   }
 `;
 

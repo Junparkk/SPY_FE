@@ -1,10 +1,20 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
+//효과음
+import click from '../sound/Click Sound.mp3';
+
 import { IoMdClose } from 'react-icons/io';
 import Slider from '../components/Slider/Slider';
 const RuleModal = ({ showModal, setShowModal }) => {
   // const [modal, setModal] = useState(true);
+  //클릭 효과음
+  const sound = new Audio(click);
+  const close = () => {
+    setShowModal((prev) => !prev)
+    sound.play();
+  }
+
   const modalRef = useRef();
 
   const closeBtn = (e) => {
@@ -32,9 +42,9 @@ const RuleModal = ({ showModal, setShowModal }) => {
         <ModalBg onClick={closeBtn} ref={modalRef}>
           <WrapModal showModal={showModal}>
             <div>
-            <Slider/>
+              <Slider />
             </div>
-            <CloseModal onClick={() => setShowModal((prev) => !prev)}>
+            <CloseModal onClick={close}>
               닫기
             </CloseModal>
           </WrapModal>
@@ -57,8 +67,8 @@ const WrapModal = styled.div`
   text-align: center;
   justify-content: center;
   align-items: center;
-    @media (max-width: 600) {
-    width: 50rem
+  @media (max-width: 600) {
+    width: 50rem;
   }
 `;
 
@@ -72,12 +82,11 @@ const ModalBg = styled.div`
   align-items: center;
 `;
 
-
 const CloseModal = styled.button`
   cursor: pointer;
-  border : none;
+  border: none;
   position: absolute;
-  background-color: #9296FD;
+  background-color: #9296fd;
   top: 30px;
   right: 60px;
   width: 9%;
@@ -91,7 +100,5 @@ const CloseModal = styled.button`
   padding: 0;
   z-index: 10;
 `;
-
-
 
 export default RuleModal;

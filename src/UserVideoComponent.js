@@ -3,6 +3,7 @@ import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
 import styled from 'styled-components';
 
+
 export default class UserVideoComponent extends Component {
   state = { subspeaking: false };
   
@@ -66,13 +67,14 @@ export default class UserVideoComponent extends Component {
               />
               <Text>{this.getNicknameTag()}</Text>
             </div>
-            <Button
+            <UserLogo/>
+            {/* <Button
               onClick={() => {
                 this.Change();
               }}
             >
               속상한 버튼
-            </Button>
+            </Button> */}
           </VideoBox>
         ) : null}
       </>
@@ -107,6 +109,10 @@ const Text = styled.div`
     margin: -55px 0px 0px 0px;
   }
 `;
+
+const UserLogo = styled.div`
+
+`
 
 const Button = styled.button`
   position: absolute;

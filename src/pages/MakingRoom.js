@@ -10,9 +10,12 @@ import blueDoor from '../images/blueDoor.png';
 import pinkDoor from '../images/pinkDoor.png';
 import whiteDoor from '../images/whiteDoor.png';
 
+//효과음
+import click from '../sound/Click Sound.mp3';
+
 // 컴포넌트
 import Header from '../components/Header';
-import VoteWaitingModal from '../components/VoteWaitingModal/VoteSpy'
+import VoteWaitingModal from '../components/VoteWaitingModal/VoteSpy';
 
 //리액트 아이콘
 import { FaLock, FaLockOpen } from 'react-icons/fa';
@@ -29,23 +32,44 @@ const Markingroom = () => {
   // const [createRoom, setCreateRoom] = useState('');
   const [roomName, setRoomName] = useState('');
   const [roomPwd, setRoomPwd] = useState(null);
-  console.log(userId);
   //인원디폴트 6(명)
   // const [maxPlayer, setMaxPlayer] = useState(6);
   // 방 문짝 선택 디폴트(0) 맨앞에꺼
 
+  //클릭 효과음
+  const sound = new Audio(click);
+
+  const Lobby = () => {
+    sound.play();
+    history.push('/lobby');
+  };
+
+  const Click = () => {
+    sound.play();
+  };
+
+  const Lock = () => {
+    sound.play();
+    setRoomLock(true);
+  };
+  const UnLock = () => {
+    sound.play();
+    setRoomLock(false);
+  };
+  const AntNum = () => {
+    sound.play();
+  };
   //Ants 카운트
   const [count, setCount] = useState(6);
-  console.log(count);
   const [roomLock, setRoomLock] = useState(false);
 
-
-//xptmxm
+  //xptmxm
   // const [open, setOpen] = useState(false);
 
   //비밀번호 숫자만 입력하게 알럿띄우기(정규표현식)
   // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
+    Click();
     if (roomName === '') {
       toast.error('방 제목을 입력해주세요!', {
         draggable: true,
@@ -105,14 +129,12 @@ const Markingroom = () => {
           />
 
           <div>
-            <PwdBn onClick={() => setRoomLock(true)}>
+            <PwdBn onClick={Lock}>
               <FaLock style={{ fontSize: '30' }} />
             </PwdBn>
-            <PwdBn onClick={() => setRoomLock(false)}>
+            <PwdBn onClick={UnLock}>
               <FaLockOpen style={{ fontSize: '30' }} />
             </PwdBn>
-
-        
           </div>
           {roomLock ? (
             <RoomPW
@@ -140,7 +162,7 @@ const Markingroom = () => {
             </TopText>
 
             <AntDiv>
-              {Array.from({ length: 8 }, (Ants, index) => {
+              {Array.from({ length: 10 }, (Ants, index) => {
                 return (
                   <Ant
                     key={index}
@@ -156,6 +178,7 @@ const Markingroom = () => {
 
                       //   return;
                       // }
+                      AntNum();
                       setCount(index + 1);
                     }}
                     src={count < index + 1 ? Null : Logo}
@@ -173,11 +196,7 @@ const Markingroom = () => {
         </RightArea>
       </Wrap>
       <BackBt>
-        <RiArrowGoBackFill
-          onClick={() => {
-            history.push('/lobby');
-          }}
-        />
+        <RiArrowGoBackFill onClick={Lobby} />
       </BackBt>
     </React.Fragment>
   );
@@ -354,8 +373,8 @@ const AntDiv = styled.div`
 `;
 
 const Ant = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   margin: 10px;
   border-radius: 50%;
   cursor: pointer;

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import blueDoor from '../images/blueDoor.png';
 import Header from '../components/Header';
+import click from '../sound/Click Sound.mp3';
 
 import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
@@ -32,9 +33,16 @@ const Main = (props) => {
     return () => window.removeEventListener('scroll', handleFollow);
   });
 
+  //클릭 효과음
+  const sound = new Audio(click);
+
+  const MakingRoom = () => {
+    sound.play();
+    history.push('/makingroom')
+  };
+
   //모든 브라우저 스크롤 맥스값
   const maxScroll = document.body.scrollHeight - window.scrollY;
-  console.log(maxScroll);
 
   const dispatch = useDispatch();
   const islogin = localStorage.getItem('nickname');
@@ -70,7 +78,8 @@ const Main = (props) => {
             room_list.map((p, idx) => {
               if (p.roomPwd === null) {
                 return (
-                  <Cards key={idx}
+                  <Cards
+                    key={idx}
                     onClick={() => {
                       console.log('비번 없는 방 입장');
                       const moveTimer = setTimeout(() => {
@@ -100,7 +109,7 @@ const Main = (props) => {
         <EnterRoomBtn
           //이게 왜 안되는지 모르겠네
           className={ScrollY > maxScroll - 300 ? 'change' : ''}
-          onClick={() => history.push('/makingroom')}
+          onClick={MakingRoom}
         >
           <span
             style={{
