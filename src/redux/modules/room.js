@@ -116,8 +116,8 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
-        console.log(error.response.data.msg);
-        window.alert(error.msg);
+        console.log(error);
+        window.alert(error);
       });
   };
 };

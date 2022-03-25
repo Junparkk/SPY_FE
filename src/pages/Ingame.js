@@ -142,8 +142,12 @@ function Ingame(props) {
       await apis
         .statusCheck2(roomId, userId)
         .then((res) => {
+          console.log('@@@@ updateStatus 실행 후 응답 받음');
           setStatus(res.data.nextStatus);
           setTimeout(() => {
+            console.log(
+              '@@@@ updateStatus 실행 후 emit 상태 받음(nextStatus) 보냄'
+            );
             socket.emit('getStatus', roomId);
           }, 500);
         })
@@ -154,7 +158,7 @@ function Ingame(props) {
   //상태가 바뀔 때 마다 유저의 리스트를 받아옴
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
-  }, [dispatch, roomId, status]);
+  }, [status]);
 
   useEffect(() => {
     // 이 당시 status는 DB 상으로 roleGive
@@ -170,7 +174,7 @@ function Ingame(props) {
       setMsg(gameStatus.msg);
       dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
     });
-  }, [dispatch, isStart, status]); // false -> true
+  }, [isStart, status]); // false -> true
 
   // 로직 흐름
   useEffect(() => {
@@ -182,7 +186,7 @@ function Ingame(props) {
       lawyerVote,
       detectiveVote,
       spyVoteCnt,
-      endOfTheDayResult,
+      finalResultNight,
       modalSpyResult;
 
     switch (status) {
@@ -200,7 +204,7 @@ function Ingame(props) {
         break;
       case 'dayTime':
         console.log('######데이 시작 요청', Date().toString());
-        clearTimeout(modalSpyResult);
+        clearTimeout(finalResultNight);
         clearTimeout(showRoleSetTimeOut);
         dayTimeSetTimeOut = setTimeout(dayTime, 10000);
         break;
@@ -220,13 +224,13 @@ function Ingame(props) {
         clearTimeout(invalidAndAiVoteCnt);
         break;
       case 'voteNightLawyer':
-        toast.success(msg, {
-          draggable: true,
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-          pauseOnFocusLoss: false,
-          pauseOnHover: false,
-        });
+        // toast.success(msg, {
+        //   draggable: true,
+        //   position: toast.POSITION.TOP_CENTER,
+        //   autoClose: 2000,
+        //   pauseOnFocusLoss: false,
+        //   pauseOnHover: false,
+        // });
         console.log('######변호사 투표 시작 요청', Date().toString());
         lawyerVote = setTimeout(voteNightLawyer, 8000);
         clearTimeout(dayVoteResult);
@@ -241,25 +245,28 @@ function Ingame(props) {
         spyVoteCnt = setTimeout(voteNightSpy, 8000);
         clearTimeout(detectiveVote);
         break;
-      case 'isGameResult_2':
+      case 'showResultNight':
         console.log('######밤 투표 결과 요청', Date().toString());
-        endOfTheDayResult = setTimeout(isGameResult_2, 3000);
+        modalSpyResult = setTimeout(showResultNight, 5000);
         clearTimeout(spyVoteCnt);
         break;
-      case 'showResultNight':
-        console.log('######스파이 투표 결과 보여주기 요청', Date().toString());
-        modalSpyResult = setTimeout(showResultNight, 5000);
-        clearTimeout(endOfTheDayResult);
+      case 'finalResult':
+        console.log('######라운드 종료 결과 요청', Date().toString());
+        finalResultNight = setTimeout(finalResult, 3000);
+        clearTimeout(modalSpyResult);
         break;
+
       default:
         console.log('실행안됨');
     }
-    clearTimeout(modalSpyResult);
+    clearTimeout(finalResultNight);
   }, [status]);
 
   //롤부여하기
   const roleGive = () => {
+    console.log('@@@@ roleGive 함수 시작');
     if (host[0].userId === parseInt(userId)) {
+      console.log('@@@@ roleGive if문 시작');
       dispatch(voteActions.divisionRole(roomId));
       //백엔드에서 api 호출을 받고 showRole로 바꿔줌
     }
@@ -274,8 +281,10 @@ function Ingame(props) {
 
   //롤보여주기
   const showRole = () => {
+    console.log('@@@@ showRole 함수 시작');
     setIsRoleModalShowing(true);
     const Timer = setTimeout(() => {
+      console.log('@@@@ showRole in타이머 (모달 닫고, updateStatus (dayTime))');
       setIsRoleModalShowing(false);
       updateStatus();
     }, 3000);
@@ -287,7 +296,9 @@ function Ingame(props) {
 
   //토론시간
   const dayTime = () => {
+    console.log('@@@@ dayTime 함수 시작');
     const voteDayTimeSet = setTimeout(() => {
+      console.log('@@@@ dayTime in타이머 (updateStatus (voteDay))');
       updateStatus();
     }, 1000);
     return () => clearTimeout(voteDayTimeSet);
@@ -296,10 +307,11 @@ function Ingame(props) {
   //투표시간
   const voteDay = () => {
     setIsDayTimeModalShowing(true);
-
+    console.log('@@@@ vote Day 시작');
     const notiJobRoleTimer = setTimeout(() => {
       setIsDayTimeModalShowing(false);
       updateStatus();
+      console.log('@@@@ vote Day 타이머 안 updateStatus (invalidVoteCnt)');
     }, 10000);
     return () => clearTimeout(notiJobRoleTimer);
   };
@@ -313,22 +325,22 @@ function Ingame(props) {
   //낮 투표 결과 확인
   function showResultDay() {
     //호스트만 보내고 값 전체가 받는거 나중
+    console.log('@@@@ 낮투표 결과 확인 시작');
     if (host[0].userId === parseInt(userId)) {
       dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
+      console.log('@@@@ 낮 투표 결과 디스패치 다음');
     }
   }
 
   //변호사 투표
   function voteNightLawyer() {
     if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
-      console.log('============변호사 모달 뜨기 직전=============1');
       setIsLawyerModalShowing(true);
     } else {
-      console.log('============변호사 모달 뜨기 직전=============2');
       setIsVotingLawyer(true);
     }
 
-    const Timer = setTimeout(() => {
+    const Timer = setTimeout(async () => {
       setIsLawyerModalShowing(false);
       setIsVotingLawyer(false);
 
@@ -340,13 +352,6 @@ function Ingame(props) {
         if (lawyerNullVote === true) {
           console.log('----내가 변호사고 아무것도 누르지 않았을때----');
           dispatch(voteActions.lawyerActDB(roomId, null));
-          toast.success(msg, {
-            draggable: true,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-          });
         }
       }
 
@@ -354,15 +359,23 @@ function Ingame(props) {
         if (host[0] && host[0].userId === parseInt(userId)) {
           console.log('----내가 방장이고 ai가 변호사일때----');
 
-          apis
+          await apis
             .aiLawyerAct(roomId)
-            .then(
-              (res) => console.log(res.data.msg),
+            .then((res) =>
               setTimeout(() => {
                 socket.emit('getStatus', roomId);
-              }, 500)
+                console.log(
+                  '이거 ai변호사새기. 이게 실행되면 다음단계로',
+                  res.data
+                );
+              }, 1000)
             )
-            .catch((err) => console.log(err));
+            .catch((err) =>
+              setTimeout(() => {
+                console.log('이거 ai변호사새기. 이게 실행되면 다음단계로', err);
+                socket.emit('getStatus', roomId);
+              }, 1000)
+            );
         }
       }
       // voteNightDetective();
@@ -371,6 +384,7 @@ function Ingame(props) {
   }
   //탐정 투표
   function voteNightDetective() {
+    console.log('한나 콘솔 테스트 detective 실행');
     toast.success(msg, {
       draggable: true,
       position: toast.POSITION.TOP_CENTER,
@@ -391,27 +405,33 @@ function Ingame(props) {
     if (isDetective[0] && isDetective[0].isAi === 'Y') {
       if (host[0] && host[0].userId === parseInt(userId)) {
         updateStatus();
+        console.log('@@@@ ai 탐정이고, 내가 호스트일때');
       }
     }
-
+    console.log('@@@@탐정 콘솔임 ㅎㅇㅎㅇ');
     const Timer1 = setTimeout(() => {
       setIsDetectiveModalShowing(false);
       setIsVotingDetective(false);
+      console.log('@@@@탐정 콘솔임 셋타임 아웃 다움 나 나옴');
     }, 10000);
     return () => clearTimeout(Timer1);
   }
 
   // 스파이 투표
   function voteNightSpy() {
+    console.log('@@@@ 스파이 투표 시작');
     if (isSpy[0] && isSpy[0].userId === parseInt(userId)) {
+      console.log('@@@@ 스파이 투표 시작 -> 스파이 모달');
       setIsSpyModalShowing(true);
     } else {
+      console.log('@@@@ 스파이 투표 시작 -> 대기 모달');
       setIsVotingSpy(true);
     }
 
     const Timer = setTimeout(() => {
       setIsSpyModalShowing(false);
       setIsVotingSpy(false);
+      console.log('@@@@ 스파이 콘솔 타이머 실행 됨');
 
       if (
         isSpy[0] &&
@@ -420,28 +440,23 @@ function Ingame(props) {
       ) {
         if (spyNullVote === true) {
           dispatch(voteActions.spyActDB(roomId, null));
-          toast.success(msg, {
-            draggable: true,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-          });
+          // toast.success(msg, {
+          //   draggable: true,
+          //   position: toast.POSITION.TOP_CENTER,
+          //   autoClose: 2000,
+          //   pauseOnFocusLoss: false,
+          //   pauseOnHover: false,
+          // });
         }
       }
 
       if (isSpy[0] && isSpy[0].isAi === 'Y') {
         if (host[0] && host[0].userId === parseInt(userId)) {
-          dispatch(voteActions.spyActDB(roomId, null));
-        }
-      }
-
-      if (isSpy[0] && isSpy[0].isAi === 'Y') {
-        if (host[0] && host[0].userId === parseInt(userId)) {
+          console.log('@@@@탐정 - ai가 탐정이고 방장이 나일때');
           apis
             .aiSpyAct(roomId)
-            .then(
-              (res) => {
+            .then((res) =>
+              setTimeout(() => {
                 toast.error(res.data.msg, {
                   draggable: true,
                   position: toast.POSITION.TOP_CENTER,
@@ -450,8 +465,6 @@ function Ingame(props) {
                   pauseOnHover: false,
                 });
                 console.log(res.data.msg);
-              },
-              setTimeout(() => {
                 socket.emit('getStatus', roomId);
               }, 500)
             )
@@ -463,37 +476,25 @@ function Ingame(props) {
   }
 
   //밤 투표결과 확인 요청 (버튼으로 동작)
-  function isGameResult_2() {
+  function showResultNight() {
     //스파이 투표여부 초기화
-    if (spyNullVote === false) {
-      dispatch(voteActions.spyNullVote(true));
-    }
-    apis.gameResult(roomId).then((res) => {
-      if (res.data.result === 0) {
-        updateStatus();
-      } else if (res.data.result === 1) {
-        window.replace('/result');
-      } else if (res.data.result === 2) {
-        window.replace('/result');
-      }
+    toast.error(msg, {
+      draggable: true,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 2000,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
     });
+    setTimeout(() => {
+      updateStatus();
+    }, 2000);
   }
 
   //아침에 최종 결과 공지 (버튼으로 동작)
-  function showResultNight() {
-    if (host[0].userId === parseInt(userId)) {
-      console.log(round, ' : showResultNight 라운드! ');
-      dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
-    }
+  function finalResult() {
     const Timer = setTimeout(() => {
-      console.log('여기는 showResult Night');
-
-      apis
-        .gameResult(roomId)
-        .then((res) => console.log(res.data.msg))
-        .catch((err) => console.log(err));
-      updateStatus();
-      console.log(round, ': 라운드 ');
+      console.log('여기는 finalResult');
+      dispatch(voteActions.voteResult(roomId));
     }, 10000);
     return () => clearTimeout(Timer);
   }
@@ -651,5 +652,3 @@ const ChatBox = styled.div`
 `;
 
 export default Ingame;
-
-

@@ -12,7 +12,7 @@ import whiteDoor from '../images/whiteDoor.png';
 
 // 컴포넌트
 import Header from '../components/Header';
-import VoteWaitingModal from '../components/VoteWaitingModal/VoteSpy'
+import VoteWaitingModal from '../components/VoteWaitingModal/VoteSpy';
 
 //리액트 아이콘
 import { FaLock, FaLockOpen } from 'react-icons/fa';
@@ -39,8 +39,7 @@ const Markingroom = () => {
   console.log(count);
   const [roomLock, setRoomLock] = useState(false);
 
-
-//xptmxm
+  //xptmxm
   // const [open, setOpen] = useState(false);
 
   //비밀번호 숫자만 입력하게 알럿띄우기(정규표현식)
@@ -63,14 +62,6 @@ const Markingroom = () => {
         autoClose: 3000,
       });
     }
-    dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
-    toast.success('방 생성 완료!', {
-      draggable: true,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
   };
 
   return (
@@ -111,8 +102,6 @@ const Markingroom = () => {
             <PwdBn onClick={() => setRoomLock(false)}>
               <FaLockOpen style={{ fontSize: '30' }} />
             </PwdBn>
-
-        
           </div>
           {roomLock ? (
             <RoomPW
