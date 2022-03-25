@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
-
 //이미지
 import Logo from '../images/Logo.png';
 import Null from '../images/Null.png';
@@ -13,10 +12,15 @@ import whiteDoor from '../images/whiteDoor.png';
 
 // 컴포넌트
 import Header from '../components/Header';
+import VoteWaitingModal from '../components/VoteWaitingModal/VoteSpy'
 
 //리액트 아이콘
 import { FaLock, FaLockOpen } from 'react-icons/fa';
 import { RiArrowGoBackFill, RiQuestionMark } from 'react-icons/ri';
+
+//토스트 알림
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Markingroom = () => {
   const dispatch = useDispatch();
@@ -35,19 +39,43 @@ const Markingroom = () => {
   console.log(count);
   const [roomLock, setRoomLock] = useState(false);
 
+
+//xptmxm
+  // const [open, setOpen] = useState(false);
+
   //비밀번호 숫자만 입력하게 알럿띄우기(정규표현식)
   // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
     if (roomName === '') {
-      window.alert('방 제목을 입력해주세요.');
+      toast.error('방 제목을 입력해주세요!', {
+        draggable: true,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+      });
       return;
+    } else {
+      dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
+      toast.success('방 생성완료', {
+        draggable: true,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
     }
     dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
-    window.alert('방 생성 완료');
+    toast.success('방 생성 완료!', {
+      draggable: true,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 2000,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+    });
   };
 
   return (
     <React.Fragment>
+      <ToastContainer />
       <div
         style={{
           position: 'fixed',
@@ -83,6 +111,8 @@ const Markingroom = () => {
             <PwdBn onClick={() => setRoomLock(false)}>
               <FaLockOpen style={{ fontSize: '30' }} />
             </PwdBn>
+
+        
           </div>
           {roomLock ? (
             <RoomPW
@@ -101,8 +131,10 @@ const Markingroom = () => {
             <TopText>
               <SetTitle>인원</SetTitle>
               <Comment>
-                <br/>
-                클릭 해 인원을 조정해 보세요!<br/><br/>     
+                <br />
+                클릭 해 인원을 조정해 보세요!
+                <br />
+                <br />
                 인원수에 따라 방의 모양이 자동으로 설정됩니다.
               </Comment>
             </TopText>
@@ -114,9 +146,14 @@ const Markingroom = () => {
                     key={index}
                     onClick={() => {
                       // if (index + 1 < 6) {
-                      //   window.alert(
-                      //     '게임 최소 인원은 6명입니다. 다시 설정해주세요.'
-                      //   );
+                      //   toast.error('게임 최소 인원은 6명입니다. 다시 설정해주세요.', {
+                      //     draggable: true,
+                      //     position: toast.POSITION.TOP_CENTER,
+                      //     autoClose: 2000,
+                      //     pauseOnFocusLoss: false,
+                      //     pauseOnHover: false,
+                      //   });
+
                       //   return;
                       // }
                       setCount(index + 1);
@@ -175,12 +212,6 @@ const Door = styled.div`
   }
 `;
 
-// const MidWrap = styled.div`
-//   width: 1104px;
-//   height: 707px;
-//   margin: 201px auto 116px auto;
-// `;
-
 const LeftArea = styled.div`
   width: 70%;
   height: 100vh;
@@ -227,7 +258,7 @@ const Comment = styled.div`
   @media screen and (max-width: 763px) {
     font-size: 14px;
   }
-`
+`;
 
 const RoomPW = styled.input`
   width: 220px;

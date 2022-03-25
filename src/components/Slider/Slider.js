@@ -13,7 +13,6 @@ import { GrClose } from 'react-icons/gr';
 import { current } from 'immer';
 
 const Slider = ({ showModal, setShowModal }) => {
-  // const [slideIndex, setSlideIndex] = useState(1); // 18분 유튜브
   const history = useHistory();
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideLength = dataSlider.length;
@@ -67,7 +66,7 @@ const Slider = ({ showModal, setShowModal }) => {
         );
       })}
       <div className="container-dots">
-        {Array.from({ length: 3 }).map((item, index) => (
+        {Array.from({ length: 4 }).map((item, index) => (
           <div
             key={index}
             onClick={() => moveDot(index)}
@@ -80,15 +79,16 @@ const Slider = ({ showModal, setShowModal }) => {
 };
 
 const SlideTitle = styled.p`
-  font-size: 36px;
+  font-size: 2.25rem;
   color: #ffe179;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 763px) {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 `;
 
 const Desc = styled.div`
+<<<<<<< HEAD
   justify-content: center;
   width: 50%;
   max-height: 500px;
@@ -98,6 +98,16 @@ const Desc = styled.div`
   font-family: 'yg-jalnan';
   @media screen and (max-width: 763px) {
     font-size: 14px;
+=======
+  margin: auto;
+  width: '50%';
+  font-size: 1.25rem;
+  background-color: #00000000;
+  line-height: 30px;
+  font-family: 'yg-jalnan';
+  @media screen and (max-width: 763px) {
+    font-size: 1rem;
+>>>>>>> 50768b6522f962b7bc5ec19d230cc4d67fcd9b40
     line-height: 25px;
     width: 35%;
   }
