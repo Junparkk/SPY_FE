@@ -182,7 +182,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
             .then(
               () => dispatch(startCheck(true)),
               setTimeout(() => {
-                socket.emit('getStatus', roomId);
+                socket.emit('isStart', roomId);
               }, 500)
             )
             .catch((err) => console.log(err));
@@ -195,10 +195,9 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
                 .start(roomId)
                 .then(
                   (res) => dispatch(startCheck(true)),
+                  console.log(res, '-----AI 추가 후 실행하는 곳'),
 
-                  setTimeout(() => {
-                    socket.emit('getStatus', roomId);
-                  }, 500)
+                  socket.emit('isStart', roomId)
 
                   // socket.on('getStatus', (status, msg) => {
                   //   console.log('socket=================', status, msg);
