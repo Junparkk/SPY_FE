@@ -47,12 +47,10 @@ const Markingroom = () => {
   // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
     if (roomName === '') {
-      toast.error('방 제목을 입력해주세요!', {
+      toast.success('방 제목을 입력해주세요', {
         draggable: true,
         position: toast.POSITION.TOP_CENTER,
-        autoClose: 2000,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
+        autoClose: 3000,
       });
       return;
     } else {
@@ -63,14 +61,7 @@ const Markingroom = () => {
         autoClose: 3000,
       });
     }
-    dispatch(roomActions.createRoomDB(roomName, count, roomPwd, userId));
-    toast.success('방 생성 완료!', {
-      draggable: true,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
+    
   };
 
   return (
