@@ -63,6 +63,7 @@ const getRoomAPI = () => {
     });
   };
 };
+
 //방들어가기
 const enterRoomDB = (userId, roomId, roomPwd) => {
   console.log(roomId);
@@ -163,7 +164,7 @@ const cancelReadyAPI = (roomId, userId) => {
         console.log(res);
       })
       .catch((error) => {
-        console.log(error.response.data.msg);
+        console.log(error);
       });
   };
 };
@@ -181,9 +182,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
             .start(roomId)
             .then(
               () => dispatch(startCheck(true)),
-              setTimeout(() => {
-                socket.emit('getStatus', roomId);
-              }, 500)
+              socket.emit('getStatus', { roomId: roomId, status: 'roleGive' })
             )
             .catch((err) => console.log(err));
         } else {
@@ -195,14 +194,10 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
                 .start(roomId)
                 .then(
                   (res) => dispatch(startCheck(true)),
-
-                  setTimeout(() => {
-                    socket.emit('getStatus', roomId);
-                  }, 500)
-
-                  // socket.on('getStatus', (status, msg) => {
-                  //   console.log('socket=================', status, msg);
-                  // });
+                  socket.emit('getStatus', {
+                    roomId: roomId,
+                    status: 'roleGive',
+                  })
                 )
                 .catch(() => {});
             })

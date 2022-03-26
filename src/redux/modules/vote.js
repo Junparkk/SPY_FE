@@ -60,9 +60,6 @@ const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId, roomId) => {
         candidacy: chosenId,
       })
       .then(function (res) {
-        setTimeout(() => {
-          socket.emit('getStatus', roomId);
-        }, 500);
         console.log(res);
       })
       .catch((err) => console.log(err));
@@ -76,20 +73,24 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
       .then(function (res) {
         console.log('@@@@ resultDayTimeVoteAPI 요청 응답받음');
         if (res.data.result === 0) {
-          setTimeout(() => {
-            socket.emit('getStatus', roomId);
-            console.log(
-              '@@@@ resultDayTimeVoteAPI 요청 응답이 0일 경우 emit 상태(voteNightLawyer) 받음'
-            );
-          }, 1000);
+          socket.emit('getStatus', {
+            roomId: roomId,
+            status: 'voteNightLawyer',
+          });
+          console.log(
+            '@@@@ resultDayTimeVoteAPI 요청 응답이 0일 경우 emit 상태(voteNightLawyer) 받음',
+            res
+          );
         } else if (res.data.result === 1) {
           console.log(
-            '@@@@ resultDayTimeVoteAPI 요청 응답이 1일 경우 바로 결과 화면'
+            '@@@@ resultDayTimeVoteAPI 요청 응답이 1일 경우 바로 결과 화면',
+            res
           );
           history.push('/result');
         } else if (res.data.result === 2) {
           console.log(
-            '@@@@ resultDayTimeVoteAPI 요청 응답이 2일 경우 바로 결과 화면'
+            '@@@@ resultDayTimeVoteAPI 요청 응답이 2일 경우 바로 결과 화면',
+            res
           );
           history.push('/result');
         }
@@ -107,10 +108,10 @@ const lawyerActDB = (roomId, userId) => {
       .then(function (res) {
         console.log('@@@@ lawyerActDB 요청 답변 받음');
         console.log(res.data);
-        setTimeout(() => {
-          console.log('@@@@ lawyerActDB emit 상태(voteNightDetective) 받음');
-          socket.emit('getStatus', roomId);
-        }, 500);
+        socket.emit('getStatus', {
+          roomId: roomId,
+          status: 'voteNightDetective',
+        });
       })
       .catch((err) => {
         console.log(err.data);
@@ -129,7 +130,6 @@ const detectiveActDB = (roomId, userId) => {
         console.log(res.data.msg);
         setTimeout(() => {
           console.log('@@@@ detectiveActDB emit 상태(voteNightSpy) 받음');
-          socket.emit('getStatus', roomId);
         }, 500);
       })
       .catch((err) => {
@@ -147,16 +147,14 @@ const spyActDB = (roomId, userId) => {
       .then(function (res) {
         console.log('@@@@ spyActDB api 요청 후 답변 받음');
         console.log(res.data);
-        setTimeout(() => {
-          console.log('@@@@ detectiveActDB emit 상태(showResultNight) 받음');
-          socket.emit('getStatus', roomId);
-        }, 500);
+        socket.emit('getStatus', {
+          roomId: roomId,
+          status: 'showResultNight',
+        });
+        console.log('@@@@ detectiveActDB emit 상태(showResultNight) 받음');
       })
       .catch((err) =>
-        setTimeout(() => {
-          console.log('스파이 캐치로 빠질경우 emit 상태 업데이트', err);
-          socket.emit('getStatus', roomId);
-        }, 500)
+        console.log('스파이 캐치로 빠질경우 emit 상태 업데이트', err)
       );
   };
 };
@@ -170,19 +168,9 @@ const divisionRole = (roomId) => {
         console.log('@@@@ divisionRole 요청 후 답변 받음');
         console.log('api 요청 후 DB 삽입됨', res, Date().toString());
         dispatch(giveUsers(res.data.users));
-        setTimeout(() => {
-          console.log('@@@@ divisionRole emit emit 상태(showRole) 받음');
-          socket.emit('getStatus', roomId);
-        }, 500);
-
-        //롤 보여주는 모달 호출해줘야함!!!!!
+        socket.emit('getStatus', { roomId: roomId, status: 'showRole' });
       })
-      .catch((err) =>
-        setTimeout(() => {
-          console.log('@@@@ divisionRole catch문으로 빠짐)', err);
-          socket.emit('getStatus', roomId);
-        }, 500)
-      );
+      .catch((err) => console.log('@@@@ divisionRole catch문으로 빠짐)', err));
   };
 };
 
@@ -192,20 +180,10 @@ const invalidVote = (roomId, roundNo, userId) => {
     await apis
       .sendInvalidVote(roomId, roundNo, userId)
       .then(function (res) {
+        socket.emit('getStatus', { roomId: roomId, status: 'showResultDay' });
         console.log('@@@@ invalidVote api 요청 받음', res);
-        setTimeout(() => {
-          console.log(
-            '@@@@ invalidVote api 요청 받은 후 emit 상태 (showResultDay) 요청 후 받음'
-          );
-          socket.emit('getStatus', roomId);
-        }, 500);
       })
-      .catch((err) =>
-        setTimeout(() => {
-          console.log('@@@@ invalidVote catch문으로 빠짐)', err);
-          socket.emit('getStatus', roomId);
-        }, 500)
-      );
+      .catch((err) => console.log('@@@@ invalidVote catch문으로 빠짐)', err));
   };
 };
 
@@ -231,12 +209,11 @@ const voteResult = (roomId) => {
       .then((res) => {
         console.log('@@@@ voteResult api 요청 받음', res.data.result);
         if (res.data.result === 0) {
+          socket.emit('getStatus', { roomId: roomId, status: 'dayTime' });
           console.log(res);
           console.log('@@@@ voteResult api 요청 값 0일때');
-          setTimeout(() => {
-            console.log('@@@@ voteResult api 요청 값 0일때 emit(dayTime) 함');
-            socket.emit('getStatus', roomId);
-          }, 500);
+
+          console.log('@@@@ voteResult api 요청 값 0일때 emit(dayTime) 함');
         } else if (res.data.result === 1) {
           console.log('@@@@ voteResult api 요청 값 1일때 결과페이지');
           history.push('/result');
@@ -245,12 +222,7 @@ const voteResult = (roomId) => {
           history.push('/result');
         }
       })
-      .catch((err) =>
-        setTimeout(() => {
-          socket.emit('getStatus', roomId);
-          console.log(err);
-        }, 500)
-      );
+      .catch((err) => console.log(err));
   };
 };
 
