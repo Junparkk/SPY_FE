@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
 //이미지
-import Logo from '../images/Logo.png';
+import Basic from '../images/BasicProfile.png';
 import Null from '../images/Null.png';
 import blueDoor from '../images/blueDoor.png';
 import pinkDoor from '../images/pinkDoor.png';
@@ -174,7 +174,7 @@ const Markingroom = () => {
                       AntNum();
                       setCount(index + 1);
                     }}
-                    src={count < index + 1 ? Null : Logo}
+                    src={count < index + 1 ? Null : Basic}
                   />
                 );
               })}

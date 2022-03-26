@@ -6,7 +6,7 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 이미지
 import VoteBG from '../images/VoteBG.png';
-import alive from '../images/alive.png';
+import alive from '../images/BasicProfile.png';
 import dead from '../images/dead.png';
 import Ai from '../images/Ai.png';
 

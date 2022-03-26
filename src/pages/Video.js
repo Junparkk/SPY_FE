@@ -79,14 +79,14 @@ class Video extends Component {
   }
 
   joinSession() {
-    // --- 1) Get an OpenVidu object ---
+    // --- 1) Get an OpenVidu object ----
 
     this.OV = new OpenVidu();
     this.OV.setAdvancedConfiguration({
       noStreamPlayingEventExceptionTimeout: 10000,
       iceConnectionDisconnectedExceptionTimeout: 10000,
     });
-    // --- 2) Init a session ---
+    // --- 2) Init a session --
 
     this.setState(
       {
@@ -305,12 +305,12 @@ class Video extends Component {
           </VideoContainer>
         ) : null}
       </div>
-      /////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////
     );
   }
 
   /**
-   * --------------------------
+   * -------------------------
    * SERVER-SIDE RESPONSIBILITY
    * --------------------------
    * These methods retrieve the mandatory user token from OpenVidu Server.

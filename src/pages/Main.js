@@ -114,7 +114,7 @@ const Main = (props) => {
         </Container>
         <EnterRoomBtn
           //이게 왜 안되는지 모르겠네
-          className={ScrollY > maxScroll - 1250 ? 'change' : ''}
+          className={ScrollY > maxScroll - 1000 ? 'change' : ''}
           onClick={MakingRoom}
         >
           <span
@@ -144,7 +144,6 @@ const Wrap = styled.div`
   height: 100vh;
   background-color: #ffe179;
   overflow: auto;
-  position: relative;
 `;
 const Container = styled.div`
   display: grid;

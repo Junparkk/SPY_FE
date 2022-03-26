@@ -87,7 +87,7 @@ function Ingame(props) {
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
-    socket.emit('join_room', roomId, userNick);
+    socket.emit('join_room', { roomId, userId });
     setShowChat(true);
   };
 
