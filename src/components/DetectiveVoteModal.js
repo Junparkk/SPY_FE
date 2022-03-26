@@ -79,39 +79,43 @@ const DetectiveVoteModal = (props) => {
               </VotePlayerWrap>
             );
           } else if (_user_list.length <= 8) {
-            <VotePlayerWrap>
-              {_user_list &&
-                _user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked()}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
+            return (
+              <VotePlayerWrap>
+                {_user_list &&
+                  _user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked()}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
           } else if (_user_list.length <= 10) {
-            <VotePlayerWrap>
-              {_user_list &&
-                _user_list.map((p, idx) => {
-                  return (
-                    <JobCheckImg
-                      pointerEvents={submit ? 'none' : ''}
-                      ref={ref}
-                      key={p.id}
-                      opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                      onClick={() => clicked(idx)}
-                    >
-                      <Contents>{p.nickname}</Contents>
-                    </JobCheckImg>
-                  );
-                })}
-            </VotePlayerWrap>;
+            return (
+              <VotePlayerWrap>
+                {_user_list &&
+                  _user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked(idx)}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
           }
         })()}
 

@@ -50,11 +50,11 @@ const VoteModal = (props) => {
           roomId
         )
       );
+      console.log(round, '<<<<<<<< 투표 클릭할 때 round');
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
   };
-
   console.log(submit);
   return createPortal(
     <Container>

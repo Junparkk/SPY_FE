@@ -8,6 +8,7 @@ import Logo from '../images/Logo.png';
 import Title from '../images/Title.png';
 import Building from '../images/Building.png';
 import '../shared/App.css';
+import click from '../sound/Click Sound.mp3'
 import { useSelector } from 'react-redux';
 
 function LoginTitle() {
@@ -59,6 +60,15 @@ function LoginTitle() {
     getMedia();
   });
 
+  //클릭 효과음
+  const sound = new Audio(click)
+
+  const ClickSound = () => {
+    sound.play()
+  }
+
+
+
   //닉네임 서버 전달
   const dispatch = useDispatch();
 
@@ -66,13 +76,20 @@ function LoginTitle() {
 
   const Login = () => {
     dispatch(userActions.LoginDB(nickname));
+    ClickSound();
   };
-  const randomNick = () => {
+  const randomNickClick = () => {
     dispatch(userActions.RandomNickDB());
     setNickname(randomUser);
+    sound.play()
   };
+
+  const randomNickDefault = () => {
+    dispatch(userActions.RandomNickDB());
+    setNickname(randomUser);
+  }
   useEffect(() => {
-    randomNick();
+    randomNickDefault();
     setNickname('');
   }, []);
 
@@ -122,7 +139,7 @@ function LoginTitle() {
                     cursor: 'pointer',
                   }}
                   size={48}
-                  onClick={randomNick}
+                  onClick={randomNickClick}
                 />
               </div>
             </InputNick>

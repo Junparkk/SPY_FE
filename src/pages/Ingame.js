@@ -19,6 +19,9 @@ import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
 import IngameHeader from '../components/IngameHeader';
 
+//효과음
+import click from '../sound/Click Sound.mp3';
+
 //컴포넌트
 import VoteModal from '../components/VoteModal';
 import LawyerVoteModal from '../components/LawyerVoteModal';
@@ -33,11 +36,9 @@ import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-//socket 서버
 const socket = io.connect('https://mafia.milagros.shop');
-//openvidu 서버
-const OPENVIDU_SERVER_URL = 'https://inderstrial-spy.firebaseapp.com';
-const OPENVIDU_SERVER_SECRET = 'MY_SECRET'; // 프론트와 백을 이어주는 것
+// const socket = io.connect('http://localhost:3001');
+//socket 서버
 
 function Ingame(props) {
   //채팅
@@ -50,14 +51,20 @@ function Ingame(props) {
   const [chatView, setChatView] = useState(false);
   const userNick = localStorage.getItem('nickname');
 
-  const Chatting = () => {
-    setChatView(!chatView);
-  };
+  //클릭 효과음
+  const sound = new Audio(click);
 
   //채팅창 드레그
   const nodeRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [Opacity, setOpacity] = useState(false);
+
+  //채팅
+  const Chatting = () => {
+    setChatView(!chatView);
+    sound.play();
+  };
+  //채팅창 드레그
   const trackPos = (data) => {
     setPosition({ x: data.x, y: data.y });
   };
@@ -85,6 +92,7 @@ function Ingame(props) {
   };
 
   const leaveRoom = () => {
+    sound.play();
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
   ////////////////////////////////////////////////////////////////////
@@ -125,17 +133,26 @@ function Ingame(props) {
   const isStart = useSelector((state) => state.room.startCheck);
 
   const doReady = () => {
-    dispatch(roomActions.doReadyAPI(roomId, userId));
+    sound.play();
+    socket.emit('ready', { roomId, userId });
     setIsReady(!isReady);
   };
   const cancelReady = () => {
-    dispatch(roomActions.cancelReadyAPI(roomId, userId));
+    socket.emit('cancelReady', { roomId, userId });
     setIsReady(!isReady);
+    sound.play();
   };
   const doStart = () => {
     dispatch(roomActions.doStartAPI(roomId, userId, changeMaxLength));
+    sound.play();
   };
 
+  socket.on('ready', (users) => {
+    console.log('소켓', users);
+  });
+  socket.on('cancelReady', (users) => {
+    console.log('소켓', users);
+  });
   useEffect(() => {
     console.log('======================시작됨=================', status);
     return () => setStatus('isStart');
@@ -216,7 +233,7 @@ function Ingame(props) {
         break;
       case 'showRole':
         console.log('######역할 불러오기 요청', Date().toString());
-        showRoleSetTimeOut = setTimeout(showRole, 5000);
+        showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
       case 'dayTime':
         console.log('######데이 시작 요청', Date().toString());
@@ -227,26 +244,26 @@ function Ingame(props) {
       case 'voteDay':
         console.log('######투표 시작 요청', Date().toString());
         clearTimeout(dayTimeSetTimeOut);
-        voteDaySetTimeOut = setTimeout(voteDay, 10000);
+        voteDaySetTimeOut = setTimeout(voteDay, 5000);
         break;
       case 'invalidVoteCnt':
         console.log('######무효표 처리 시작 요청', Date().toString());
         clearTimeout(voteDaySetTimeOut);
-        invalidAndAiVoteCnt = setTimeout(invalidVoteCnt, 10000);
+        invalidAndAiVoteCnt = setTimeout(invalidVoteCnt, 5000);
         break;
       case 'showResultDay':
         console.log('######낮투표 결과 요청', Date().toString());
-        dayVoteResult = setTimeout(showResultDay, 10000);
+        dayVoteResult = setTimeout(showResultDay, 3000);
         clearTimeout(invalidAndAiVoteCnt);
         break;
       case 'voteNightLawyer':
-        // toast.success(msg, {
-        //   draggable: true,
-        //   position: toast.POSITION.TOP_CENTER,
-        //   autoClose: 2000,
-        //   pauseOnFocusLoss: false,
-        //   pauseOnHover: false,
-        // });
+        toast.success('--낮투표 결과--' + msg, {
+          draggable: true,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         console.log('######변호사 투표 시작 요청', Date().toString());
         lawyerVote = setTimeout(voteNightLawyer, 8000);
         clearTimeout(dayVoteResult);
@@ -434,9 +451,10 @@ function Ingame(props) {
       pauseOnFocusLoss: false,
       pauseOnHover: false,
     });
-    //변호사 투표여부 초기화
+
     if (isDetective[0] && isDetective[0].userId === parseInt(userId)) {
       setIsDetectiveModalShowing(true);
+      //변호사 투표여부 초기화
       if (lawyerNullVote === false) {
         dispatch(voteActions.lawyerNullVote(true));
       }
@@ -501,7 +519,7 @@ function Ingame(props) {
             .aiSpyAct(roomId)
             .then((res) =>
               setTimeout(() => {
-                toast.error(res.data.msg, {
+                toast.success(res.data.msg, {
                   draggable: true,
                   position: toast.POSITION.TOP_CENTER,
                   autoClose: 2000,
@@ -525,6 +543,9 @@ function Ingame(props) {
   //밤 투표결과 확인 요청 (버튼으로 동작)
   function showResultNight() {
     //스파이 투표여부 초기화
+    if (spyNullVote === false) {
+      dispatch(voteActions.spyNullVote(true));
+    }
     toast.error(msg, {
       draggable: true,
       position: toast.POSITION.TOP_CENTER,
@@ -538,13 +559,13 @@ function Ingame(props) {
     }, 2000);
   }
 
-  //아침에 최종 결과 공지 (버튼으로 동작)
+  //아침에 최종 결과 공지
   function finalResult() {
     const Timer = setTimeout(() => {
       console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId));
       setStatus('dayTime');
-    }, 10000);
+    }, 2000);
     return () => clearTimeout(Timer);
   }
   //////////////////////////////////////////////////////////////////////

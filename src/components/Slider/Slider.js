@@ -12,6 +12,9 @@ import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { GrClose } from 'react-icons/gr';
 import { current } from 'immer';
 
+//효과음
+import click from '../../sound/Click Sound.mp3';
+
 const Slider = ({ showModal, setShowModal }) => {
   const history = useHistory();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -22,6 +25,8 @@ const Slider = ({ showModal, setShowModal }) => {
   console.log(tuto);
   console.log(dataSlider);
   console.log(currentSlide);
+  //클릭 효과음
+  const sound = new Audio(click);
 
   useEffect(() => {
     setCurrentSlide(0);
@@ -29,11 +34,12 @@ const Slider = ({ showModal, setShowModal }) => {
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === slideLength - 1 ? 0 : currentSlide + 1);
-    console.log(setCurrentSlide);
+    sound.play();
   };
 
   const prevSlide = () => {
     setCurrentSlide(currentSlide === 0 ? slideLength - 1 : currentSlide - 1);
+    sound.play();
   };
 
   const moveDot = (index) => {
@@ -97,6 +103,7 @@ const Desc = styled.div`
   @media screen and (max-width: 763px) {
     font-size: 1rem;
     line-height: 25px;
+    width: 35%;
   }
 `;
 

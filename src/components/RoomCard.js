@@ -10,15 +10,12 @@ import SecretBlueDoor from '../images/SecretBlueDoor.png';
 //props로 비밀번호 받아서 삼항연산자 출력
 
 const RoomCard = (props) => {
-  console.log('hi', props);
   const secret = props.roomPwd;
-  console.log(secret);
+  const isPlay = props.onPlay;
   const testImg = React.useRef(null);
   const openDoor = () => {
     testImg.current.style.transform = 'rotateY(-90deg)';
   };
-  console.log(props.maxPlayer);
-
   //6인 이하 방
   if (props.maxPlayer <= 6) {
     return (
