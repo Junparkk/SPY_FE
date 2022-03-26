@@ -44,34 +44,11 @@ const VoteModal = (props) => {
           roomId
         )
       );
+      console.log(round, '<<<<<<<< 투표 클릭할 때 round');
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
   };
-
-  // const aiAutoVoting = () => {
-  //   console.log(user_list);
-  //   console.log(round);
-  //   for (let i = 0; i < user_list.length; i++) {
-  //     const chooseRandomPlayer = Math.floor(Math.random() * user_list.length);
-  //     console.log(user_list[i]);
-  //     if (user_list[i].isAi === 'Y') {
-  //       dispatch(
-  //         voteActions.sendDayTimeVoteAPI(
-  //           user_list[i].roomId,
-  //           user_list[i].userId,
-  //           round,
-  //           user_list[chooseRandomPlayer].userId
-  //         )
-  //       );
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   aiAutoVoting();
-  // }, [round]);
-
   console.log(submit);
   return createPortal(
     <Container>
