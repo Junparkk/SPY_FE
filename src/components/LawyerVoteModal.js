@@ -94,26 +94,7 @@ const LawyerVoteModal = (props) => {
                   })}
               </VotePlayerWrap>
             );
-          } else if (user_list.length <= 10) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
-                        <Contents>{p.nickname}</Contents>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          }
+          } 
         })()}
 
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}

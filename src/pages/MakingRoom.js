@@ -47,10 +47,12 @@ const Markingroom = () => {
   // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
     if (roomName === '') {
-      toast.success('방 제목을 입력해주세요', {
+      toast.error('방 제목을 입력해주세요', {
         draggable: true,
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
+        pauseOnFocusLoss: false,
+          pauseOnHover: false,
       });
       return;
     } else {
@@ -123,7 +125,7 @@ const Markingroom = () => {
               <SetTitle>인원</SetTitle>
               <Comment>
                 <br />
-                클릭 해 인원을 조정해 보세요!
+                클릭해서 인원을 조정해 보세요!
                 <br />
                 <br />
                 인원수에 따라 방의 모양이 자동으로 설정됩니다.
