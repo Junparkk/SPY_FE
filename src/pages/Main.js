@@ -142,6 +142,7 @@ const Cards = styled.div`
 `;
 const Wrap = styled.div`
   height: 100vh;
+  min-height: 900px;
   background-color: #ffe179;
   overflow: auto;
 `;

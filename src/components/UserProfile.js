@@ -2,16 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import BasicProfile from '../images/BasicProfile.png';
+import BasicProfileDeath from '../images/BasicProfile(Death).png';
 import MapiaProfile from '../images/Mapia.png';
 
 const UserProfile = (props) => {
   const roomUserList = useSelector((state) => state.vote.userList);
-  const Rule = roomUserList.role;
+  const Rule = roomUserList.map((role) => role.role);
+  const is_Live = roomUserList.map((role) => role.isEliminated);
 
   return (
     <Wrap>
       {Rule ? (
-        <Basic src={Rule === 'mapia' ? MapiaProfile : BasicProfile} />
+        <Basic src={Rule === 4 ? MapiaProfile : BasicProfile} />
+      ) : is_Live === 'N' ? (
+        <Basic src={Rule === 4 ? MapiaProfile : BasicProfileDeath} />
       ) : (
         ''
       )}
