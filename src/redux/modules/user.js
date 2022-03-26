@@ -58,7 +58,6 @@ const LoginDB = (nickname) => {
       })
       .then((response) => {
         toast.success(`${nickname} 님 반가워요`);
-        toast.success('테스트');
         console.log(response);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid', response.data.user.id);
