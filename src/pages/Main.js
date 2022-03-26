@@ -38,12 +38,18 @@ const Main = (props) => {
 
   const MakingRoom = () => {
     sound.play();
-    history.push('/makingroom')
+    history.push('/makingroom');
   };
 
   //모든 브라우저 스크롤 맥스값
-  const maxScroll = document.body.scrollHeight - window.scrollY;
-
+  const maxScroll = Math.max(
+    document.body.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.clientHeight,
+    document.documentElement.scrollHeight,
+    document.documentElement.offsetHeight
+  );
+  console.log(maxScroll);
   const dispatch = useDispatch();
   const islogin = localStorage.getItem('nickname');
   const userId = localStorage.getItem('userid');
@@ -108,7 +114,7 @@ const Main = (props) => {
         </Container>
         <EnterRoomBtn
           //이게 왜 안되는지 모르겠네
-          className={ScrollY > maxScroll - 300 ? 'change' : ''}
+          className={ScrollY > maxScroll - 1250 ? 'change' : ''}
           onClick={MakingRoom}
         >
           <span
@@ -138,6 +144,7 @@ const Wrap = styled.div`
   height: 100vh;
   background-color: #ffe179;
   overflow: auto;
+  position: relative;
 `;
 const Container = styled.div`
   display: grid;

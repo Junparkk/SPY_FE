@@ -217,7 +217,7 @@ class Video extends Component {
   }
 
   leaveSession() {
-    // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
+    // --- 7) Leave the session by calling 'disconnect' method over the Session object ----
 
     const mySession = this.state.session;
 
@@ -225,7 +225,7 @@ class Video extends Component {
       mySession.disconnect();
     }
 
-    // Empty all properties...
+    // Empty all properties..
     this.OV = null;
     this.setState({
       session: undefined,

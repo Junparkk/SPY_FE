@@ -572,13 +572,12 @@ function Ingame(props) {
             ) : (
               <StartButton onClick={() => doStart()}>시작</StartButton>
             )}
+            {chatView ? (
+              <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+            ) : (
+              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+            )}
           </ButtonContainer>
-        )}
-
-        {chatView ? (
-          <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
-        ) : (
-          <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
         )}
       </Wrap>
     </>
