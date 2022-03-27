@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { actionCreators as voteActions } from '../redux/modules/vote';
+import vote, { actionCreators as voteActions } from '../redux/modules/vote';
+import io from 'socket.io-client';
 
 // 이미지
 import VoteBG from '../images/VoteBG.png';
@@ -12,24 +13,32 @@ import Ai from '../images/Ai.png';
 
 //낮 투표 모달
 const VoteModal = (props) => {
+  const socket = io.connect('https://mafia.milagros.shop');
   const { isMe, roomId, _handleModal, children, ...rest } = props;
   const dispatch = useDispatch();
 
   const user_list = useSelector((state) => state.vote.userList);
   const round = useSelector((state) => state.room.round);
   const userId = localStorage.getItem('userid');
-  const Alive = user_list.filter((user) => user.isEliminater === 'Y');
-  console.log(Alive);
-
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
+  const [disable, setDisable] = useState(false);
+  const [voteId, setVoteId] = useState('');
 
   const ref = useRef();
 
-  console.log('투표모달안에 몇명?', user_list);
+  // //산사람 죽은사람 확인 후 캐릭터로 표시(X표시 됨) N-산사람 Y-죽은사람
+  const Alive = user_list.filter((user) => user.isEliminated === 'N');
+  console.log(Alive, '주것니 사랏니!');
+  console.log(Alive[0].isEliminated === "N")
+  
+  // // 죽은사람 확인 후 모달 띄우지 않기
+  // const deadPerson = user_list.filter((user) => user.isEliminated === 'Y');
+  // console.log(deadPerson, '죽은 사람들 리스트');
 
+  
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
     const chosen = user_list[idx];
@@ -40,22 +49,37 @@ const VoteModal = (props) => {
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       setSubmit(true);
+      setDisable(true);
       //디스패치로 넘겨주기 넣기
-      dispatch(
-        voteActions.sendDayTimeVoteAPI(
-          chosenRoomId,
-          userId,
-          round,
-          chosenId,
-          roomId
-        )
-      );
+      // dispatch(
+      //   voteActions.sendDayTimeVoteAPI(
+      //     chosenRoomId,
+      //     userId,
+      //     round,
+      //     chosenId,
+      //     roomId
+      //   )
+      // );
+
+      socket.on('dayTimeVoteArr', (vote) => {
+        console.log(vote, '투표퉆투푵픁푵$$$$$$$');
+      });
+
+      console.log('vote용 소켓 data --->', roomId, userId, chosenId, round);
+      socket.emit('dayTimeVoteArr', {
+        roomId,
+        userId,
+        candidacy: chosenId,
+        roundNo: round,
+      });
+      console.log(roomId, userId, '$$$$$$$$f룸아디유져아디');
+      console.log(chosenId, '투표', round, '라운드');
       console.log(round, '<<<<<<<< 투표 클릭할 때 round');
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
   };
-  console.log(submit);
+  console.log(submit, '선택 완료 눌렀는가');
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
@@ -64,89 +88,137 @@ const VoteModal = (props) => {
         <Contents>가장 스파이로 의심되는 사람에게 투표하세요.</Contents>
         {/* 롤을 부여받은대로 보여줘야함 */}
         {(() => {
-          if (user_list.length <= 6) {
+          if (user_list.length <= 6 && Alive ) {
             return (
               <VotePlayerWrap>
-                <Vote>
-                  {user_list &&
-                    user_list.map((p, idx) => {
-                      return (
-                        <JobCheckImg
-                          src={Alive ? alive : dead}
-                          pointerEvents={submit ? 'none' : ''}
-                          ref={ref}
-                          key={p.id}
-                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                          onClick={() => clicked(idx)}
-                        >
-                          <Nickname>{p.nickname}</Nickname>
-
-                          <ChoiceBox>
-                            <Choice src={Ai} />
-                          </ChoiceBox>
-                        </JobCheckImg>
-                      );
-                    })}
-                </Vote>
-              </VotePlayerWrap>
-            );
-          } else if (user_list.length <= 8) {
-            return (
-              <VotePlayerWrap>
-              <Vote>
                 {user_list &&
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        src={Alive ? alive : dead}
+                        src={p.isEliminated === 'N' ? alive : dead}
                         pointerEvents={submit ? 'none' : ''}
                         ref={ref}
                         key={p.id}
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
                         onClick={() => clicked(idx)}
                       >
-                        <Nickname>{p.nickname}</Nickname>
+                        {/* 닉네임과 선택해준 사람들의 이미지 */}
+                        <Vote>
+                          <Nickname>{p.nickname}</Nickname>
 
-                        <ChoiceBox>
-                          <Choice src={Ai} />
-                        </ChoiceBox>
+                          {Array.from(
+                            { length: vote.voteCnt },
+                            (voter, index) => {
+                              return (
+                                <ChoiceBox>
+                                  <Choice key={index} src={Ai} >...{voter}</Choice>
+                                </ChoiceBox>
+                              );
+                            }
+                          )}
+                        </Vote>
                       </JobCheckImg>
                     );
                   })}
-              </Vote>
-            </VotePlayerWrap>
+              </VotePlayerWrap>
             );
-          } else if (user_list.length <= 10) {
+          } else if (user_list.length <= 8 && Alive) {
             return (
               <VotePlayerWrap>
-                <Vote>
-                  {user_list &&
-                    user_list.map((p, idx) => {
-                      return (
-                        <JobCheckImg
-                          src={Alive ? alive : dead}
-                          pointerEvents={submit ? 'none' : ''}
-                          ref={ref}
-                          key={p.id}
-                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                          onClick={() => clicked(idx)}
-                        >
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        src={p.isEliminated === 'N' ? alive : dead}
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked(idx)}
+                      >
+                        <Vote>
+                          <Nickname>{p.nickname}</Nickname>
+                          {Array.from(
+                            { length: vote.voteCnt },
+                            (voter, index) => {
+                              return (
+                                <ChoiceBox>
+                                  <Choice key={index} src={Ai} />
+                                </ChoiceBox>
+                              );
+                            }
+                          )}
+                        </Vote>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
+          } else if (user_list.length <= 10 && Alive) {
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        src={p.isEliminated === 'N' ? alive : dead}
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked(idx)}
+                      >
+                        <Vote>
                           <Nickname>{p.nickname}</Nickname>
 
-                          <ChoiceBox>
-                            <Choice src={Ai} />
-                          </ChoiceBox>
-                        </JobCheckImg>
-                      );
-                    })}
-                </Vote>
+                          {Array.from(
+                            { length: vote.voteCnt },
+                            (voter, index) => {
+                              return (
+                                <ChoiceBox>
+                                  <Choice key={index} src={Ai} />
+                                </ChoiceBox>
+                              );
+                            }
+                          )}
+                        </Vote>
+                      </JobCheckImg>
+                    );
+                  })}
               </VotePlayerWrap>
             );
           }
         })()}
 
+        {/* ///////////////////// */}
+
+        {/* <VotePlayerWrap>
+          {user_list &&
+            user_list.map((p, idx) => {
+              return (
+                <JobCheckImg
+                  src={Alive ? alive : dead}
+                  pointerEvents={submit ? 'none' : ''}
+                  ref={ref}
+                  key={p.id}
+                  opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                  onClick={() => clicked(idx)}
+                >
+                  <Vote>
+                    <Nickname>ㅎㅇㅎㅇ</Nickname>
+
+                    <ChoiceBox>
+                      <Choice src={Ai} />
+                      <Choice src={Ai} />
+                    </ChoiceBox>
+                  </Vote>
+                </JobCheckImg>
+              );
+            })}
+        </VotePlayerWrap> */}
+
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn disabled={submit} onClick={() => submitClicked()}>
+        <SendBtn disabled={disable} onClick={() => submitClicked()}>
           선택 완료
         </SendBtn>
       </ModalBlock>
@@ -192,10 +264,8 @@ const ModalBlock = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  padding: 3rem;
   align-items: center;
-
+  padding: 3rem;
   background: url('${(props) => props.src}') no-repeat center/cover;
   width: 70%;
   height: 100%;
@@ -228,19 +298,19 @@ const VotePlayerWrap = styled.div`
   grid-template-rows: repeat(2, 1fr);
   justify-content: center;
   align-items: center;
+
   @media screen and (min-width: 1607px) {
     grid-template-columns: repeat(5, 10rem);
   }
   @media screen and (min-width: 1065px) and (max-width: 1607px) {
     grid-template-columns: repeat(4, 10rem);
     grid-template-rows: repeat(3, 1fr);
+    gap: 20px 10px;
   }
   @media screen and (min-width: 551px) and (max-width: 1065px) {
     grid-template-columns: repeat(4, 7rem);
     grid-template-rows: repeat(3, 1fr);
     gap: 20px 10px;
-  }
-  @media screen and (min-width: 0px) and (max-width: 551px) {
   }
 `;
 
@@ -285,8 +355,9 @@ const Contents = styled.div`
 const Vote = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  position: relative;
+  top: 7rem;
 `;
 
 const Nickname = styled.div`
@@ -315,6 +386,7 @@ const JobCheckImg = styled.div`
   border-radius: 50%;
   background: url('${(props) => props.src}') no-repeat center/contain;
   margin: auto;
+  cursor: pointer;
   opacity: ${(props) => props.opacity};
   @media screen and (min-width: 1065px) and (max-width: 1607px) {
     width: 90px;
@@ -367,6 +439,10 @@ const SendBtn = styled.button`
   font-size: 1rem;
   font-family: 'yg-jalnan';
   color: #fff;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.5;
+  }
 `;
 
 export default VoteModal;

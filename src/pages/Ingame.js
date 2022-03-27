@@ -35,6 +35,7 @@ import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
 
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GiNetworkBars } from 'react-icons/gi';
 
 const socket = io.connect('https://mafia.milagros.shop');
 // const socket = io.connect('http://localhost:3001');
@@ -87,10 +88,9 @@ function Ingame(props) {
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
-    socket.emit('join_room', roomId, userNick);
+    socket.emit('join_room', { roomId, userId });
     setShowChat(true);
   };
-
   const leaveRoom = () => {
     sound.play();
     dispatch(roomActions.leaveRoomDB(userId, roomId));
@@ -121,10 +121,26 @@ function Ingame(props) {
   const isLawyer = roomUserList.filter((user) => user.role === 2);
   const isDetective = roomUserList.filter((user) => user.role === 3);
   const isSpy = roomUserList.filter((user) => user.role === 4);
-  // 유저리스트에서 본인 정보만 뽑아 내기
+  const isFired = roomUserList.filter((user) => user.isEliminated === 'Y');
+  
+  const isFireds = [];
+  isFired.forEach((id) => {
+    isFireds.push(Object.values(id))
+  })
+  console.log(isFireds, 'assssssssssssssssssss')
+  console.log(isFired, "해고인들")
+  console.log(isFired[0], '0번쨰 해고인')
+  // console.log(isFired[0].userId, "해고인 아이디")
+  // console.log(isFired[0].userId === parseInt(userId), "해고인이 본이 맞는ㄴ가")
+  // const _isFired = isFireds[0].includes(parseInt(userId))
+  // console.log('이게 진짜야! 트루 펄스값만 주라 제발',_isFired)
+
+
+  // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
   );
+
   //빈 값 넘겨주는 용도
   const lawyerNullVote = useSelector((state) => state.vote.isLawyerNull);
   const spyNullVote = useSelector((state) => state.vote.isSpyNull);
@@ -318,7 +334,6 @@ function Ingame(props) {
   const showRole = () => {
     console.log('@@@@ showRole 함수 시작');
     setIsRoleModalShowing(true);
-
     setTimeout(() => {
       console.log('@@@@ showRole in타이머 (모달 닫고, updateStatus (dayTime))');
       setIsRoleModalShowing(false);
@@ -346,6 +361,7 @@ function Ingame(props) {
     }
   };
 
+ 
   //투표시간
   const voteDay = () => {
     setIsDayTimeModalShowing(true);
@@ -390,7 +406,7 @@ function Ingame(props) {
   //변호사 투표
   function voteNightLawyer() {
     if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
-      setIsLawyerModalShowing(true);
+     setIsLawyerModalShowing(true);
     } else {
       setIsVotingLawyer(true);
     }
@@ -434,7 +450,7 @@ function Ingame(props) {
         isLawyer[0] &&
         isLawyer[0].isAi === 'N' &&
         isLawyer[0].userId === parseInt(userId) &&
-        lawyerNullVote === true
+        lawyerNullVote === true 
       ) {
         console.log('----내가 변호사고 아무것도 누르지 않았을때----');
         dispatch(voteActions.lawyerActDB(roomId, null));
@@ -453,9 +469,9 @@ function Ingame(props) {
     });
 
     if (isDetective[0] && isDetective[0].userId === parseInt(userId)) {
-      setIsDetectiveModalShowing(true);
+        setIsDetectiveModalShowing(true);
       //변호사 투표여부 초기화
-      if (lawyerNullVote === false) {
+      if (lawyerNullVote === false && isFired[0].userId !== parseInt(userId)) {
         dispatch(voteActions.lawyerNullVote(true));
       }
     } else {

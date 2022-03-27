@@ -11,7 +11,7 @@ import Result from '../pages/Result';
 import Ingame from '../pages/Ingame';
 import Tutorial from '../pages/Tutorial';
 import NotFound from '../pages/NotFound';
-import VoteModal from '../components/VoteModal';
+import DetectiveVoteModal from '../components/DetectiveVoteModal';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
       <ConnectedRouter history={history}>
         
       <Switch>
-      <Route path="/test" exact component={VoteModal}></Route>
+      <Route path="/test" exact component={DetectiveVoteModal}></Route>
         <Route path="/lobby" exact component={Main}></Route>
         <Route path="/" exact component={LoginTitle}></Route>
         <Route path="/signup" exact component={SignUp}></Route>
