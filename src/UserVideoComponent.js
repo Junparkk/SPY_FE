@@ -78,9 +78,11 @@ const UserVideoComponent = ({
     console.log('실행됨?', roomUserList[0].roomId);
   }, [readyCheck]);
 
-  socket.on('ready', (users) => {
-    console.log(users, 'userVideo');
-  });
+  // useEffect(() => {
+  //   socket.on('ready', (users) => {
+  //     console.log(users, 'ready');
+  //   });
+  // }, []);
 
   //////////////////////////////////////////////////
   return (

@@ -150,9 +150,9 @@ function Ingame(props) {
     sound.play();
   };
   //소켓 으로 ready 받기
-  socket.on('ready', (users) => {
-    console.log(users);
-  });
+  // socket.on('ready', (users) => {
+  //   console.log(users);
+  // });
 
   socket.on('cancelReady', (users) => {
     console.log(users);

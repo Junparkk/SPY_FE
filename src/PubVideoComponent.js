@@ -35,6 +35,7 @@ const UserVideoComponent = ({
     dispatch(voteActions.getUserDB(roomUserList[0].roomId));
     console.log('실행됨?', roomUserList[0].roomId);
   }, [readyCheck]);
+
   //////////////////////////////////////////////////
   return (
     <>
