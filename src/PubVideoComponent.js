@@ -26,7 +26,7 @@ const UserVideoComponent = ({
   const user = roomUserList.filter(
     (users) => users.nickname === getNicknameTag()
   );
-  const findHost = roomUserList.filter((users) => users.isHost === 'Y');
+  const findHost = roomUserList.filter((users) => users.isHost === 'Y')
   const isReady = user[0] && user[0].isReady;
   const isStart = user[0] && user[0].role;
   const host = findHost[0] && findHost[0].nickname === getNicknameTag();
