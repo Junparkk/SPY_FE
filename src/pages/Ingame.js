@@ -33,8 +33,11 @@ import VoteDetective from '../components/VoteWaitingModal/VoteDetective';
 import VoteSpy from '../components/VoteWaitingModal/VoteSpy';
 import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
 
+import Fired from '../components/Fired';
+
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GiNetworkBars } from 'react-icons/gi';
 
 const socket = io.connect('https://mafia.milagros.shop');
 // const socket = io.connect('http://localhost:3001');
@@ -90,7 +93,6 @@ function Ingame(props) {
     socket.emit('join_room', { roomId, userId });
     setShowChat(true);
   };
-
   const leaveRoom = () => {
     sound.play();
     dispatch(roomActions.leaveRoomDB(userId, roomId));
@@ -116,15 +118,39 @@ function Ingame(props) {
   const [isVotingDetective, setIsVotingDetective] = useState(false); // 탐정 투표 시
   const [iVotingSpy, setIsVotingSpy] = useState(false); // 스파이 투표 시
 
+  const [isFired_, setIsFired] = useState(false); //해고 당한 사람이 투표 되는동안 볼 모달
+
   //본인 확인 용도
   const host = roomUserList.filter((user) => user.isHost === 'Y');
   const isLawyer = roomUserList.filter((user) => user.role === 2);
   const isDetective = roomUserList.filter((user) => user.role === 3);
   const isSpy = roomUserList.filter((user) => user.role === 4);
-  // 유저리스트에서 본인 정보만 뽑아 내기
+  const isFired = roomUserList.filter((user) => user.isEliminated === 'Y'); // 해고당한 명단
+
+  //빈배열
+  const isFireds = [];
+  //해고 명단 반복문 돌려서 ID값 isFireds에 넣기
+  isFired.forEach((id) => {
+    isFireds.push(Object.values(id));
+  });
+  // 처음 시작할 때 isFireds는 빈배열이기에 오류가 나서 밑에 코드 작성
+  // 빈배열일때 undefined ID넣기
+  if (isFireds.length === 0) isFireds.push('undefined Id');
+
+  console.log(isFireds, 'assssssssssssssssssss');
+  console.log(isFired, '해고인들');
+  console.log(isFired[0], '0번쨰 해고인');
+  console.log(isFired.length > 1 && isFired);
+
+  //해고 명단 ID 리스트에 본인 ID가 있다면 true반환
+  const _isFired = isFireds[0].includes(parseInt(userId));
+  console.log('이게 진짜야! 트루 펄스값만 주라 제발', _isFired);
+
+  // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
   );
+
   //빈 값 넘겨주는 용도
   const lawyerNullVote = useSelector((state) => state.vote.isLawyerNull);
   const spyNullVote = useSelector((state) => state.vote.isSpyNull);
@@ -291,7 +317,6 @@ function Ingame(props) {
   const showRole = () => {
     console.log('@@@@ showRole 함수 시작');
     setIsRoleModalShowing(true);
-
     setTimeout(() => {
       console.log('@@@@ showRole in타이머 (모달 닫고, updateStatus (dayTime))');
       setIsRoleModalShowing(false);
@@ -321,10 +346,11 @@ function Ingame(props) {
 
   //투표시간
   const voteDay = () => {
-    setIsDayTimeModalShowing(true);
+    _isFired ? setIsFired(true) : setIsDayTimeModalShowing(true);
     console.log('@@@@ vote Day 시작');
 
     const notiJobRoleTimer = setTimeout(() => {
+      setIsFired(false);
       setIsDayTimeModalShowing(false);
       console.log('@@@@ vote Day 타이머 안 updateStatus (invalidVoteCnt)');
       if (host[0] && host[0].userId === parseInt(userId)) {
@@ -363,7 +389,7 @@ function Ingame(props) {
   //변호사 투표
   function voteNightLawyer() {
     if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
-      setIsLawyerModalShowing(true);
+      _isFired ? setIsFired(true) : setIsLawyerModalShowing(true);
     } else {
       setIsVotingLawyer(true);
     }
@@ -371,7 +397,7 @@ function Ingame(props) {
     const Timer = setTimeout(async () => {
       setIsLawyerModalShowing(false);
       setIsVotingLawyer(false);
-
+      setIsFired(false);
       if (host[0] && host[0].userId === parseInt(userId)) {
         console.log('----내가 방장이고----');
         setTimeout(() => {
@@ -426,9 +452,9 @@ function Ingame(props) {
     });
 
     if (isDetective[0] && isDetective[0].userId === parseInt(userId)) {
-      setIsDetectiveModalShowing(true);
+      _isFired ? setIsFired(true) : setIsDetectiveModalShowing(true);
       //변호사 투표여부 초기화
-      if (lawyerNullVote === false) {
+      if (lawyerNullVote === false && isFired[0].userId !== parseInt(userId)) {
         dispatch(voteActions.lawyerNullVote(true));
       }
     } else {
@@ -446,6 +472,7 @@ function Ingame(props) {
     const Timer1 = setTimeout(() => {
       setIsDetectiveModalShowing(false);
       setIsVotingDetective(false);
+      setIsFired(false);
       console.log('@@@@탐정 콘솔임 셋타임 아웃 다움 나 나옴');
     }, 10000);
 
@@ -455,7 +482,7 @@ function Ingame(props) {
   // 스파이 투표
   function voteNightSpy() {
     if (isSpy[0] && isSpy[0].userId === parseInt(userId)) {
-      setIsSpyModalShowing(true);
+      _isFired ? setIsFired(true) : setIsSpyModalShowing(true);
     } else {
       setIsVotingSpy(true);
     }
@@ -463,6 +490,7 @@ function Ingame(props) {
     const Timer = setTimeout(() => {
       setIsSpyModalShowing(false);
       setIsVotingSpy(false);
+      setIsFired(false)
       console.log('@@@@ 스파이 콘솔 타이머 실행 됨');
 
       if (
@@ -554,6 +582,7 @@ function Ingame(props) {
         {isVotingLawyer && <VoteLawyer />}
         {isVotingDetective && <VoteDetective />}
         {iVotingSpy && <VoteSpy />}
+        {isFired_ && <Fired />}
         <div
           style={{
             width: '100%',
