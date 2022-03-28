@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
-import Logo from '../images/Logo.png';
+import Logo from '../images/Mapia.png';
 import Title from '../images/Title.png';
 import Building from '../images/Building.png';
 import '../shared/App.css';
@@ -51,10 +51,6 @@ function LoginTitle() {
   useEffect(() => {
     document.documentElement.scroll(0, 3000);
   }, []);
-
-  useEffect(() => {
-    console.log('Scroll is', ScrollY);
-  }, [ScrollY]);
 
   useEffect(() => {
     getMedia();

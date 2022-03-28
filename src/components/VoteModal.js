@@ -7,8 +7,8 @@ import io from 'socket.io-client';
 
 // 이미지
 import VoteBG from '../images/VoteBG.png';
-import alive from '../images/alive.png';
-import dead from '../images/dead.png';
+import alive from '../images/BasicProfile.png';
+import dead from '../images/BasicProfile_Death.png';
 import Ai from '../images/Ai.png';
 
 //낮 투표 모달

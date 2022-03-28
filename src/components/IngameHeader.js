@@ -2,9 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { history } from '../redux/configureStore';
+import { useSelector } from 'react-redux';
 
 import { RiQuestionnaireLine } from 'react-icons/ri';
 import HeaderTitleLogo from '../images/HeaderTitleLogo.png';
+import Ai from '../images/Ai.png';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
@@ -13,6 +15,12 @@ import RuleModal from './RuleModal';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
+  const roomUserList = useSelector((state) => state.vote.userList);
+  const is_Ai = roomUserList.map((user) => user.isAi === 'Y' && user.isEliminated === 'N');
+  const Ai_Num = is_Ai.filter((user) => user === true).length;
+  console.log(is_Ai)
+  console.log(Ai_Num);
+
   //클릭 효과음
   const sound = new Audio(click);
 
@@ -57,10 +65,13 @@ const Header = () => {
     <React.Fragment>
       <Wrap>
         <HeaderTitle src={HeaderTitleLogo} />
+        <Aicon src={Ai} /> <AiText>남은 봇 X {Ai_Num}</AiText>
         <div>
           <RiQuestionnaireLine
             onClick={openModal}
             style={{
+              position: 'fixed',
+              right: '20px',
               fontSize: '36px',
               cursor: 'pointer',
               padding: '20px',
@@ -82,12 +93,25 @@ const HeaderTitle = styled.div`
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
 `;
+const Aicon = styled.div`
+  width: 200px;
+  margin: 10px 10px 10px 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+`;
+
+const AiText = styled.span`
+  font-size: 30px;
+  font-family: 'yg-jalnan';
+  color: #ffe179;
+  margin: 25px 0px 0px -120px;
+`;
 
 const Wrap = styled.div`
   display: flex;
   width: 100%;
   height: 80px;
-  justify-content: space-between;
   background-color: #6164ce;
   position: relative;
   top: 0;
