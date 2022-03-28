@@ -11,36 +11,11 @@ const RANDOM_NICK = 'RANDOM_NICK';
 
 //액션 생성
 const logout = createAction(LOG_OUT, (user) => ({ user }));
-const setUser = createAction(SET_USER, (user) => ({ user }));
 const randomNick = createAction(RANDOM_NICK, (user) => user);
 
 const initialState = {
   user: null,
   randomNick: null,
-};
-//이건 사용 안하는듯? 확인 후 수정 22-03-24
-const LoginCheckDB = () => {
-  return function (dispatch, getState, { history }) {
-    axios
-      .get('api 주소 입력', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('is_login')}`,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        dispatch(
-          setUser({
-            is_login: response,
-            user_id: response.data.user.user_id,
-            user_nick: response.data.user.user_nick,
-          })
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 };
 
 const LogOutDB = () => {
@@ -106,7 +81,6 @@ export default handleActions(
 const actionCreators = {
   LoginDB,
   LogOutDB,
-  LoginCheckDB,
   RandomNickDB,
   randomNick,
 };
