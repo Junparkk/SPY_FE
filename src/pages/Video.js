@@ -79,14 +79,14 @@ class Video extends Component {
   }
 
   joinSession() {
-    // --- 1) Get an OpenVidu object ---
+    // --- 1) Get an OpenVidu object ----
 
     this.OV = new OpenVidu();
     this.OV.setAdvancedConfiguration({
       noStreamPlayingEventExceptionTimeout: 10000,
       iceConnectionDisconnectedExceptionTimeout: 10000,
     });
-    // --- 2) Init a session ---
+    // --- 2) Init a session --
 
     this.setState(
       {
@@ -94,32 +94,12 @@ class Video extends Component {
       },
       () => {
         var mySession = this.state.session;
-        // console.log(mySession);
 
-        this.state.session.on('publisherStartSpeaking', (event) => {
-          this.setState({ speaking: true });
-          // console.log(
-          //   'User ' +
-          //     event.connection.connectionId +
-          //     ' start speaking~@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-          //   this.state.speaking
-          // );
-        });
-
-        this.state.session.on('publisherStopSpeaking', (event) => {
-          this.setState({ speaking: false });
-          // console.log(
-          //   'User ' +
-          //     event.connection.connectionId +
-          //     ' stop speaking~~~~~~~~~~~~~~~~~~~~~~~'
-          // );
-        });
-
-        // --- 3) Specify the actions when events take place in the session ---
+        // --- 3) Specify the actions when events take place in the session --
 
         // On every new Stream received...
         mySession.on('streamCreated', (event) => {
-          // Subscribe to the Stream to receive it. Second parameter is undefineㅇ
+          // Subscribe to the Stream to receive it. Second parameter is undefine
           // so OpenVidu doesn't create an HTML video by its own
           var subscriber = mySession.subscribe(event.stream, undefined);
           var subscribers = this.state.subscribers;
@@ -127,13 +107,12 @@ class Video extends Component {
 
           subscriber.on('publisherStartSpeaking', (event) => {
             this.setState({ subspeaking: true });
+            console.log('섭스크라이버 시작', this.state.subspeaking);
           });
-
           subscriber.on('publisherStopSpeaking', (event) => {
             this.setState({ subspeaking: false });
-            console.log(event.connection.connectionId)
+            console.log('섭스크라이버 종료', this.state.subspeaking);
           });
-
           // Update the state with the new subscribers
           this.setState({
             subscribers: subscribers,
@@ -185,12 +164,12 @@ class Video extends Component {
 
               publisher.on('publisherStartSpeaking', (event) => {
                 this.setState({ pubspeaking: true });
-                // console.log(this.state.pubspeaking);
+                console.log('퍼블리셔시작', this.state.pubspeaking);
               });
 
               publisher.on('publisherStopSpeaking', (event) => {
                 this.setState({ pubspeaking: false });
-                // console.log(this.state.pubspeaking);
+                console.log('퍼블리셔종료', this.state.pubspeaking);
               });
 
               // --- 6) Publish your stream ---
@@ -276,7 +255,7 @@ class Video extends Component {
   }
   render() {
     return (
-      //////////////////////////////////////////////////////////////
+      /////////////////////////////////////////////////////////////
       //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2
       <div>
         {this.state.session !== undefined ? (
@@ -289,23 +268,21 @@ class Video extends Component {
                 />
               </div>
             ) : null}
-            {this.state.subscribers.map(
-              (sub, i) => (
-                <div key={i}>
-                  <UserVideoComponent
-                    streamManager={sub}
-                    speaking={this.state.subspeaking}
-                    session={this.state.session}
-                    publisher={this.state.publisher}
-                  />
-                </div>
-              ),
-              console.log(this.state.subscribers)
-            )}
+            {this.state.subscribers.map((sub, i) => (
+              <div key={i}>
+                <UserVideoComponent
+                  streamManager={sub}
+                  subscribers={this.state.subscribers}
+                  speaking={this.state.subspeaking}
+                  session={this.state.session}
+                  // publisher={this.state.publisher}
+                />
+              </div>
+            ))}
           </VideoContainer>
         ) : null}
       </div>
-      /////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////
     );
   }
 

@@ -1,7 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
-import UserProfile from './components/UserProfile';
+import PubUserProfile from './components/PubUserProfile';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import User from './redux/modules/user';
@@ -21,7 +21,6 @@ const UserVideoComponent = ({
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };
-
   /////////////////////준파크추가///////////////////////
 
   const user = roomUserList.filter(
@@ -36,16 +35,21 @@ const UserVideoComponent = ({
     dispatch(voteActions.getUserDB(roomUserList[0].roomId));
     console.log('실행됨?', roomUserList[0].roomId);
   }, [readyCheck]);
-  //////////////////////////////////////////////////
 
+  //////////////////////////////////////////////////
   return (
     <>
       {streamManager !== undefined ? (
-        <VideoBox className={speaking ? 'speaking' : ''}>
-          <div className="streamcomponent">
-            <OpenViduVideoComponent streamManager={streamManager} />
-            <Text>
-              {getNicknameTag()}{' '}
+        <div>
+          <VideoBox className={speaking ? 'speaking' : ''}>
+            <div className="streamcomponent">
+              <OpenViduVideoComponent streamManager={streamManager} />
+            </div>
+            <PubUserProfile />
+          </VideoBox>
+          <Text>
+            <span>
+              {getNicknameTag()}
               {isReady === 'Y' && isStart === null ? (
                 host ? (
                   <ReadyCheck>방장</ReadyCheck>
@@ -53,10 +57,9 @@ const UserVideoComponent = ({
                   <ReadyCheck>준비완료</ReadyCheck>
                 )
               ) : null}
-            </Text>
-          </div>
-          <UserProfile />
-        </VideoBox>
+            </span>
+          </Text>
+        </div>
       ) : null}
     </>
   );
@@ -84,17 +87,12 @@ const VideoBox = styled.div`
 `;
 
 const Text = styled.div`
-  margin: 0px 0px 0px 20px;
+  color: #6164ce;
+  text-align: center;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 1251px) {
-    margin: -55px 0px 0px 0px;
+    margin-top: 20px;
   }
-`;
-
-const UserLogo = styled.div`
-  position: absolute;
-  top: 330px;
-  left: 200px;
 `;
 
 const Button = styled.button`
