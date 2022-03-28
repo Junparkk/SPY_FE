@@ -2,24 +2,26 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import BasicProfile from '../images/BasicProfile.png';
-import BasicProfileDeath from '../images/BasicProfile(Death).png';
+import BasicProfileDeath from '../images/BasicProfile_Death.png';
 import MapiaProfile from '../images/Mapia.png';
 
-const UserProfile = (props) => {
+const SubUserProfile = (props) => {
   const roomUserList = useSelector((state) => state.vote.userList);
   const Rule = roomUserList.map((role) => role.role);
-  const is_Live = roomUserList.map((role) => role.isEliminated);
-
+  const is_Live = roomUserList.map((role) => role.isEliminated === 'N');
+  console.log(is_Live)
   return (
-    <Wrap>
-      {Rule ? (
-        <Basic src={Rule === 4 ? MapiaProfile : BasicProfile} />
-      ) : is_Live === 'N' ? (
-        <Basic src={Rule === 4 ? MapiaProfile : BasicProfileDeath} />
+    <>
+      {is_Live ? (
+        <Wrap>
+          {Rule ? <Basic src={BasicProfile} /> : ''}
+        </Wrap>
       ) : (
-        ''
+        <WrapChange>
+          {Rule ? <Basic src={BasicProfile} /> : ''}
+        </WrapChange>
       )}
-    </Wrap>
+    </>
   );
 };
 
@@ -28,6 +30,14 @@ const Wrap = styled.div`
   margin: -90px 0px 0px 180px;
   @media screen and (max-width: 1251px) {
     margin: -120px 0px 0px 150px;
+  }
+`;
+
+const WrapChange = styled.div`
+  position: absolute;
+  margin: -75px 0px 0px 180px;
+  @media screen and (max-width: 1251px) {
+    margin: -55px 0px 0px 150px;
   }
 `;
 
@@ -46,4 +56,4 @@ const Basic = styled.div`
   }
 `;
 
-export default UserProfile;
+export default SubUserProfile;

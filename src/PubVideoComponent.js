@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
-import UserProfile from './components/UserProfile';
+import PubUserProfile from './components/PubUserProfile';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import User from './redux/modules/user';
@@ -14,7 +14,6 @@ const UserVideoComponent = ({
 }) => {
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
-  console.log(roomUserList);
 
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -23,13 +22,17 @@ const UserVideoComponent = ({
   return (
     <>
       {streamManager !== undefined ? (
-        <VideoBox className={speaking ? 'speaking' : ''}>
-          <div className="streamcomponent">
-            <OpenViduVideoComponent streamManager={streamManager} />
-            <Text>{getNicknameTag()}</Text>
-          </div>
-          <UserProfile />
-        </VideoBox>
+        <div>
+          <VideoBox className={speaking ? 'speaking' : ''}>
+            <div className="streamcomponent">
+              <OpenViduVideoComponent streamManager={streamManager} />
+            </div>
+            <PubUserProfile />
+          </VideoBox>
+          <Text>
+            <span>{getNicknameTag()}</span>
+          </Text>
+        </div>
       ) : null}
     </>
   );
@@ -57,17 +60,12 @@ const VideoBox = styled.div`
 `;
 
 const Text = styled.div`
-  margin: 0px 0px 0px 20px;
+  color: #6164ce;
+  text-align: center;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 1251px) {
-    margin: -55px 0px 0px 0px;
+    margin-top: 20px;
   }
-`;
-
-const UserLogo = styled.div`
-  position: absolute;
-  top: 330px;
-  left: 200px;
 `;
 
 const Button = styled.button`

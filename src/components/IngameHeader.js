@@ -16,9 +16,9 @@ import RuleModal from './RuleModal';
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
-  const is_Ai = roomUserList.map((user) => user.isAi === 'Y');
+  const is_Ai = roomUserList.map((user) => user.isAi === 'Y' && user.isEliminated === 'N');
   const Ai_Num = is_Ai.filter((user) => user === true).length;
-
+  console.log(is_Ai)
   console.log(Ai_Num);
 
   //클릭 효과음

@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
 import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
-import UserProfile from './components/UserProfile';
+import SubUserProfile from './components/SubUserProfile';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import User from './redux/modules/user';
 
+import BasicProfileDeath from './images/BasicProfile_Death.png';
+import MapiaProfileDeath from './images/SpyProfile_Death.png';
+import ByunProfileDeath from './images/ByunProfile_Death.png';
+import TamProfileDeath from './images/TamProfile_Death.png';
+
 const UserVideoComponent = ({
   streamManager,
-  speaking,
   session,
-  publisher,
+  subscribers,
+  speaking,
 }) => {
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
+  const is_Live = roomUserList.map((role) => role.isEliminated === 'N');
+  const Role = roomUserList.map((role) => role.role);
+
+  console.log(is_Live);
   console.log(roomUserList);
 
   const Change = () => {
@@ -22,40 +31,75 @@ const UserVideoComponent = ({
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };
-  const mySession = session;
-  const pub = publisher;
 
-  // pub.on('publisherStartSpeaking', (event) => {
-  //   setSubspeaking(true);
-  //   // this.Change();
+  React.useEffect(() => {
+    setSubspeaking(speaking);
+    console.log('변환했다');
+    console.log(subspeaking);
+  }, [speaking]);
+
+  // const mySession = session;
+
+  // mySession.on('streamCreated', (event) => {
+  //   var subscriber = mySession.subscribe(event.stream, undefined);
+
+  //   subscriber.on('publisherStartSpeaking', (event) => {
+  //     setSubspeaking(!subspeaking);
+  //     console.log("섭스크라이버 시작2222")
+  //     console.log(subspeaking)
+  //   });
+  //   subscriber.on('publisherStartSpeaking', (event) => {
+  //     setSubspeaking(!subspeaking);
+  //     console.log("섭스크라이버 종료2222222")
+  //     console.log(subspeaking)
+
+  //     // this.Change();
+  //   });
   // });
-  // pub.on('publisherStopSpeaking', (event) => {
-  //   setSubspeaking(true);
-  //   // this.Change();
-  // });
-
-  mySession.on('streamCreated', (event) => {
-    var subscriber = mySession.subscribe(event.stream, undefined);
-
-    subscriber.on('publisherStartSpeaking', (event) => {
-      setSubspeaking(true);
-      // this.Change();
-    });
-    subscriber.on('publisherStopSpeaking', (event) => {
-      setSubspeaking(false);
-      // this.Change();
-    });
-  });
   return (
     <>
       {streamManager !== undefined ? (
-        <VideoBox className={subspeaking ? 'speaking' : ''}>
-          <div className="streamcomponent">
-            <OpenViduVideoComponent streamManager={streamManager} />
-            <Text>{getNicknameTag()}</Text>
-          </div>
-          <UserProfile />
-        </VideoBox>
+        <div>
+          {is_Live ? (
+            <div>
+              <VideoBox className={subspeaking ? 'speaking' : ''}>
+                <div className="streamcomponent">
+                  <OpenViduVideoComponent streamManager={streamManager} />
+                </div>
+                <SubUserProfile />
+                <Button onClick={Change}>ㅇㅇㅇㅇ</Button>
+              </VideoBox>
+              <Text>
+                <span>{getNicknameTag()}</span>
+              </Text>
+            </div>
+          ) : (
+            <div>
+              <VideoBox className={subspeaking ? 'speaking' : ''}>
+                <div>
+                  <DeathVideo
+                    src={
+                      Role === 1
+                        ? BasicProfileDeath
+                        : Role === 2
+                        ? ByunProfileDeath
+                        : Role === 3
+                        ? TamProfileDeath
+                        : Role === 4
+                        ? MapiaProfileDeath
+                        : BasicProfileDeath
+                    }
+                  />
+                </div>
+                <SubUserProfile is_Live={is_Live} />
+                <Button onClick={Change}>ㅇㅇㅇㅇ</Button>
+              </VideoBox>
+              <DeathText>
+                <span>{getNicknameTag()}</span>
+              </DeathText>
+            </div>
+          )}
+        </div>
       ) : null}
     </>
   );
@@ -83,16 +127,37 @@ const VideoBox = styled.div`
 `;
 
 const Text = styled.div`
-  margin: 0px 0px 0px 20px;
+  color: #6164ce;
+  text-align: center;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 1251px) {
-    margin: -55px 0px 0px 0px;
+    margin: 20px
   }
 `;
 
-const UserLogo = styled.div`
-  position: absolute;
-  top: 500px;
+const DeathText = styled.div`
+  color: #6164ce;
+  text-align: center;
+  font-family: 'yg-jalnan';
+  @media screen and (max-width: 1251px) {
+    margin-top: 20px
+  }
+`;
+
+const DeathVideo = styled.div`
+  width: 250px;
+  height: 250px;
+  border-radius: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 1251px) {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 200px;
+  }
 `;
 
 const Button = styled.button`
