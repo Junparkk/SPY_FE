@@ -79,7 +79,7 @@ class Video extends Component {
   }
 
   joinSession() {
-    // --- 1) Get an OpenVidu object ----
+    // --- 1) Get an OpenVidu object ---
 
     this.OV = new OpenVidu();
     this.OV.setAdvancedConfiguration({

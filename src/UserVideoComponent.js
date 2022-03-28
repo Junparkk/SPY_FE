@@ -24,11 +24,12 @@ const UserVideoComponent = ({
   const socket = io.connect('https://mafia.milagros.shop');
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
-  const is_Live = roomUserList.map((role) => role.isEliminated === 'N');
   const Role = roomUserList.map((role) => role.role);
+  const userInfo = useSelector((state) => state.user.userinfo);
+  const is_Live = userInfo.isEliminated;
 
   console.log(is_Live);
-  console.log(roomUserList);
+  console.log(userInfo);
 
   const Change = () => {
     setSubspeaking(!subspeaking);
@@ -79,7 +80,7 @@ const UserVideoComponent = ({
   }, [readyCheck]);
 
   socket.on('ready', (users) => {
-    console.log(users, 'userVideo');
+    console.log(users, 'ready');
   });
 
   //////////////////////////////////////////////////
@@ -87,7 +88,7 @@ const UserVideoComponent = ({
     <>
       {streamManager !== undefined ? (
         <div>
-          {is_Live ? (
+          {is_Live === 'N' ? (
             <div>
               <VideoBox className={subspeaking ? 'speaking' : ''}>
                 <div className="streamcomponent">
@@ -109,9 +110,9 @@ const UserVideoComponent = ({
                 </span>
               </Text>
             </div>
-          ) : (
+          ) : is_Live === 'Y' ? (
             <div>
-              <VideoBox className={subspeaking ? 'speaking' : ''}>
+              <VideoBox>
                 <div>
                   <DeathVideo
                     src={
@@ -127,13 +128,15 @@ const UserVideoComponent = ({
                     }
                   />
                 </div>
-                <SubUserProfile is_Live={is_Live} />
+                <SubUserProfile />
                 <Button onClick={Change}>ㅇㅇㅇㅇ</Button>
               </VideoBox>
               <DeathText>
                 <span>{getNicknameTag()}</span>
               </DeathText>
             </div>
+          ) : (
+            ''
           )}
         </div>
       ) : null}

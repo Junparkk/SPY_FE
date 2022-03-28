@@ -124,9 +124,6 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
 };
 // 방 들어갈 때 패스워드 확인하기
 const roomPwCheckAPI = (userId, roomId, pwd) => {
-  console.log(userId);
-  console.log(parseInt(pwd));
-  console.log(roomId);
   return async function (dispatch, useState, { history }) {
     console.log(pwd);
     await axios
@@ -225,6 +222,8 @@ const startCheckAPI = (roomId) => {
       });
   };
 };
+
+
 
 //게임 최종결과 페이지에서 결과 불러오기
 const finalResult = (roomId) => {

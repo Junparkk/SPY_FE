@@ -13,12 +13,17 @@ import TamProfileDeath from '../images/TamProfile_Death.png';
 
 const PubUserProfile = (props) => {
   const roomUserList = useSelector((state) => state.vote.userList);
-  const Role = roomUserList.map((role) => role.role);
-  const is_Live = roomUserList.map((role) => role.isEliminated === 'N');
+  const userNick = localStorage.getItem('nickname')
+  const is_me = roomUserList.filter((user) => user.nickname === userNick);
+  const Role = is_me[0].role
+  const is_Live = is_me[0].isEliminated
+
+  console.log(is_Live)
+
 
   return (
     <Wrap>
-      {Role && is_Live ? (
+      {Role && is_Live === 'N' ?(
         <Basic
           src={
             Role === 1
@@ -32,7 +37,7 @@ const PubUserProfile = (props) => {
               : BasicProfile
           }
         />
-      ) : Role || is_Live ? (
+      ) : Role && is_Live === 'Y' ? (
         <Basic
           src={
             Role === 1

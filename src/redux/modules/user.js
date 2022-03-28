@@ -5,40 +5,31 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 //액션
-const SET_USER = 'SET_USER';
+const GET_USER_INFO = 'GET_USER_INFO';
 const LOG_OUT = 'LOG_OUT';
 const RANDOM_NICK = 'RANDOM_NICK';
 
 //액션 생성
+const getuser = createAction(GET_USER_INFO, (user_info) => ({ user_info }));
 const logout = createAction(LOG_OUT, (user) => ({ user }));
-const setUser = createAction(SET_USER, (user) => ({ user }));
 const randomNick = createAction(RANDOM_NICK, (user) => user);
 
 const initialState = {
   user: null,
+  userinfo: null,
   randomNick: null,
 };
-//이건 사용 안하는듯? 확인 후 수정 22-03-24
-const LoginCheckDB = () => {
+
+const GetUser = (userId, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .get('api 주소 입력', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('is_login')}`,
-        },
+      .get(`https://mafia.milagros.shop/api/room/${roomId}/user/${userId}/info`, {})
+      .then((res) => {
+        console.log(res.data.user);
+        dispatch(getuser(res.data.user));
       })
-      .then((response) => {
-        console.log(response);
-        dispatch(
-          setUser({
-            is_login: response,
-            user_id: response.data.user.user_id,
-            user_nick: response.data.user.user_nick,
-          })
-        );
-      })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
       });
   };
 };
@@ -84,16 +75,15 @@ const RandomNickDB = () => {
 
 export default handleActions(
   {
-    [SET_USER]: (state, action) =>
-      produce(state, (draft) => {
-        draft.user = action.payload.user;
-        draft.is_login = true;
-      }),
     [LOG_OUT]: (state, action) =>
       produce(state, (draft) => {
         localStorage.clear();
         draft.user = null;
         draft.is_login = false;
+      }),
+    [GET_USER_INFO]: (state, action) =>
+      produce(state, (draft) => {
+        draft.userinfo = action.payload.user_info;
       }),
     [RANDOM_NICK]: (state, action) =>
       produce(state, (draft) => {
@@ -104,9 +94,9 @@ export default handleActions(
 );
 
 const actionCreators = {
+  GetUser,
   LoginDB,
   LogOutDB,
-  LoginCheckDB,
   RandomNickDB,
   randomNick,
 };

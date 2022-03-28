@@ -9,6 +9,8 @@ import {
   actionCreators as roomActions,
 } from '../redux/modules/room';
 import vote, { actionCreators as voteActions } from '../redux/modules/vote';
+import { actionCreators as userActions } from '../redux/modules/user';
+
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
@@ -85,6 +87,11 @@ function Ingame(props) {
     joinChat();
   }, []);
 
+  useEffect(() => {
+    dispatch(userActions.GetUser(userId, roomId));
+    console.log('ddddddddddddddddddddddddddddddddddddddd')
+  });
+
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
     socket.emit('join_room', { roomId, userId });
@@ -150,9 +157,9 @@ function Ingame(props) {
     sound.play();
   };
   //소켓 으로 ready 받기
-  socket.on('ready', (users) => {
-    console.log(users);
-  });
+  // socket.on('ready', (users) => {
+  //   console.log(users);
+  // });
 
   socket.on('cancelReady', (users) => {
     console.log(users);

@@ -4,22 +4,28 @@ import { useSelector } from 'react-redux';
 import BasicProfile from '../images/BasicProfile.png';
 import BasicProfileDeath from '../images/BasicProfile_Death.png';
 import MapiaProfile from '../images/Mapia.png';
+import { actionCreators as userActions } from '../redux/modules/user';
+import { useDispatch } from 'react-redux';
 
 const SubUserProfile = (props) => {
-  const roomUserList = useSelector((state) => state.vote.userList);
-  const Rule = roomUserList.map((role) => role.role);
-  const is_Live = roomUserList.map((role) => role.isEliminated === 'N');
-  console.log(is_Live)
+  const userInfo = useSelector((state) => state.user.userinfo);
+  const Role = userInfo.role;
+  const is_Live = userInfo.isEliminated;
+  
+  console.log(is_Live);
+  console.log(userInfo)
   return (
     <>
-      {is_Live ? (
+      {Role && is_Live === 'N' ? (
         <Wrap>
-          {Rule ? <Basic src={BasicProfile} /> : ''}
+          <Basic src={BasicProfile} />
         </Wrap>
-      ) : (
+      ) : Role && is_Live === 'Y' ? (
         <WrapChange>
-          {Rule ? <Basic src={BasicProfile} /> : ''}
+          <Basic src={BasicProfileDeath} />
         </WrapChange>
+      ) : (
+        ''
       )}
     </>
   );
