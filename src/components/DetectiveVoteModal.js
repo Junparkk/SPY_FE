@@ -7,8 +7,8 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 이미지
 import VoteBG from '../images/VoteBG.png';
-import alive from '../images/alive.png';
-import dead from '../images/dead.png';
+import BasicProfile from '../images/BasicProfile.png';
+import BasicProfile_Death from '../images/BasicProfile_Death.png';
 import Ai from '../images/Ai.png';
 
 // 탐정 모달
@@ -53,7 +53,7 @@ const DetectiveVoteModal = (props) => {
   // 본인명단은 제외하기
   const user_list = _user_list.filter((user) => user.role !== 3);
   console.log(user_list, '제발..!');
- 
+
   console.log(submit);
   return createPortal(
     <Container>
@@ -72,7 +72,11 @@ const DetectiveVoteModal = (props) => {
                     return (
                       <JobCheckImg
                         disabled={submit}
-                        src={p.isEliminated === 'N' ? alive : dead}
+                        src={
+                          p.isEliminated === 'N'
+                            ? BasicProfile
+                            : BasicProfile_Death
+                        }
                         pointerEvents={submit ? 'none' : ''}
                         ref={ref}
                         key={p.id}
@@ -98,7 +102,11 @@ const DetectiveVoteModal = (props) => {
                     return (
                       <JobCheckImg
                         disabled={submit}
-                        src={p.isEliminated === 'N' ? alive : dead}
+                        src={
+                          p.isEliminated === 'N'
+                            ? BasicProfile
+                            : BasicProfile_Death
+                        }
                         pointerEvents={submit ? 'none' : ''}
                         ref={ref}
                         key={p.id}
@@ -126,8 +134,8 @@ const DetectiveVoteModal = (props) => {
                         disabled={submit}
                         src={
                           p.isEliminated === 'N'
-                            ? alive
-                            : dead
+                            ? BasicProfile
+                            : BasicProfile_Death
                         }
                         pointerEvents={submit ? 'none' : ''}
                         ref={ref}

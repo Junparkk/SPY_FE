@@ -7,10 +7,9 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 이미지
 import VoteBG from '../images/VoteBG.png';
-import alive from '../images/alive.png';
-import dead from '../images/dead.png';
+import BasicProfile from '../images/BasicProfile.png';
+import BasicProfile_Death from '../images/BasicProfile_Death.png';
 import Ai from '../images/Ai.png';
-
 
 // 변호사 모달
 const LawyerVoteModal = (props) => {
@@ -56,11 +55,12 @@ const LawyerVoteModal = (props) => {
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
-      <ModalBlock {...rest}  src={VoteBG}>
+      <ModalBlock {...rest} src={VoteBG}>
         <Title>투표</Title>
         <Contents>
-          해고 당할 거 같은 직원에게 투표하세요.<br/><br/>
-          단 투표를 안하게 되면 무효표 처리 되어 랜덤 선택 됩니다.
+          해고 당할 거 같은 직원에게 투표하세요.
+          <br />
+          <br />단 투표를 안하게 되면 무효표 처리 되어 랜덤 선택 됩니다.
         </Contents>
 
         {/* 롤을 부여받은대로 보여줘야함 */}
@@ -72,12 +72,12 @@ const LawyerVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                      disabled={submit}
-                      src={
-                        p.isEliminated === 'N'
-                          ? alive
-                          : dead
-                      }
+                        disabled={submit}
+                        src={
+                          p.isEliminated === 'N'
+                            ? BasicProfile
+                            : BasicProfile_Death
+                        }
                         pointerEvents={submit ? 'none' : ''}
                         ref={ref}
                         key={p.id}
@@ -87,10 +87,8 @@ const LawyerVoteModal = (props) => {
                         {/* 닉네임과 선택해준 사람들의 이미지 */}
                         <Vote>
                           <Nickname>{p.nickname}</Nickname>
-                      
-                          <ChoiceBox>
-                            {/* <Choice src={Ai} /> */}
-                          </ChoiceBox>
+
+                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
                         </Vote>
                       </JobCheckImg>
                     );
@@ -104,12 +102,12 @@ const LawyerVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                      disabled={submit}
-                      src={
-                        p.isEliminated === 'N'
-                          ? alive
-                          : dead
-                      }
+                        disabled={submit}
+                        src={
+                          p.isEliminated === 'N'
+                            ? BasicProfile
+                            : BasicProfile_Death
+                        }
                         pointerEvents={submit ? 'none' : ''}
                         ref={ref}
                         key={p.id}
@@ -119,10 +117,8 @@ const LawyerVoteModal = (props) => {
                         {/* 닉네임과 선택해준 사람들의 이미지 */}
                         <Vote>
                           <Nickname>{p.nickname}</Nickname>
-                      
-                          <ChoiceBox>
-                            {/* <Choice src={Ai} /> */}
-                          </ChoiceBox>
+
+                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
                         </Vote>
                       </JobCheckImg>
                     );
@@ -136,12 +132,12 @@ const LawyerVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                      disabled={submit}
-                      src={
-                        p.isEliminated === 'N'
-                          ? alive
-                          : dead
-                      }
+                        disabled={submit}
+                        src={
+                          p.isEliminated === 'N'
+                            ? BasicProfile
+                            : BasicProfile_Death
+                        }
                         pointerEvents={submit ? 'none' : ''}
                         ref={ref}
                         key={p.id}
@@ -151,10 +147,8 @@ const LawyerVoteModal = (props) => {
                         {/* 닉네임과 선택해준 사람들의 이미지 */}
                         <Vote>
                           <Nickname>{p.nickname}</Nickname>
-                      
-                          <ChoiceBox>
-                            {/* <Choice src={Ai} /> */}
-                          </ChoiceBox>
+
+                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
                         </Vote>
                       </JobCheckImg>
                     );

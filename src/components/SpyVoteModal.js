@@ -7,8 +7,8 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 이미지
 import SpyBG from '../images/SpyBG.png';
-import alive from '../images/alive.png';
-import dead from '../images/dead.png';
+import BasicProfile from '../images/BasicProfile.png';
+import BasicProfile_Death from '../images/BasicProfile_Death.png';
 import Ai from '../images/Ai.png';
 
 // 스파이 모달
@@ -73,8 +73,8 @@ const SpyVoteModal = (props) => {
                           disabled={submit}
                           src={
                             p.isEliminated === 'N'
-                              ? alive
-                              : dead
+                              ? BasicProfile
+                              : BasicProfile_Death
                           }
                           pointerEvents={submit ? 'none' : ''}
                           ref={ref}
@@ -103,8 +103,8 @@ const SpyVoteModal = (props) => {
                           disabled={submit}
                           src={
                             p.isEliminated === 'N'
-                              ? alive
-                              : dead
+                              ? BasicProfile
+                              : BasicProfile_Death
                           }
                           pointerEvents={submit ? 'none' : ''}
                           ref={ref}
@@ -133,8 +133,8 @@ const SpyVoteModal = (props) => {
                           disabled={submit}
                           src={
                             p.isEliminated === 'N'
-                              ? alive
-                              : dead
+                              ? BasicProfile
+                              : BasicProfile_Death
                           }
                           pointerEvents={submit ? 'none' : ''}
                           ref={ref}
