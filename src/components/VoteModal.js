@@ -25,20 +25,23 @@ const VoteModal = (props) => {
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
   const [disable, setDisable] = useState(false);
-  const [voteId, setVoteId] = useState('');
+  const [isFired, setIsFired] = useState(false);
 
   const ref = useRef();
 
   // //산사람 죽은사람 확인 후 캐릭터로 표시(X표시 됨) N-산사람 Y-죽은사람
   const Alive = user_list.filter((user) => user.isEliminated === 'N');
   console.log(Alive, '주것니 사랏니!');
-  console.log(Alive[0].isEliminated === "N")
+  console.log(Alive[0].isEliminated === 'N');
+  const findMe = user_list.filter((user) => user.userId === parseInt(userId));
+  console.log(findMe);
+  console.log(findMe && Alive);
   
+
   // // 죽은사람 확인 후 모달 띄우지 않기
   // const deadPerson = user_list.filter((user) => user.isEliminated === 'Y');
   // console.log(deadPerson, '죽은 사람들 리스트');
 
-  
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
     const chosen = user_list[idx];
@@ -49,7 +52,6 @@ const VoteModal = (props) => {
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       setSubmit(true);
-      setDisable(true);
       //디스패치로 넘겨주기 넣기
       // dispatch(
       //   voteActions.sendDayTimeVoteAPI(
@@ -60,11 +62,6 @@ const VoteModal = (props) => {
       //     roomId
       //   )
       // );
-
-      socket.on('dayTimeVoteArr', (vote) => {
-        console.log(vote, '투표퉆투푵픁푵$$$$$$$');
-      });
-
       console.log('vote용 소켓 data --->', roomId, userId, chosenId, round);
       socket.emit('dayTimeVoteArr', {
         roomId,
@@ -75,11 +72,16 @@ const VoteModal = (props) => {
       console.log(roomId, userId, '$$$$$$$$f룸아디유져아디');
       console.log(chosenId, '투표', round, '라운드');
       console.log(round, '<<<<<<<< 투표 클릭할 때 round');
+
+      socket.on('dayTimeVoteArr', (vote) => {
+        console.log(vote, '투표$$$$$$$');
+      });
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
   };
   console.log(submit, '선택 완료 눌렀는가');
+  console.log(vote.voteCnt);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
@@ -87,7 +89,7 @@ const VoteModal = (props) => {
         <Title>투표</Title>
         <Contents>가장 스파이로 의심되는 사람에게 투표하세요.</Contents>
         {/* 롤을 부여받은대로 보여줘야함 */}
-        {(() => {
+        {/* {(() => {
           if (user_list.length <= 6 && Alive ) {
             return (
               <VotePlayerWrap>
@@ -102,7 +104,6 @@ const VoteModal = (props) => {
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
                         onClick={() => clicked(idx)}
                       >
-                        {/* 닉네임과 선택해준 사람들의 이미지 */}
                         <Vote>
                           <Nickname>{p.nickname}</Nickname>
 
@@ -187,38 +188,43 @@ const VoteModal = (props) => {
                   })}
               </VotePlayerWrap>
             );
-          }
-        })()}
+          } 
+        })()} */}
 
-        {/* ///////////////////// */}
+        {/* ///////////////////////////////////////////////////////// */}
+        {findMe && Alive ? (
+          <VotePlayerWrap>
+            {user_list &&
+              user_list.map((p, idx) => {
+                return (
+                  <JobCheckImg
+                    src={p.isEliminated === 'N' ? alive : dead}
+                    pointerEvents={submit ? 'none' : ''}
+                    ref={ref}
+                    key={p.id}
+                    opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                    onClick={() => clicked(idx)}
+                  >
+                    <Vote>
+                      <Nickname>{p.nickname}</Nickname>
 
-        {/* <VotePlayerWrap>
-          {user_list &&
-            user_list.map((p, idx) => {
-              return (
-                <JobCheckImg
-                  src={Alive ? alive : dead}
-                  pointerEvents={submit ? 'none' : ''}
-                  ref={ref}
-                  key={p.id}
-                  opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                  onClick={() => clicked(idx)}
-                >
-                  <Vote>
-                    <Nickname>ㅎㅇㅎㅇ</Nickname>
-
-                    <ChoiceBox>
-                      <Choice src={Ai} />
-                      <Choice src={Ai} />
-                    </ChoiceBox>
-                  </Vote>
-                </JobCheckImg>
-              );
-            })}
-        </VotePlayerWrap> */}
+                      <ChoiceBox>
+                        {Array.from(
+                          { length: vote.voteCnt },
+                          (voter, index) => {
+                            return <Choice key={index} src={Ai} />;
+                          }
+                        )}
+                      </ChoiceBox>
+                    </Vote>
+                  </JobCheckImg>
+                );
+              })}
+          </VotePlayerWrap>
+        ) : null}
 
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn disabled={disable} onClick={() => submitClicked()}>
+        <SendBtn disabled={submit} onClick={() => submitClicked()}>
           선택 완료
         </SendBtn>
       </ModalBlock>

@@ -164,7 +164,7 @@ const Markingroom = () => {
                       //   toast.error('게임 최소 인원은 6명입니다. 다시 설정해주세요.', {
                       //     draggable: true,
                       //     position: toast.POSITION.TOP_CENTER,
-                      //     autoClose: 2000,
+                      //     autoClose: 3000,
                       //     pauseOnFocusLoss: false,
                       //     pauseOnHover: false,
                       //   });

@@ -359,7 +359,6 @@ const Choice = styled.div`
     height: 10px;
   }
 `;
-
 const SendBtn = styled.button`
   width: 6rem;
   height: 3rem;
@@ -372,6 +371,9 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
+  &:hover {
+    opacity: 0.5;
+  }
 `;
 
 export default DetectiveVoteModal;
