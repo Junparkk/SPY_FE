@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Video from './Video';
 import IngameHeader from '../components/IngameHeader';
@@ -48,6 +48,10 @@ const Result = () => {
   const shared = () => {
     sound.play();
   };
+  //결과페이지에서 결과 리스트 불러오기
+  useEffect(() => {
+    dispatch(roomActions.finalResult(35));
+  });
 
   return (
     <React.Fragment>

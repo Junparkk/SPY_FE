@@ -51,7 +51,8 @@ const LawyerVoteModal = (props) => {
       <ModalBlock {...rest}>
         <Contents size="4rem">투표</Contents>
         <Contents margin="1rem" size="2rem">
-          해고 당할 거 같은 직원에게 투표하세요.\n 단 투표를 안하게 되면 무효표 처리 되어 랜덤 선택 됩니다.
+          해고 당할 거 같은 직원에게 투표하세요.\n 단 투표를 안하게 되면 무효표
+          처리 되어 랜덤 선택 됩니다.
         </Contents>
 
         {/* 롤을 부여받은대로 보여줘야함 */}
@@ -94,7 +95,26 @@ const LawyerVoteModal = (props) => {
                   })}
               </VotePlayerWrap>
             );
-          } 
+          } else if (user_list.length <= 10) {
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked()}
+                      >
+                        <Contents>{p.nickname}</Contents>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
+          }
         })()}
 
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}

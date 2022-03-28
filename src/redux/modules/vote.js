@@ -262,6 +262,7 @@ export default handleActions(
 
 const actionCreators = {
   getUserDB,
+  setUsers,
   sendDayTimeVoteAPI,
   resultDayTimeVoteAPI,
   lawyerActDB,

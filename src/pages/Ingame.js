@@ -87,7 +87,7 @@ function Ingame(props) {
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
-    socket.emit('join_room', roomId, userNick);
+    socket.emit('join_room', { roomId, userId });
     setShowChat(true);
   };
 
@@ -131,14 +131,17 @@ function Ingame(props) {
 
   //시작했는지 여부 확인용
   const isStart = useSelector((state) => state.room.startCheck);
+  const [ready, setReady] = useState(false);
 
   const doReady = () => {
     sound.play();
     socket.emit('ready', { roomId, userId });
+
     setIsReady(!isReady);
   };
   const cancelReady = () => {
     socket.emit('cancelReady', { roomId, userId });
+
     setIsReady(!isReady);
     sound.play();
   };
@@ -146,37 +149,22 @@ function Ingame(props) {
     dispatch(roomActions.doStartAPI(roomId, userId, changeMaxLength));
     sound.play();
   };
-
+  //소켓 으로 ready 받기
   socket.on('ready', (users) => {
-    console.log('소켓', users);
+    console.log(users);
   });
+
   socket.on('cancelReady', (users) => {
-    console.log('소켓', users);
+    console.log(users);
   });
+
+  //시작하는 기능
   useEffect(() => {
     console.log('======================시작됨=================', status);
     return () => setStatus('isStart');
   }, [isStart]);
-  //업데이트 상태값
-  // const updateStatus = async () => {
-  //   if (host[0].userId === parseInt(userId)) {
-  //     await apis
-  //       .statusCheck2(roomId, userId)
-  //       .then((res) => {
-  //         console.log('@@@@ updateStatus 실행 후 응답 받음');
-  //         setStatus(res.data.nextStatus);
-  //         setTimeout(() => {
-  //           console.log(
-  //             '@@@@ updateStatus 실행 후 emit 상태 받음(nextStatus) 보냄'
-  //           );
-  //           socket.emit('getStatus', roomId);
-  //         }, 500);
-  //       })
-  //       .catch((err) => console.log(err, 'catch'));
-  //   }
-  // };
 
-  //상태가 바뀔 때 마다 유저의 리스트를 받아옴
+  // 상태가 바뀔 때 마다 유저의 리스트를 받아옴
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
   }, [status]);
@@ -194,21 +182,6 @@ function Ingame(props) {
       setMsg(gameStatus.msg);
     });
   }
-
-  // useEffect(() => {
-  //   socket.on('getStatus', (gameStatus) => {
-  //     console.log(
-  //       '==========실시간 소켓 Status 값 ======= :',
-  //       gameStatus.status,
-  //       gameStatus.msg,
-  //       gameStatus.roundNo,
-  //       gameStatus
-  //     );
-  //     setStatus(gameStatus.status);
-  //     setMsg(gameStatus.msg);
-  //     dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
-  //   });
-  // }, [isStart, status]); // false -> true
 
   // 로직 흐름
   useEffect(() => {

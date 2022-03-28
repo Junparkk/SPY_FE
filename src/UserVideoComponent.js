@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-
+import io from 'socket.io-client';
+import { actionCreators as voteActions } from './redux/modules/vote';
 const UserVideoComponent = ({
   streamManager,
   speaking,
   session,
   publisher,
 }) => {
+  const dispatch = useDispatch();
+  const socket = io.connect('https://mafia.milagros.shop');
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
   console.log(roomUserList);
@@ -20,9 +23,9 @@ const UserVideoComponent = ({
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };
+
   const mySession = session;
   const pub = publisher;
-  console.log(publisher);
 
   // pub.on('publisherStartSpeaking', (event) => {
   //   setSubspeaking(true);
@@ -45,15 +48,46 @@ const UserVideoComponent = ({
       // this.Change();
     });
   });
+  /////////////////////준파크추가///////////////////////
+
+  const user = roomUserList.filter(
+    (users) => users.nickname === getNicknameTag()
+  );
+  const findHost = roomUserList.filter((users) => users.isHost === 'Y');
+  const isReady = user[0] && user[0].isReady;
+  const isStart = user[0] && user[0].role;
+  const host = findHost[0] && findHost[0].nickname === getNicknameTag();
+  const readyCheck = useSelector((state) => state.room.readyCheck);
+  useEffect(() => {
+    dispatch(voteActions.getUserDB(roomUserList[0].roomId));
+    console.log('실행됨?', roomUserList[0].roomId);
+  }, [readyCheck]);
+
+  socket.on('ready', (users) => {
+    console.log(users, 'userVideo');
+  });
+  //////////////////////////////////////////////////
+
   return (
     <>
       {streamManager !== undefined ? (
         <VideoBox className={subspeaking ? 'speaking' : ''}>
           <div className="streamcomponent">
             <OpenViduVideoComponent streamManager={streamManager} />
-            <Text>{getNicknameTag()}</Text>
+            <Text>
+              {getNicknameTag()}
+              {isReady === 'Y' && isStart === null ? (
+                host ? (
+                  <ReadyCheck>방장</ReadyCheck>
+                ) : (
+                  <ReadyCheck>준비완료</ReadyCheck>
+                )
+              ) : null}
+            </Text>
           </div>
+
           <UserLogo />
+
           {/* <Button
             onClick={() => {
               Change();
@@ -178,4 +212,9 @@ const UserLogo = styled.div``;
 const Button = styled.button`
   position: absolute;
   top: 500px;
+`;
+const ReadyCheck = styled.div`
+  left: 30%;
+  width: 100%;
+  height: 100%;
 `;
