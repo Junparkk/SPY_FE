@@ -214,11 +214,24 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
 //게임시작확인 미완
 const startCheckAPI = (roomId) => {
   return async function (dispatch, useState, { history }) {
-    console.log(roomId);
     await apis
       .startCheck(roomId)
       .then((res) => {
         dispatch(roundNoInfo(res.data.roundNo));
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+};
+
+//게임 최종결과 페이지에서 결과 불러오기
+const finalResult = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .finalResult(roomId)
+      .then((res) => {
         console.log(res);
       })
       .catch((error) => {
@@ -275,6 +288,7 @@ const actionCreators = {
   cancelReadyAPI,
   startCheckAPI,
   roundNoInfo,
+  finalResult,
 };
 
 export { actionCreators };

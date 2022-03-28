@@ -63,4 +63,5 @@ export const apis = {
   gameResult: (roomId) => api.get(`/room/${roomId}/result`),
   aiLawyerAct: (roomId) => api.patch(`/room/${roomId}/aiLawyerAct`),
   aiSpyAct: (roomId) => api.patch(`/room/${roomId}/aiSpyAct`),
+  finalResult: (roomId) => api.get(`/room/${roomId}/winner`),
 };
