@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { history } from '../redux/configureStore';
 import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
 
 import { RiQuestionnaireLine } from 'react-icons/ri';
 import HeaderTitleLogo from '../images/HeaderTitleLogo.png';
@@ -12,11 +13,15 @@ import Ai from '../images/Ai.png';
 import click from '../sound/Click Sound.mp3';
 
 import RuleModal from './RuleModal';
+const socket = io.connect('https://mafia.milagros.shop');
+const IngameHeader = (props) => {
+  const readyCnt = props.readyCnt;
 
-const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
-  const is_Ai = roomUserList.map((user) => user.isAi === 'Y' && user.isEliminated === 'N');
+  const is_Ai = roomUserList.map(
+    (user) => user.isAi === 'Y' && user.isEliminated === 'N'
+  );
   const Ai_Num = is_Ai.filter((user) => user === true).length;
 
   //클릭 효과음
@@ -64,6 +69,12 @@ const Header = () => {
       <Wrap>
         <HeaderTitle src={HeaderTitleLogo} />
         <Aicon src={Ai} /> <AiText>남은 봇 X {Ai_Num}</AiText>
+        <Aicon src={Ai} />{' '}
+        {readyCnt === undefined ? (
+          <AiText>레디 X 1 </AiText>
+        ) : (
+          <AiText>레디 X {readyCnt}</AiText>
+        )}
         <div>
           <RiQuestionnaireLine
             onClick={openModal}
@@ -117,4 +128,4 @@ const Wrap = styled.div`
   z-index: 50;
 `;
 
-export default Header;
+export default IngameHeader;

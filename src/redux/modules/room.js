@@ -22,6 +22,7 @@ const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
 const GAME_START = 'GAME_START';
 const START_CHECK = 'START_CHECK';
+const READY_CHECK = 'READY_CHECK';
 
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
@@ -38,7 +39,7 @@ const privateState = createAction(PRIVATE_STATE, (privateState) => ({
 }));
 
 const startCheck = createAction(START_CHECK, (check) => ({ check }));
-
+const readyCheck = createAction(READY_CHECK, (check) => ({ check }));
 const initialState = {
   list: [],
   post: [],
@@ -50,6 +51,7 @@ const initialState = {
   },
   round: 0,
   startCheck: false,
+  readyCheck: false,
 };
 
 //middleware
@@ -270,6 +272,10 @@ export default handleActions(
       produce(state, (draft) => {
         draft.startCheck = action.payload.check;
       }),
+    [READY_CHECK]: (state, action) =>
+      produce(state, (draft) => {
+        draft.readyCheck = action.payload.check;
+      }),
   },
   initialState
 );
@@ -288,6 +294,7 @@ const actionCreators = {
   startCheckAPI,
   roundNoInfo,
   finalResult,
+  readyCheck,
 };
 
 export { actionCreators };

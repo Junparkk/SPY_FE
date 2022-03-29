@@ -44,13 +44,12 @@ const SpyVoteModal = (props) => {
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
+      dispatch(voteActions.spyNullVote(false));
       setSubmit(true);
     } else {
       window.alert('해고 시킬 직원을 선택해주세요. :)');
     }
   };
-
-  console.log(submit);
 
   return createPortal(
     <Container>
@@ -72,7 +71,7 @@ const SpyVoteModal = (props) => {
                         <JobCheckImg
                           disabled={submit}
                           src={
-                            p.isEliminated === 'N'
+                            p.isEliminated.includes('N')
                               ? BasicProfile
                               : BasicProfile_Death
                           }
