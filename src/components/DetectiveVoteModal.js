@@ -23,7 +23,7 @@ const DetectiveVoteModal = (props) => {
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-  const [disable, setDisable] = useState(false);
+  const [antDisable, setAntDisable] = useState(false);
   const ref = useRef();
 
   console.log(round, '게임 라운드');
@@ -39,6 +39,15 @@ const DetectiveVoteModal = (props) => {
     console.log(chosen, '해당유저 정보');
     console.log(chosen.user.id, '유저 아이디');
     console.log(chosen.roomId, '룸 아이디');
+    if (chosen.isEliminated === 'Y') {
+      setAntDisable(true);
+      console.log(
+        chosen,
+        '누구 골랐고 얘는 죽었을까?? ::',
+        chosen.isEliminated,
+        '초이슨생명 여부'
+      );
+    }
   };
 
   const submitClicked = () => {
@@ -59,7 +68,7 @@ const DetectiveVoteModal = (props) => {
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest} src={VoteBG}>
-        <Title>투표</Title>
+        <Title>탐정 투표</Title>
         <Contents>스파이로 의심되는 사람을 선택해주세요.</Contents>
 
         {/* 롤을 부여받은대로 보여줘야함 */}
@@ -71,9 +80,9 @@ const DetectiveVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        disabled={submit}
+                        disabled={antDisable}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
@@ -101,9 +110,9 @@ const DetectiveVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        disabled={submit}
+                        disabled={antDisable}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
@@ -131,9 +140,9 @@ const DetectiveVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        disabled={submit}
+                        disabled={antDisable}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
@@ -338,6 +347,10 @@ const JobCheckImg = styled.div`
   }
   @media screen and (min-width: 0px) and (max-width: 551px) {
   }
+  :disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
 `;
 
 // 선택받은 사람에게 나타날수 있게 한 Wrap
@@ -379,7 +392,8 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
-  &:hover {
+  :disabled {
+    cursor: default;
     opacity: 0.5;
   }
 `;

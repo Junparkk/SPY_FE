@@ -12,7 +12,6 @@ const SET_ROOM = 'SET_ROOM';
 
 const PRIVATE_ROOM = 'PRIVATE_ROOM';
 const PRIVATE_STATE = 'PRIVATE_STATE';
-//병우추가
 const ADD_ROOM = 'ADD_ROOM';
 
 // const ADD_POST = 'ADD_POST';
@@ -22,6 +21,8 @@ const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
 const GAME_START = 'GAME_START';
 const START_CHECK = 'START_CHECK';
+const WiNNER_LIST = 'WiNNER_LIST';
+
 
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
@@ -38,6 +39,8 @@ const privateState = createAction(PRIVATE_STATE, (privateState) => ({
 }));
 
 const startCheck = createAction(START_CHECK, (check) => ({ check }));
+const winnerList = createAction(WiNNER_LIST, (winner) => ({ winner }));
+
 
 const initialState = {
   list: [],
@@ -50,6 +53,8 @@ const initialState = {
   },
   round: 0,
   startCheck: false,
+  winner: [],
+
 };
 
 //middleware
@@ -223,8 +228,6 @@ const startCheckAPI = (roomId) => {
   };
 };
 
-
-
 //게임 최종결과 페이지에서 결과 불러오기
 const finalResult = (roomId) => {
   return async function (dispatch, useState, { history }) {
@@ -235,6 +238,21 @@ const finalResult = (roomId) => {
       })
       .catch((error) => {
         console.log(error);
+      });
+  };
+};
+
+//최종 승리자 API
+const WinnerDB = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .winnerList(roomId)
+      .then((res) => {
+        console.log(res);
+        dispatch(winnerList(res.data.users));
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 };
@@ -270,6 +288,12 @@ export default handleActions(
       produce(state, (draft) => {
         draft.startCheck = action.payload.check;
       }),
+    [WiNNER_LIST]: (state, action) =>
+      produce(state, (draft) => {
+        console.log(draft.winner);
+        console.log(action.payload);
+        draft.winner = action.payload.winner;
+      }),
   },
   initialState
 );
@@ -288,6 +312,8 @@ const actionCreators = {
   startCheckAPI,
   roundNoInfo,
   finalResult,
+  WinnerDB,
+
 };
 
 export { actionCreators };

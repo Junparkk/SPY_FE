@@ -21,6 +21,8 @@ const SpyVoteModal = (props) => {
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
+  const [antDisable, setAntDisable] = useState(false);
+
   const Alive = user_list.filter((user) => user.isEliminated === 'N');
   const ref = useRef();
 
@@ -38,18 +40,29 @@ const SpyVoteModal = (props) => {
     const chosen = user_list[idx];
     setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
+    if (chosen.isEliminated === 'Y') {
+      setAntDisable(true);
+      console.log(
+        chosen,
+        '누구 골랐고 얘는 죽었을까?? ::',
+        chosen.isEliminated,
+        '초이슨생명 여부'
+      );
+    }
   };
 
   // 투표 값 서버로 전달
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
+      dispatch(voteActions.spyNullVote(false));
       setSubmit(true);
     } else {
       window.alert('해고 시킬 직원을 선택해주세요. :)');
     }
   };
 
+  
   console.log(submit);
 
   return createPortal(
@@ -58,7 +71,7 @@ const SpyVoteModal = (props) => {
       {/* 높은애는 대기화면 나타내기(미완) */}
       {voteSpy[0] && voteSpy[0].user.id === parseInt(spyId) ? (
         <ModalBlock {...rest} src={SpyBG}>
-          <Title>투표</Title>
+          <Title>스파이 투표</Title>
           <Contents>해고 시킬 직원을 선택해주세요.</Contents>
 
           {/* 롤을 부여받은대로 보여줘야함 */}
@@ -70,9 +83,9 @@ const SpyVoteModal = (props) => {
                     user_list.map((p, idx) => {
                       return (
                         <JobCheckImg
-                          disabled={submit}
+                          disabled={antDisable}
                           src={
-                            p.isEliminated === 'N'
+                            p.isEliminated.includes('N')
                               ? BasicProfile
                               : BasicProfile_Death
                           }
@@ -100,9 +113,9 @@ const SpyVoteModal = (props) => {
                     user_list.map((p, idx) => {
                       return (
                         <JobCheckImg
-                          disabled={submit}
+                          disabled={antDisable}
                           src={
-                            p.isEliminated === 'N'
+                            p.isEliminated.includes('N')
                               ? BasicProfile
                               : BasicProfile_Death
                           }
@@ -130,9 +143,9 @@ const SpyVoteModal = (props) => {
                     user_list.map((p, idx) => {
                       return (
                         <JobCheckImg
-                          disabled={submit}
+                          disabled={antDisable}
                           src={
-                            p.isEliminated === 'N'
+                            p.isEliminated.includes('N')
                               ? BasicProfile
                               : BasicProfile_Death
                           }
@@ -338,6 +351,10 @@ const JobCheckImg = styled.div`
   }
   @media screen and (min-width: 0px) and (max-width: 551px) {
   }
+  :disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
 `;
 
 // 선택받은 사람에게 나타날수 있게 한 Wrap
@@ -380,7 +397,8 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
-  &:hover {
+  :disabled {
+    cursor: default;
     opacity: 0.5;
   }
 `;

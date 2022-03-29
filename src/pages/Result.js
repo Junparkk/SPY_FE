@@ -5,14 +5,17 @@ import IngameHeader from '../components/IngameHeader';
 import Footer from '../components/Footer';
 import blueDoor from '../images/blueDoor.png';
 import WinEffect from '../images/WinEffect.gif';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
 import click from '../sound/Click Sound.mp3';
+//이미지
+import citizenWin from '../images/citizenWin.png';
+import spyWin from '../images/spyWin.png';
 
 // 게임 결과 창
 
-const Result = () => {
+const Result = (props) => {
   //클릭 효과음
   const sound = new Audio(click);
 
@@ -48,31 +51,44 @@ const Result = () => {
   const shared = () => {
     sound.play();
   };
+  ////////////////////////////////////////////////////////////////////////
+  const roomId = props.match.params.roomId;
+  console.log(props);
+
   //결과페이지에서 결과 리스트 불러오기
   useEffect(() => {
-    dispatch(roomActions.finalResult(35));
-  });
+    dispatch(roomActions.WinnerDB(roomId));
+  }, []);
+
+  //승자 목록
+  const winnerList = useSelector((state) => state.room.winner);
+  console.log(winnerList, '콘솔 확인');
+  console.log(winnerList[0], '콘솔 확인2');
+  // console.log(winnerList[0].role, '콘솔 확인3');
+  // 직업 구분 4번이면 스파이 아니면 시민
+  const divideWinner = winnerList && winnerList[0] === 4;
+  console.log(divideWinner);
+
+  // 승자 목록에서 [0] 유저의 롤이 4이면 스파이승리 아니면 시민 승리 제목
+  // const title = winnerList[0].role === 4
+  // console.log(title)
 
   return (
     <React.Fragment>
+      <IngameHeader />
       <Wrap>
-        <div
-          style={{
-            width: '100%',
-            boxShadow: '0px 5px 5px gray',
-          }}
-        >
-          <IngameHeader />
-        </div>
-        <WinnerWrap>
-          <H1 height="auto"> ~~ 의 승리!</H1>
-          <Win src={WinEffect}>
-            <Winner>
-              <Video />
-            </Winner>
-          </Win>
-        </WinnerWrap>
+        <CEOComent src={divideWinner ? spyWin : citizenWin} />
+        <H1 height="auto"> {divideWinner ? '스파이' : '시민'}의 승리!</H1>
+        <Win src={WinEffect}>
+          {winnerList.map((p, idx) => {
+            <Winner  key={p.id}>
+              승리한 사람들 캐릭터 들어가기
+            </Winner>;
+          })}
+        </Win>
+        ;
       </Wrap>
+
       <Footer />
       <Restart className={ScrollY > 0 ? 'Change_Button' : ''} onClick={reStart}>
         <span
@@ -116,33 +132,54 @@ const Wrap = styled.div`
   min-width: 380px;
   height: 100vh;
   min-height: 670px;
+  display: flex;
+  flex-direction: column;
   background-color: #ffe179;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 30px;
+`;
+
+const CEOComent = styled.div`
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  /* margin: auto; */
+  background: url('${(props) => props.src}') no-repeat center/contain;
 `;
 
 const H1 = styled.p`
   width: 50vw;
-  margin: auto;
-  font-size: 48px;
+  /* margin: auto; */
   text-align: center;
+  font-size: 48px;
+  font-family: 'Jalnan';
+  font-weight: 700;
   padding: 30px;
-`;
-
-const WinnerWrap = styled.div`
-  width: 100%;
-  height: 100vh;
+  
+  font-family:yg-jalnan;
 `;
 
 const Win = styled.div`
   width: 80%;
   height: 100vh;
   margin: auto;
-  background-size: contain;
+  border-radius: 1px solid;
+  background-size: cover;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
+  z-index:99;
 `;
 
 const Winner = styled.div`
-  margin: 0px 10% 0px 10%;
+  display: flex;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: url('${(props) => props.src}') no-repeat center/contain;
+  margin: auto;
+  cursor: pointer;
 `;
 
 const LeaveRoom = styled.button`

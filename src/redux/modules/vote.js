@@ -52,8 +52,6 @@ const getUserDB = (roomId) => {
   };
 };
 
-
-
 //낮시간 투표 선택인원 보내기
 const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId, roomId) => {
   return async function (dispatch, useState, { history }) {
@@ -89,13 +87,13 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
             '@@@@ resultDayTimeVoteAPI 요청 응답이 1일 경우 바로 결과 화면',
             res
           );
-          history.push('/result');
+          history.push(`/result/${roomId}`);
         } else if (res.data.result === 2) {
           console.log(
             '@@@@ resultDayTimeVoteAPI 요청 응답이 2일 경우 바로 결과 화면',
             res
           );
-          history.push('/result');
+          history.push(`/result/${roomId}`);
         }
       })
       .catch((err) => console.log(err));
@@ -111,6 +109,13 @@ const lawyerActDB = (roomId, userId) => {
       .then(function (res) {
         console.log('@@@@ lawyerActDB 요청 답변 받음');
         console.log(res.data);
+        toast.success(res.data.msg, {
+          draggable: true,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 5000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         socket.emit('getStatus', {
           roomId: roomId,
           status: 'voteNightDetective',
@@ -131,6 +136,13 @@ const detectiveActDB = (roomId, userId) => {
       .then((res) => {
         console.log('@@@@ detectiveActDB api 요청 후 답변 받음');
         console.log(res.data.msg);
+        toast.success(res.data.msg, {
+          draggable: true,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 5000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         setTimeout(() => {
           console.log('@@@@ detectiveActDB emit 상태(voteNightSpy) 받음');
         }, 500);
@@ -149,7 +161,17 @@ const spyActDB = (roomId, userId) => {
       .spyAct(roomId, userId)
       .then(function (res) {
         console.log('@@@@ spyActDB api 요청 후 답변 받음');
-        console.log(res.data);
+        console.log(
+          res.data.msg,
+          '***** 스파이가 유저일떄 잘 죽이면 뜨는 콘솔임 밑에 토스트메시지도 있음'
+        );
+        toast.success(res.data.msg, {
+          draggable: true,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 5000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         socket.emit('getStatus', {
           roomId: roomId,
           status: 'showResultNight',
@@ -219,15 +241,16 @@ const voteResult = (roomId) => {
           console.log('@@@@ voteResult api 요청 값 0일때 emit(dayTime) 함');
         } else if (res.data.result === 1) {
           console.log('@@@@ voteResult api 요청 값 1일때 결과페이지');
-          history.push('/result');
+          history.push(`/result/${roomId}`);
         } else if (res.data.result === 2) {
           console.log('@@@@ voteResult api 요청 값 2일때 결과페이지');
-          history.push('/result');
+          history.push(`/result/${roomId}`);
         }
       })
       .catch((err) => console.log(err));
   };
 };
+
 
 export default handleActions(
   {
@@ -259,6 +282,8 @@ export default handleActions(
       produce(state, (draft) => {
         draft._isVote = action.payload.voteCheck;
       }),
+
+   
   },
   initialState
 );

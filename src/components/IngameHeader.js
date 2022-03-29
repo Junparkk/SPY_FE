@@ -10,14 +10,21 @@ import Ai from '../images/Ai.png';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
-
+//컴포넌트
 import RuleModal from './RuleModal';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
-  const is_Ai = roomUserList.map((user) => user.isAi === 'Y' && user.isEliminated === 'N');
+  const is_Ai = roomUserList.map(
+    (user) => user.isAi === 'Y' && user.isEliminated === 'N'
+  );
   const Ai_Num = is_Ai.filter((user) => user === true).length;
+  const round = useSelector((state) => state.room.round);
+  console.log(
+    round,
+    '인게임 헤더 안 라운드는 실시간으로 바뀌어서 들어올것인지 확인#####'
+  );
 
   //클릭 효과음
   const sound = new Audio(click);
@@ -63,7 +70,12 @@ const Header = () => {
     <React.Fragment>
       <Wrap>
         <HeaderTitle src={HeaderTitleLogo} />
-        <Aicon src={Ai} /> <AiText>남은 봇 X {Ai_Num}</AiText>
+        <RealTimeinfo>
+          <Aicon src={Ai}/>
+            <AiText>남은 봇 X {Ai_Num}</AiText>
+         
+          <RoundText>현재 라운드 : {round} </RoundText>
+        </RealTimeinfo>
         <div>
           <RiQuestionnaireLine
             onClick={openModal}
@@ -103,11 +115,26 @@ const AiText = styled.span`
   font-size: 30px;
   font-family: 'yg-jalnan';
   color: #ffe179;
+  margin: auto;
   margin: 25px 0px 0px -120px;
+`;
+
+const RoundText = styled.span`
+  font-size: 30px;
+  font-family: 'yg-jalnan';
+  color: #ffe179;
+  margin: auto;
+  margin: 25px 0px 0px 80px;
+`;
+
+const RealTimeinfo = styled.div`
+  display: flex;
+  justify-content: space-around;
 `;
 
 const Wrap = styled.div`
   display: flex;
+  /* justify-content:space-between; */
   width: 100%;
   height: 80px;
   background-color: #6164ce;
@@ -115,6 +142,7 @@ const Wrap = styled.div`
   top: 0;
   left: 0;
   z-index: 50;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
 `;
 
 export default Header;

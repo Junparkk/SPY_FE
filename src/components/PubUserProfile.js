@@ -23,7 +23,7 @@ const PubUserProfile = (props) => {
 
   return (
     <Wrap>
-      {Role && is_Live === 'N' ?(
+      {Role && is_Live.includes('N')?(
         <Basic
           src={
             Role === 1
@@ -37,7 +37,7 @@ const PubUserProfile = (props) => {
               : BasicProfile
           }
         />
-      ) : Role && is_Live === 'Y' ? (
+      ) : Role && is_Live.includes('Y') ? (
         <Basic
           src={
             Role === 1

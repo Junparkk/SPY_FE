@@ -19,12 +19,14 @@ const LawyerVoteModal = (props) => {
   const round = useSelector((state) => state.room.round);
   console.log(round);
   const user_list = useSelector((state) => state.vote.userList);
-  const Alive = user_list.filter((user) => user.isEliminated === 'N');
+  const Alive = user_list.filter((user) => user.isEliminated.includes('N'));
 
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
+  const [antDisable, setAntDisable] = useState(false);
+
   const ref = useRef();
 
   const clicked = (idx) => {
@@ -37,6 +39,15 @@ const LawyerVoteModal = (props) => {
     console.log(chosen.user.id, '유저 아이디');
     console.log(chosen.roomId, '룸 아이디');
     console.log(chosen.user, '제발');
+    if (chosen.isEliminated.includes('Y')) {
+      setAntDisable(true);
+      console.log(
+        chosen,
+        '누구 골랐고 얘는 죽었을까?? ::',
+        chosen.isEliminated,
+        '초이슨생명 여부'
+      );
+    }
   };
 
   const submitClicked = () => {
@@ -56,7 +67,7 @@ const LawyerVoteModal = (props) => {
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest} src={VoteBG}>
-        <Title>투표</Title>
+        <Title>변호사 투표</Title>
         <Contents>
           해고 당할 거 같은 직원에게 투표하세요.
           <br />
@@ -72,9 +83,9 @@ const LawyerVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        disabled={submit}
+                        disabled={antDisable}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
@@ -102,9 +113,9 @@ const LawyerVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        disabled={submit}
+                        disabled={antDisable}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
@@ -132,9 +143,9 @@ const LawyerVoteModal = (props) => {
                   user_list.map((p, idx) => {
                     return (
                       <JobCheckImg
-                        disabled={submit}
+                        disabled={antDisable}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
@@ -150,25 +161,6 @@ const LawyerVoteModal = (props) => {
 
                           <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
                         </Vote>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          } else if (user_list.length <= 10) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked()}
-                      >
-                        <Contents>{p.nickname}</Contents>
                       </JobCheckImg>
                     );
                   })}
@@ -358,6 +350,10 @@ const JobCheckImg = styled.div`
   }
   @media screen and (min-width: 0px) and (max-width: 551px) {
   }
+  :disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
 `;
 
 // 선택받은 사람에게 나타날수 있게 한 Wrap
@@ -400,7 +396,8 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
-  &:hover {
+  :disabled {
+    cursor: default;
     opacity: 0.5;
   }
 `;

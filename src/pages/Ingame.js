@@ -9,8 +9,6 @@ import {
   actionCreators as roomActions,
 } from '../redux/modules/room';
 import vote, { actionCreators as voteActions } from '../redux/modules/vote';
-import { actionCreators as userActions } from '../redux/modules/user';
-
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
@@ -90,11 +88,6 @@ function Ingame(props) {
     joinChat();
   }, []);
 
-  useEffect(() => {
-    dispatch(userActions.GetUser(userId, roomId));
-    console.log('ddddddddddddddddddddddddddddddddddddddd')
-  });
-
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
     socket.emit('join_room', { roomId, userId });
@@ -130,29 +123,21 @@ function Ingame(props) {
   //본인 확인 용도
   const host = roomUserList.filter((user) => user.isHost === 'Y');
   const isLawyer = roomUserList.filter((user) => user.role === 2);
+  const aiLawyer = isLawyer.filter((list) => list.isEliminated === 'N');
   const isDetective = roomUserList.filter((user) => user.role === 3);
   const isSpy = roomUserList.filter((user) => user.role === 4);
+  const aiSpy = isSpy.filter((list) => list.isEliminated === 'N');
   const isFired = roomUserList.filter((user) => user.isEliminated === 'Y'); // 해고당한 명단
+  console.log(aiSpy);
 
-  //빈배열
-  const isFireds = [];
-  //해고 명단 반복문 돌려서 ID값 isFireds에 넣기
-  isFired.forEach((id) => {
-    isFireds.push(Object.values(id));
+  // isFired.map((a, idx)) ->a.userId -> localStorage.userId 비교 -> 트루 이면 죽은 화면 풠이면 원래 모달
+  const isFireds = isFired.map((user) => {
+    return user.userId;
   });
-  // 처음 시작할 때 isFireds는 빈배열이기에 오류가 나서 밑에 코드 작성
-  // 빈배열일때 undefined ID넣기
-  if (isFireds.length === 0) isFireds.push('undefined Id');
+  console.log(isFireds);
 
-  console.log(isFireds, 'assssssssssssssssssss');
-  console.log(isFired, '해고인들');
-  console.log(isFired[0], '0번쨰 해고인');
-  console.log(isFired.length > 1 && isFired);
-
-  //해고 명단 ID 리스트에 본인 ID가 있다면 true반환
-  const _isFired = isFireds[0].includes(parseInt(userId));
-  console.log('이게 진짜야! 트루 펄스값만 주라 제발', _isFired);
-
+  const _isFired = isFireds.includes(parseInt(userId));
+  console.log(_isFired, '불린형 ㅇㅇ');
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
@@ -161,20 +146,17 @@ function Ingame(props) {
   //빈 값 넘겨주는 용도
   const lawyerNullVote = useSelector((state) => state.vote.isLawyerNull);
   const spyNullVote = useSelector((state) => state.vote.isSpyNull);
-
+  console.log(lawyerNullVote, '@@@@@@@@@ 눌렀으면 반응하자 ');
   //시작했는지 여부 확인용
   const isStart = useSelector((state) => state.room.startCheck);
-  const [ready, setReady] = useState(false);
 
   const doReady = () => {
+    socket.emit('readyCnt', { roomId, userId });
     sound.play();
-    socket.emit('ready', { roomId, userId });
-
     setIsReady(!isReady);
   };
   const cancelReady = () => {
     socket.emit('cancelReady', { roomId, userId });
-
     setIsReady(!isReady);
     sound.play();
   };
@@ -183,12 +165,21 @@ function Ingame(props) {
     sound.play();
   };
   //소켓 으로 ready 받기
-  // socket.on('ready', (users) => {
-  //   console.log(users);
-  // });
+  const [readyCnt, setReadyCnt] = useState();
 
-  socket.on('cancelReady', (users) => {
-    console.log(users);
+  socket.on('readyCnt', (num) => {
+    setReadyCnt(num.readyCnt);
+  });
+  socket.on('cancelReady', (num) => {
+    setReadyCnt(num.readyCnt);
+  });
+
+  socket.on('myReadyCnt', (num) => {
+    setReadyCnt(num.myReadyCnt);
+  });
+
+  socket.on('myCancelReady', (num) => {
+    setReadyCnt(num.myReadyCnt);
   });
 
   //시작하는 기능
@@ -202,7 +193,7 @@ function Ingame(props) {
     dispatch(voteActions.getUserDB(roomId));
   }, [status]);
 
-  if (host[0] && host[0].userId !== parseInt(userId)) {
+  if (host[0] && host[0].userId === parseInt(userId)) {
     socket.on('getStatus', (gameStatus) => {
       console.log(gameStatus);
       setStatus(gameStatus.status);
@@ -231,7 +222,7 @@ function Ingame(props) {
 
     switch (status) {
       case 'isStart':
-        setStatus('roleGive');
+        // setStatus('roleGive');
         break;
       case 'roleGive':
         console.log('######역할 부여 요청', Date().toString());
@@ -281,7 +272,7 @@ function Ingame(props) {
         break;
       case 'voteNightSpy':
         console.log('######스파이 투표 요청', Date().toString());
-        spyVoteCnt = setTimeout(voteNightSpy, 8000);
+        spyVoteCnt = setTimeout(voteNightSpy, 13000);
         clearTimeout(detectiveVote);
         break;
       case 'showResultNight':
@@ -400,23 +391,35 @@ function Ingame(props) {
     } else {
       setIsVotingLawyer(true);
     }
-
+    console.log(lawyerNullVote, '@@@@@@@@@@ 타이머 밖에 있는 lawyerNullVote');
     const Timer = setTimeout(async () => {
       setIsLawyerModalShowing(false);
       setIsVotingLawyer(false);
       setIsFired(false);
+      console.log(lawyerNullVote, '@@@@@@@@@@ 투표했으면 false');
+      if (
+        isLawyer[0] &&
+        isLawyer[0].isAi === 'N' &&
+        isLawyer[0].userId === parseInt(userId) &&
+        lawyerNullVote === true
+      ) {
+        console.log('----내가 변호사고 아무것도 누르지 않았을때----');
+        dispatch(voteActions.lawyerActDB(roomId, null));
+      }
+
       if (host[0] && host[0].userId === parseInt(userId)) {
-        console.log('----내가 방장이고----');
+        console.log('----내가 방장이고----@@@@@@@@@');
         setTimeout(() => {
           setStatus('voteNightDetective');
         }, 500);
 
-        if (isLawyer[0] && isLawyer[0].isAi === 'Y') {
+        if (aiLawyer[0] && aiLawyer[0].isAi === 'Y') {
           console.log('----내가 방장이고 ai가 변호사일때----');
 
           await apis
             .aiLawyerAct(roomId)
             .then((res) => {
+              console.log(res, '@@@@@@@@@@@@@@@@@@ ai 변호사 api 요청');
               socket.emit('getStatus', {
                 roomId: roomId,
                 status: 'voteNightDetective',
@@ -435,51 +438,37 @@ function Ingame(props) {
             );
         }
       }
-
-      if (
-        isLawyer[0] &&
-        isLawyer[0].isAi === 'N' &&
-        isLawyer[0].userId === parseInt(userId) &&
-        lawyerNullVote === true
-      ) {
-        console.log('----내가 변호사고 아무것도 누르지 않았을때----');
-        dispatch(voteActions.lawyerActDB(roomId, null));
-      }
     }, 10000);
     return () => clearTimeout(Timer);
   }
   //탐정 투표
   function voteNightDetective() {
-    toast.success(msg, {
-      draggable: true,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
-
     if (isDetective[0] && isDetective[0].userId === parseInt(userId)) {
       _isFired ? setIsFired(true) : setIsDetectiveModalShowing(true);
-      //변호사 투표여부 초기화
-      if (lawyerNullVote === false && isFired[0].userId !== parseInt(userId)) {
-        dispatch(voteActions.lawyerNullVote(true));
-      }
     } else {
       setIsVotingDetective(true);
-    }
-
-    if (host[0] && host[0].userId === parseInt(userId)) {
-      console.log('@@@@ 탐정 api 호스만 요청');
-      socket.emit('getStatus', { roomId: roomId, status: 'voteNightSpy' });
-      setTimeout(() => {
-        setStatus('voteNightSpy');
-      }, 500);
     }
 
     const Timer1 = setTimeout(() => {
       setIsDetectiveModalShowing(false);
       setIsVotingDetective(false);
       setIsFired(false);
+
+      if (host[0] && host[0].userId === parseInt(userId)) {
+        console.log('@@@@ 탐정 api 호스만 요청');
+        socket.emit('getStatus', { roomId: roomId, status: 'voteNightSpy' });
+        setTimeout(() => {
+          setStatus('voteNightSpy');
+        }, 500);
+      }
+
+      toast.success('탐정투표 결과 모달' + msg, {
+        draggable: true,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+      });
       console.log('@@@@탐정 콘솔임 셋타임 아웃 다움 나 나옴');
     }, 10000);
 
@@ -497,43 +486,30 @@ function Ingame(props) {
     const Timer = setTimeout(() => {
       setIsSpyModalShowing(false);
       setIsVotingSpy(false);
-      setIsFired(false)
+      setIsFired(false);
       console.log('@@@@ 스파이 콘솔 타이머 실행 됨');
 
       if (
         isSpy[0] &&
         isSpy[0].isAi === 'N' &&
-        isSpy[0].userId === parseInt(userId)
+        isSpy[0].userId === parseInt(userId) &&
+        isSpy[0].isEliminated === 'N'
       ) {
-        if (spyNullVote === true) {
-          dispatch(voteActions.spyActDB(roomId, null));
-          // toast.success(msg, {
-          //   draggable: true,
-          //   position: toast.POSITION.TOP_CENTER,
-          //   autoClose: 2000,
-          //   pauseOnFocusLoss: false,
-          //   pauseOnHover: false,
-          // });
-        }
+        if (spyNullVote === true) dispatch(voteActions.spyActDB(roomId, null));
       }
+
       if (host[0] && host[0].userId === parseInt(userId)) {
         setTimeout(() => {
           setStatus('showResultNight');
         }, 500);
 
-        if (isSpy[0] && isSpy[0].isAi === 'Y') {
+        if (aiSpy[0] && aiSpy[0].isAi === 'Y') {
+          // false
           console.log('@@@@ 스파이 - ai가 스파이고 방장이 나일때');
           apis
             .aiSpyAct(roomId)
             .then((res) =>
               setTimeout(() => {
-                toast.success(res.data.msg, {
-                  draggable: true,
-                  position: toast.POSITION.TOP_CENTER,
-                  autoClose: 2000,
-                  pauseOnFocusLoss: false,
-                  pauseOnHover: false,
-                });
                 console.log(res.data.msg);
                 socket.emit('getStatus', {
                   roomId: roomId,
@@ -554,7 +530,11 @@ function Ingame(props) {
     if (spyNullVote === false) {
       dispatch(voteActions.spyNullVote(true));
     }
-    toast.error(msg, {
+    //변호사 투표여부 초기화
+    if (lawyerNullVote === false) {
+      dispatch(voteActions.lawyerNullVote(true));
+    }
+    toast.error('밤투표결과확인' + msg, {
       draggable: true,
       position: toast.POSITION.TOP_CENTER,
       autoClose: 2000,
@@ -596,7 +576,7 @@ function Ingame(props) {
             boxShadow: '0px 5px 5px gray',
           }}
         >
-          <IngameHeader />
+          <IngameHeader readyCnt={readyCnt} />
         </div>
         <VideoContainer>
           <Video roomId={roomId} />

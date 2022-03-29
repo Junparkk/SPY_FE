@@ -64,4 +64,8 @@ export const apis = {
   aiLawyerAct: (roomId) => api.patch(`/room/${roomId}/aiLawyerAct`),
   aiSpyAct: (roomId) => api.patch(`/room/${roomId}/aiSpyAct`),
   finalResult: (roomId) => api.get(`/room/${roomId}/winner`),
+  //승자 목록 불러오기
+  winnerList: (roomId) =>
+    api.get(`/room/${roomId}/winner
+  `),
 };

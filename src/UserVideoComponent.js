@@ -26,7 +26,7 @@ const UserVideoComponent = ({
   const roomUserList = useSelector((state) => state.vote.userList);
   const Role = roomUserList.map((role) => role.role);
   const userInfo = useSelector((state) => state.user.userinfo);
-  const is_Live = userInfo.isEliminated;
+  const is_Live = userInfo && userInfo.isEliminated;
 
   console.log(is_Live);
   console.log(userInfo);
