@@ -12,8 +12,6 @@ const SubUserProfile = (props) => {
   const Role = userInfo.role;
   const is_Live = userInfo.isEliminated;
   
-  console.log(is_Live);
-  console.log(userInfo)
   return (
     <>
       {Role && is_Live === 'N' ? (

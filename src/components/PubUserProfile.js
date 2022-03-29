@@ -18,9 +18,6 @@ const PubUserProfile = (props) => {
   const Role = is_me[0].role
   const is_Live = is_me[0].isEliminated
 
-  console.log(is_Live)
-
-
   return (
     <Wrap>
       {Role && is_Live === 'N' ?(

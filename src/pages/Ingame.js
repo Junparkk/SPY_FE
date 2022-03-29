@@ -89,7 +89,6 @@ function Ingame(props) {
 
   useEffect(() => {
     dispatch(userActions.GetUser(userId, roomId));
-    console.log('ddddddddddddddddddddddddddddddddddddddd')
   });
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
@@ -573,16 +572,16 @@ function Ingame(props) {
           <Video roomId={roomId} />
         </VideoContainer>
         {chatView ? (
-          <Draggable
-            nodeRef={nodeRef}
-            onDrag={(e, data) => trackPos(data)}
-            onStart={handleStart}
-            onStop={handleEnd}
-          >
+          // <Draggable
+          //   nodeRef={nodeRef}
+          //   onDrag={(e, data) => trackPos(data)}
+          //   onStart={handleStart}
+          //   onStop={handleEnd}
+          // >
             <ChatBox>
-              <Chat socket={socket} username={username} room={roomId} />
+              <Chat socket={socket} username={username} roomId={roomId} />
             </ChatBox>
-          </Draggable>
+          // </Draggable>
         ) : null}
         {round >= 1 ? null : (
           <ButtonContainer>

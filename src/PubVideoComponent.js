@@ -16,7 +16,6 @@ const UserVideoComponent = ({
   const dispatch = useDispatch();
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
-  console.log(roomUserList);
 
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;

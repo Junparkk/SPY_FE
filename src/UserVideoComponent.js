@@ -28,9 +28,6 @@ const UserVideoComponent = ({
   const userInfo = useSelector((state) => state.user.userinfo);
   const is_Live = userInfo.isEliminated;
 
-  console.log(is_Live);
-  console.log(userInfo);
-
   const Change = () => {
     setSubspeaking(!subspeaking);
   };

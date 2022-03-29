@@ -1,31 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
-function Chat({ socket, username, room }) {
+function Chat({ socket, username, roomId }) {
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [change, setChange] = useState(false);
+  const [sendtype, setSendtype] = useState('send_message');
+  const [toUser, setToUser] = useState('');
+  const roomUserList = useSelector((state) => state.vote.userList);
+  const userSocketId = useSelector((state) => state.user.userinfo).socketId;
+  console.log(roomUserList);
+
   const userNick = localStorage.getItem('nickname');
 
-  const chageChat = () => {
+  const chageChat = (props) => {
     setChange(!change);
   };
 
-  const [selectUser, setSelectUser] = useState('');
+  const List = roomUserList.map((u) => ({
+    value: u.socketId,
+    name: u.nickname,
+  }));
 
   const sendMessage = async () => {
     if (currentMessage !== '') {
       const messageData = {
-        room: room,
+        roomId: roomId,
         author: userNick,
         message: currentMessage,
+        socketId: toUser,
         time:
           new Date(Date.now()).getHours() +
           ':' +
           new Date(Date.now()).getMinutes(),
       };
 
-      await socket.emit('send_message', messageData);
+      await socket.emit(sendtype, messageData);
       setMessageList((list) => [...list, messageData]);
       setCurrentMessage('');
     }
@@ -37,15 +49,14 @@ function Chat({ socket, username, room }) {
     });
   }, [socket]);
 
-  //귓속말 기능 보류
-  // useEffect(() => {
-  //   socket.on('join_room', (roomNumber, nickName, socketId) => {
-  //     console.log(roomNumber, nickName, socketId);
-  //   });
-  // }, []);
-  // const userInfo = socket.on('join_room', (roomNumber, nickName, socketId) => {
-  //   console.log(roomNumber, nickName, socketId)
-  // })
+  const not_To_me = () => {
+    alert('자기자신에게는 귓속말을 할 수 없어요');
+    setToUser('');
+  };
+
+  const handleChange = (e) => {
+    userSocketId === e.target.value ? not_To_me() : setToUser(e.target.value);
+  };
 
   return (
     <div className="chat-window">
@@ -60,7 +71,6 @@ function Chat({ socket, username, room }) {
                 <div
                   className="message"
                   id={userNick === messageContent.author ? 'you' : 'other'}
-                  key={i}
                 >
                   <div>
                     <div className="message-meta">
@@ -78,6 +88,14 @@ function Chat({ socket, username, room }) {
             );
           })}
         </ScrollToBottom>
+        <Select onChange={(e) => handleChange(e)}>
+          <option value="">모두에게</option>
+          {List.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.name}에게
+            </option>
+          ))}
+        </Select>
       </div>
       <div className="chat-footer">
         <input
@@ -90,10 +108,34 @@ function Chat({ socket, username, room }) {
             event.key === 'Enter' && sendMessage();
           }}
         />
-        <button onClick={sendMessage}>전송</button>
+        <button onClick={sendMessage} style={{ minWidth: '55px' }}>
+          전송
+        </button>
       </div>
     </div>
   );
 }
 
 export default Chat;
+
+const Select = styled.select`
+  min-width: 0;
+  width: 180px;
+  padding: 4px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #434343;
+  line-height: inherit;
+  border: none;
+  background-color: transparent;
+  /* -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none; */
+  &:focus {
+    border-color: #9296fd;
+  }
+`;
+
+const Wrap = styled.div`
+  display: flex;
+`;

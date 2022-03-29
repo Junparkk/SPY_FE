@@ -25,7 +25,6 @@ const GetUser = (userId, roomId) => {
     axios
       .get(`https://mafia.milagros.shop/api/room/${roomId}/user/${userId}/info`, {})
       .then((res) => {
-        console.log(res.data.user);
         dispatch(getuser(res.data.user));
       })
       .catch((err) => {

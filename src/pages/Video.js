@@ -204,7 +204,7 @@ class Video extends Component {
       mySession.disconnect();
     }
 
-    // Empty all properties..
+    // Empty all properties...
     this.OV = null;
     this.setState({
       session: undefined,
