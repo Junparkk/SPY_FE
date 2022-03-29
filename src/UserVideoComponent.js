@@ -11,7 +11,6 @@ import MapiaProfileDeath from './images/SpyProfile_Death.png';
 import ByunProfileDeath from './images/ByunProfile_Death.png';
 import TamProfileDeath from './images/TamProfile_Death.png';
 
-import io from 'socket.io-client';
 import { actionCreators as voteActions } from './redux/modules/vote';
 
 const UserVideoComponent = ({
@@ -20,8 +19,6 @@ const UserVideoComponent = ({
   subscribers,
   speaking,
 }) => {
-  const dispatch = useDispatch();
-  const socket = io.connect('https://mafia.milagros.shop');
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
   const is_Live = roomUserList.map((role) => role.isEliminated === 'N');
@@ -63,28 +60,7 @@ const UserVideoComponent = ({
   //     // this.Change();
   //   });
   // });
-  /////////////////////준파크추가///////////////////////
 
-  const user = roomUserList.filter(
-    (users) => users.nickname === getNicknameTag()
-  );
-  const findHost = roomUserList.filter((users) => users.isHost === 'Y');
-  const isReady = user[0] && user[0].isReady;
-  const isStart = user[0] && user[0].role;
-  const host = findHost[0] && findHost[0].nickname === getNicknameTag();
-  const readyCheck = useSelector((state) => state.room.readyCheck);
-  useEffect(() => {
-    dispatch(voteActions.getUserDB(roomUserList[0].roomId));
-    console.log('실행됨?', roomUserList[0].roomId);
-  }, [readyCheck]);
-
-  // useEffect(() => {
-  //   socket.on('ready', (users) => {
-  //     console.log(users, 'ready');
-  //   });
-  // }, []);
-
-  //////////////////////////////////////////////////
   return (
     <>
       {streamManager !== undefined ? (
@@ -99,16 +75,7 @@ const UserVideoComponent = ({
                 <Button onClick={Change}>ㅇㅇㅇㅇ</Button>
               </VideoBox>
               <Text>
-                <span>
-                  {getNicknameTag()}
-                  {isReady === 'Y' && isStart === null ? (
-                    host ? (
-                      <ReadyCheck>방장</ReadyCheck>
-                    ) : (
-                      <ReadyCheck>준비완료</ReadyCheck>
-                    )
-                  ) : null}
-                </span>
+                <span>{getNicknameTag()}</span>
               </Text>
             </div>
           ) : (
@@ -201,12 +168,6 @@ const DeathVideo = styled.div`
 const Button = styled.button`
   position: absolute;
   top: 500px;
-`;
-
-const ReadyCheck = styled.div`
-  left: 30%;
-  width: 100%;
-  height: 100%;
 `;
 
 /////////class 형 ///////////////////////////

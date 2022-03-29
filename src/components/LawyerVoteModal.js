@@ -104,7 +104,7 @@ const LawyerVoteModal = (props) => {
                       <JobCheckImg
                         disabled={submit}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }

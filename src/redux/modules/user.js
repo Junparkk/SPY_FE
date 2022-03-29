@@ -5,17 +5,32 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 //액션
-const SET_USER = 'SET_USER';
+const GET_USER_INFO = 'GET_USER_INFO';
 const LOG_OUT = 'LOG_OUT';
 const RANDOM_NICK = 'RANDOM_NICK';
 
 //액션 생성
+const getuser = createAction(GET_USER_INFO, (user_info) => ({ user_info }));
 const logout = createAction(LOG_OUT, (user) => ({ user }));
 const randomNick = createAction(RANDOM_NICK, (user) => user);
 
 const initialState = {
   user: null,
+  userinfo: null,
   randomNick: null,
+};
+
+const GetUser = (userId, roomId) => {
+  return function (dispatch, getState, { history }) {
+    axios
+      .get(`https://mafia.milagros.shop/api/room/${roomId}/user/${userId}/info`)
+      .then((res) => {
+        dispatch(getuser(res.data.user));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 };
 
 const LogOutDB = () => {
@@ -59,16 +74,15 @@ const RandomNickDB = () => {
 
 export default handleActions(
   {
-    [SET_USER]: (state, action) =>
-      produce(state, (draft) => {
-        draft.user = action.payload.user;
-        draft.is_login = true;
-      }),
     [LOG_OUT]: (state, action) =>
       produce(state, (draft) => {
         localStorage.clear();
         draft.user = null;
         draft.is_login = false;
+      }),
+    [GET_USER_INFO]: (state, action) =>
+      produce(state, (draft) => {
+        draft.userinfo = action.payload.user_info;
       }),
     [RANDOM_NICK]: (state, action) =>
       produce(state, (draft) => {
@@ -79,6 +93,7 @@ export default handleActions(
 );
 
 const actionCreators = {
+  GetUser,
   LoginDB,
   LogOutDB,
   RandomNickDB,

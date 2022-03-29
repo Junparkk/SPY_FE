@@ -246,11 +246,13 @@ export default handleActions(
       }),
     [LAWYER_NULL_VOTE]: (state, action) =>
       produce(state, (draft) => {
-        draft.isLawyerNull = !action.payload.vote;
+        draft.isLawyerNull = action.payload.vote;
+        console.log(action.payload.vote, '@@@@@@ 변호사 핸들러');
       }),
     [SPY_NULL_VOTE]: (state, action) =>
       produce(state, (draft) => {
-        draft.isSpyNull = !action.payload.vote;
+        draft.isSpyNull = action.payload.vote;
+        console.log(action.payload.vote);
       }),
     [IS_VOTE]: (state, action) =>
       produce(state, (draft) => {

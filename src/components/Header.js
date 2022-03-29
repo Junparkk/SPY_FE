@@ -26,6 +26,7 @@ const Header = () => {
     setShowModal(true);
     sound.play();
   };
+
   // function Sound() {
   //   const [volume, setVolume] = useState(1);
   //   const [muted, setMuted] = useState(false);
