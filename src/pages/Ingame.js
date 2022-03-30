@@ -572,16 +572,9 @@ function Ingame(props) {
           <Video roomId={roomId} />
         </VideoContainer>
         {chatView ? (
-          // <Draggable
-          //   nodeRef={nodeRef}
-          //   onDrag={(e, data) => trackPos(data)}
-          //   onStart={handleStart}
-          //   onStop={handleEnd}
-          // >
             <ChatBox>
               <Chat socket={socket} username={username} roomId={roomId} />
             </ChatBox>
-          // </Draggable>
         ) : null}
         {round >= 1 ? null : (
           <ButtonContainer>

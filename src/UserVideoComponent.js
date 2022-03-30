@@ -35,8 +35,6 @@ const UserVideoComponent = ({
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };
 
-  const mySession = session;
-
   React.useEffect(() => {
     setSubspeaking(speaking);
     console.log('변환했다');
@@ -49,14 +47,16 @@ const UserVideoComponent = ({
   //   var subscriber = mySession.subscribe(event.stream, undefined);
 
   //   subscriber.on('publisherStartSpeaking', (event) => {
-  //     setSubspeaking(!subspeaking);
-  //     console.log("섭스크라이버 시작2222")
-  //     console.log(subspeaking)
+  //     setSubspeaking(true);
+  //     console.log('섭스크라이버 시작2222');
+  //     console.log(subspeaking);
+  //     console.log(event.connection.connectionId)
   //   });
-  //   subscriber.on('publisherStartSpeaking', (event) => {
-  //     setSubspeaking(!subspeaking);
-  //     console.log("섭스크라이버 종료2222222")
-  //     console.log(subspeaking)
+  //   subscriber.on('publisherStopSpeaking', (event) => {
+  //     setSubspeaking(false);
+  //     console.log('섭스크라이버 종료2222222');
+  //     console.log(subspeaking);
+  //     console.log(event.connection.connectionId)
 
   //     // this.Change();
   //   });
@@ -85,7 +85,7 @@ const UserVideoComponent = ({
     <>
       {streamManager !== undefined ? (
         <div>
-          {is_Live === 'N' ? (
+          {is_Live.includes('N') ? (
             <div>
               <VideoBox className={subspeaking ? 'speaking' : ''}>
                 <div className="streamcomponent">
@@ -107,7 +107,7 @@ const UserVideoComponent = ({
                 </span>
               </Text>
             </div>
-          ) : is_Live === 'Y' ? (
+          ) : is_Live.includes('Y') ? (
             <div>
               <VideoBox>
                 <div>

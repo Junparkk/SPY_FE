@@ -95,7 +95,7 @@ class Video extends Component {
       () => {
         var mySession = this.state.session;
 
-        // --- 3) Specify the actions when events take place in the session --
+        // --- 3) Specify the actions when events take place in the session ---
 
         // On every new Stream received...
         mySession.on('streamCreated', (event) => {
@@ -108,10 +108,12 @@ class Video extends Component {
           subscriber.on('publisherStartSpeaking', (event) => {
             this.setState({ subspeaking: true });
             console.log('섭스크라이버 시작', this.state.subspeaking);
+            console.log(event.connection.connectionId)
           });
           subscriber.on('publisherStopSpeaking', (event) => {
             this.setState({ subspeaking: false });
             console.log('섭스크라이버 종료', this.state.subspeaking);
+            console.log(event.connection.connectionId)
           });
           // Update the state with the new subscribers
           this.setState({
@@ -165,11 +167,13 @@ class Video extends Component {
               publisher.on('publisherStartSpeaking', (event) => {
                 this.setState({ pubspeaking: true });
                 console.log('퍼블리셔시작', this.state.pubspeaking);
+                console.log(event.connection.connectionId)
               });
 
               publisher.on('publisherStopSpeaking', (event) => {
                 this.setState({ pubspeaking: false });
                 console.log('퍼블리셔종료', this.state.pubspeaking);
+                console.log(event.connection.connectionId)
               });
 
               // --- 6) Publish your stream ---

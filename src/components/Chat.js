@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import Draggable from 'react-draggable';
 
 function Chat({ socket, username, roomId }) {
   const [currentMessage, setCurrentMessage] = useState('');
@@ -11,8 +12,20 @@ function Chat({ socket, username, roomId }) {
   const [toUser, setToUser] = useState('');
   const roomUserList = useSelector((state) => state.vote.userList);
   const userSocketId = useSelector((state) => state.user.userinfo).socketId;
-  console.log(roomUserList);
-
+  //채팅창 드레그
+  const nodeRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [Opacity, setOpacity] = useState(false);
+  //채팅창 드레그
+  const trackPos = (data) => {
+    setPosition({ x: data.x, y: data.y });
+  };
+  const handleStart = () => {
+    setOpacity(true);
+  };
+  const handleEnd = () => {
+    setOpacity(false);
+  };
   const userNick = localStorage.getItem('nickname');
 
   const chageChat = (props) => {
@@ -59,60 +72,67 @@ function Chat({ socket, username, roomId }) {
   };
 
   return (
-    <div className="chat-window">
-      <div className="chat-header" onClick={chageChat}>
-        <p>채팅</p>
-      </div>
-      <div className={change ? 'chat-Longbody' : 'chat-body'}>
-        <ScrollToBottom className="message-container">
-          {messageList.map((messageContent, i) => {
-            return (
-              <>
-                <div
-                  className="message"
-                  id={userNick === messageContent.author ? 'you' : 'other'}
-                >
-                  <div>
-                    <div className="message-meta">
-                      <p id="author">{messageContent.author}</p>
-                    </div>
-                    <div className="message-content">
-                      <p>{messageContent.message}</p>
-                    </div>
-                    <div className="message-time" style={{ display: 'flex' }}>
-                      <p id="time">{messageContent.time}</p>
+    <Draggable
+      nodeRef={nodeRef}
+      onDrag={(e, data) => trackPos(data)}
+      onStart={handleStart}
+      onStop={handleEnd}
+    >
+      <div className="chat-window">
+        <div className="chat-header" onClick={chageChat}>
+          <p>채팅</p>
+        </div>
+        <div className={change ? 'chat-Longbody' : 'chat-body'}>
+          <ScrollToBottom className="message-container">
+            {messageList.map((messageContent, i) => {
+              return (
+                <>
+                  <div
+                    className="message"
+                    id={userNick === messageContent.author ? 'you' : 'other'}
+                  >
+                    <div>
+                      <div className="message-meta">
+                        <p id="author">{messageContent.author}</p>
+                      </div>
+                      <div className="message-content">
+                        <p>{messageContent.message}</p>
+                      </div>
+                      <div className="message-time" style={{ display: 'flex' }}>
+                        <p id="time">{messageContent.time}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            );
-          })}
-        </ScrollToBottom>
-        <Select onChange={(e) => handleChange(e)}>
-          <option value="">모두에게</option>
-          {List.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.name}에게
-            </option>
-          ))}
-        </Select>
+                </>
+              );
+            })}
+          </ScrollToBottom>
+          <Select onChange={(e) => handleChange(e)}>
+            <option value="">모두에게</option>
+            {List.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.name}에게
+              </option>
+            ))}
+          </Select>
+        </div>
+        <div className="chat-footer">
+          <input
+            type="text"
+            value={currentMessage}
+            onChange={(event) => {
+              setCurrentMessage(event.target.value);
+            }}
+            onKeyPress={(event) => {
+              event.key === 'Enter' && sendMessage();
+            }}
+          />
+          <button onClick={sendMessage} style={{ minWidth: '55px' }}>
+            전송
+          </button>
+        </div>
       </div>
-      <div className="chat-footer">
-        <input
-          type="text"
-          value={currentMessage}
-          onChange={(event) => {
-            setCurrentMessage(event.target.value);
-          }}
-          onKeyPress={(event) => {
-            event.key === 'Enter' && sendMessage();
-          }}
-        />
-        <button onClick={sendMessage} style={{ minWidth: '55px' }}>
-          전송
-        </button>
-      </div>
-    </div>
+    </Draggable>
   );
 }
 
