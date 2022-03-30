@@ -11,16 +11,16 @@ const SubUserProfile = (props) => {
   const userInfo = useSelector((state) => state.user.userinfo);
   const Role = userInfo.role;
   const is_Live = userInfo.isEliminated;
-  
+
   console.log(is_Live);
-  console.log(userInfo)
+  console.log(userInfo);
   return (
     <>
-      {Role && is_Live === 'N' ? (
+      {Role && is_Live.includes('N') ? (
         <Wrap>
           <Basic src={BasicProfile} />
         </Wrap>
-      ) : Role && is_Live === 'Y' ? (
+      ) : Role && is_Live.includes('Y') ? (
         <WrapChange>
           <Basic src={BasicProfileDeath} />
         </WrapChange>

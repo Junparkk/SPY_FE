@@ -33,13 +33,14 @@ const SpyVoteModal = (props) => {
   console.log(spyId);
 
   // 투표 사람 클릭
-  const clicked = (idx) => {
+  const clicked = (idx, e) => {
+    e.preventDefault();
     setVoteBtnClicked(idx);
     const chosen = user_list[idx];
     setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
   };
-
+  console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   // 투표 값 서버로 전달
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
@@ -79,7 +80,7 @@ const SpyVoteModal = (props) => {
                           ref={ref}
                           key={p.id}
                           opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                          onClick={() => clicked(idx)}
+                          onClick={(e) => clicked(idx, e)}
                         >
                           {/* 닉네임과 선택해준 사람들의 이미지 */}
                           <Vote>
@@ -109,7 +110,7 @@ const SpyVoteModal = (props) => {
                           ref={ref}
                           key={p.id}
                           opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                          onClick={() => clicked(idx)}
+                          onClick={(e) => clicked(idx, e)}
                         >
                           {/* 닉네임과 선택해준 사람들의 이미지 */}
                           <Vote>
@@ -156,7 +157,7 @@ const SpyVoteModal = (props) => {
           })()}
 
           {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-          <SendBtn disable={submit} onClick={submitClicked}>
+          <SendBtn disabled={submit} onClick={submitClicked}>
             선택 완료
           </SendBtn>
         </ModalBlock>
@@ -379,8 +380,9 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
-  &:hover {
+  :disabled {
     opacity: 0.5;
+    cursor: default;
   }
 `;
 

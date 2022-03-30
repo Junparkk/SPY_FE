@@ -60,8 +60,13 @@ export const apis = {
 
   // role 부여 1-시민/2-의사/3-경찰/4-스파이
   role: (roomId) => api.patch(`/room/${roomId}/role`),
-  gameResult: (roomId) => api.get(`/room/${roomId}/result`),
+  gameResult: (roomId, userId) =>
+    api.get(`/room/${roomId}/user/${userId}/result`),
   aiLawyerAct: (roomId) => api.patch(`/room/${roomId}/aiLawyerAct`),
   aiSpyAct: (roomId) => api.patch(`/room/${roomId}/aiSpyAct`),
   finalResult: (roomId) => api.get(`/room/${roomId}/winner`),
+  //승자 목록 불러오기
+  winnerList: (roomId) =>
+    api.get(`/room/${roomId}/winner
+ `),
 };

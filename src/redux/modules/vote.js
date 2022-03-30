@@ -52,8 +52,6 @@ const getUserDB = (roomId) => {
   };
 };
 
-
-
 //낮시간 투표 선택인원 보내기
 const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId, roomId) => {
   return async function (dispatch, useState, { history }) {
@@ -205,10 +203,10 @@ const isVoteDB = (roomId) => {
   };
 };
 // 투표결과 확인
-const voteResult = (roomId) => {
+const voteResult = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .gameResult(roomId)
+      .gameResult(roomId, userId)
       .then((res) => {
         console.log('@@@@ voteResult api 요청 받음', res.data.result);
         if (res.data.result === 0) {

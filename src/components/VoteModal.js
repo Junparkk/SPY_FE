@@ -24,23 +24,7 @@ const VoteModal = (props) => {
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-  const [disable, setDisable] = useState(false);
-  const [isFired, setIsFired] = useState(false);
-
   const ref = useRef();
-
-  // //산사람 죽은사람 확인 후 캐릭터로 표시(X표시 됨) N-산사람 Y-죽은사람
-  const Alive = user_list.filter((user) => user.isEliminated === 'N');
-  console.log(Alive, '주것니 사랏니!');
-  console.log(Alive[0].isEliminated === 'N');
-  const findMe = user_list.filter((user) => user.userId === parseInt(userId));
-  console.log(findMe);
-  console.log(findMe && Alive);
-  
-
-  // // 죽은사람 확인 후 모달 띄우지 않기
-  // const deadPerson = user_list.filter((user) => user.isEliminated === 'Y');
-  // console.log(deadPerson, '죽은 사람들 리스트');
 
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
@@ -48,7 +32,7 @@ const VoteModal = (props) => {
     setChosenId(chosen.userId);
     setChosenRoomId(chosen.roomId);
   };
-
+  console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       setSubmit(true);
@@ -88,140 +72,32 @@ const VoteModal = (props) => {
       <ModalBlock {...rest} src={VoteBG}>
         <Title>투표</Title>
         <Contents>가장 스파이로 의심되는 사람에게 투표하세요.</Contents>
-        {/* 롤을 부여받은대로 보여줘야함 */}
-        {/* {(() => {
-          if (user_list.length <= 6 && Alive ) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        src={p.isEliminated === 'N' ? alive : dead}
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
-                        <Vote>
-                          <Nickname>{p.nickname}</Nickname>
+        <VotePlayerWrap>
+          {user_list &&
+            user_list.map((p, idx) => {
+              return (
+                <JobCheckImg
+                  disabled={submit}
+                  src={p.isEliminated.includes('N') ? alive : dead}
+                  pointerEvents={submit ? 'none' : ''}
+                  ref={ref}
+                  key={p.id}
+                  opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                  onClick={() => clicked(idx)}
+                >
+                  <Vote>
+                    <Nickname>{p.nickname}</Nickname>
 
-                          {Array.from(
-                            { length: vote.voteCnt },
-                            (voter, index) => {
-                              return (
-                                <ChoiceBox>
-                                  <Choice key={index} src={Ai} >...{voter}</Choice>
-                                </ChoiceBox>
-                              );
-                            }
-                          )}
-                        </Vote>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          } else if (user_list.length <= 8 && Alive) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        src={p.isEliminated === 'N' ? alive : dead}
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
-                        <Vote>
-                          <Nickname>{p.nickname}</Nickname>
-                          {Array.from(
-                            { length: vote.voteCnt },
-                            (voter, index) => {
-                              return (
-                                <ChoiceBox>
-                                  <Choice key={index} src={Ai} />
-                                </ChoiceBox>
-                              );
-                            }
-                          )}
-                        </Vote>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          } else if (user_list.length <= 10 && Alive) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        src={p.isEliminated === 'N' ? alive : dead}
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
-                        <Vote>
-                          <Nickname>{p.nickname}</Nickname>
-
-                          {Array.from(
-                            { length: vote.voteCnt },
-                            (voter, index) => {
-                              return (
-                                <ChoiceBox>
-                                  <Choice key={index} src={Ai} />
-                                </ChoiceBox>
-                              );
-                            }
-                          )}
-                        </Vote>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          } 
-        })()} */}
-
-        {/* ///////////////////////////////////////////////////////// */}
-        {findMe && Alive ? (
-          <VotePlayerWrap>
-            {user_list &&
-              user_list.map((p, idx) => {
-                return (
-                  <JobCheckImg
-                    src={p.isEliminated === 'N' ? alive : dead}
-                    pointerEvents={submit ? 'none' : ''}
-                    ref={ref}
-                    key={p.id}
-                    opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                    onClick={() => clicked(idx)}
-                  >
-                    <Vote>
-                      <Nickname>{p.nickname}</Nickname>
-
-                      <ChoiceBox>
-                        {Array.from(
-                          { length: vote.voteCnt },
-                          (voter, index) => {
-                            return <Choice key={index} src={Ai} />;
-                          }
-                        )}
-                      </ChoiceBox>
-                    </Vote>
-                  </JobCheckImg>
-                );
-              })}
-          </VotePlayerWrap>
-        ) : null}
+                    <ChoiceBox>
+                      {Array.from({ length: vote.voteCnt }, (voter, index) => {
+                        return <Choice key={index} src={Ai} />;
+                      })}
+                    </ChoiceBox>
+                  </Vote>
+                </JobCheckImg>
+              );
+            })}
+        </VotePlayerWrap>
 
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
         <SendBtn disabled={submit} onClick={() => submitClicked()}>
@@ -446,8 +322,9 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
-  &:hover {
+  :disabled {
     opacity: 0.5;
+    cursor: default;
   }
 `;
 

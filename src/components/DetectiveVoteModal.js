@@ -23,8 +23,14 @@ const DetectiveVoteModal = (props) => {
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-  const [disable, setDisable] = useState(false);
+
   const ref = useRef();
+  // 본인명단은 제외하기
+  const user_list = _user_list.filter((user) => user.role !== 3);
+  console.log(user_list, '~~~~~~~~~~~~~~~~~본인 제외명단 리스트');
+  console.log(_user_list, '~~~~~~~~~~~전체 리스트~~~~~~');
+  console.log(chosenId, '선택한 ID값');
+  console.log(submit);
 
   console.log(round, '게임 라운드');
   console.log(_user_list, '유저 리스트');
@@ -33,7 +39,7 @@ const DetectiveVoteModal = (props) => {
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
     console.log(idx, ' 얘는 인덱스');
-    const chosen = _user_list[idx];
+    const chosen = user_list[idx];
     setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
     console.log(chosen, '해당유저 정보');
@@ -50,11 +56,6 @@ const DetectiveVoteModal = (props) => {
     }
   };
 
-  // 본인명단은 제외하기
-  const user_list = _user_list.filter((user) => user.role !== 3);
-  console.log(user_list, '제발..!');
-
-  console.log(submit);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
@@ -64,37 +65,7 @@ const DetectiveVoteModal = (props) => {
 
         {/* 롤을 부여받은대로 보여줘야함 */}
         {(() => {
-          if (_user_list.length <= 6) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        disabled={submit}
-                        src={
-                          p.isEliminated === 'N'
-                            ? BasicProfile
-                            : BasicProfile_Death
-                        }
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
-                        {/* 닉네임과 선택해준 사람들의 이미지 */}
-                        <Vote>
-                          <Nickname>{p.nickname}</Nickname>
-
-                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
-                        </Vote>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          } else if (_user_list.length <= 8) {
+          if (user_list.length <= 6) {
             return (
               <VotePlayerWrap>
                 {user_list &&
@@ -124,7 +95,37 @@ const DetectiveVoteModal = (props) => {
                   })}
               </VotePlayerWrap>
             );
-          } else if (_user_list.length <= 10) {
+          } else if (user_list.length <= 8) {
+            return (
+              <VotePlayerWrap>
+                {user_list &&
+                  user_list.map((p, idx) => {
+                    return (
+                      <JobCheckImg
+                        disabled={submit}
+                        src={
+                          p.isEliminated.includes('N')
+                            ? BasicProfile
+                            : BasicProfile_Death
+                        }
+                        pointerEvents={submit ? 'none' : ''}
+                        ref={ref}
+                        key={p.id}
+                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                        onClick={() => clicked(idx)}
+                      >
+                        {/* 닉네임과 선택해준 사람들의 이미지 */}
+                        <Vote>
+                          <Nickname>{p.nickname}</Nickname>
+
+                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
+                        </Vote>
+                      </JobCheckImg>
+                    );
+                  })}
+              </VotePlayerWrap>
+            );
+          } else if (user_list.length <= 10) {
             return (
               <VotePlayerWrap>
                 {user_list &&
@@ -158,7 +159,7 @@ const DetectiveVoteModal = (props) => {
         })()}
 
         {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
-        <SendBtn disable={submit} onClick={submitClicked}>
+        <SendBtn disabled={submit} onClick={submitClicked}>
           선택 완료
         </SendBtn>
       </ModalBlock>
@@ -379,8 +380,9 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
-  &:hover {
+  :disabled {
     opacity: 0.5;
+    cursor: default;
   }
 `;
 

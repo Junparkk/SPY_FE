@@ -74,7 +74,7 @@ const LawyerVoteModal = (props) => {
                       <JobCheckImg
                         disabled={submit}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
@@ -400,8 +400,9 @@ const SendBtn = styled.button`
   font-family: 'yg-jalnan';
   color: #fff;
   cursor: pointer;
-  &:hover {
+  :disabled {
     opacity: 0.5;
+    cursor: default;
   }
 `;
 
