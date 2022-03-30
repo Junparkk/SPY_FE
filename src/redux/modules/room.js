@@ -22,6 +22,8 @@ const LEAVE_USER = 'LEAVE_USER';
 const ROUND_NUM = 'ROUND_NUM';
 const GAME_START = 'GAME_START';
 const START_CHECK = 'START_CHECK';
+const READY_CHECK = 'READY_CHECK';
+const WINNER_LIST = 'WINNER_LIST';
 
 const addRoom = createAction(ADD_ROOM, (room) => ({ room }));
 const setRoom = createAction(SET_ROOM, (room_list) => ({ room_list }));
@@ -38,6 +40,8 @@ const privateState = createAction(PRIVATE_STATE, (privateState) => ({
 }));
 
 const startCheck = createAction(START_CHECK, (check) => ({ check }));
+const readyCheck = createAction(READY_CHECK, (check) => ({ check }));
+const winnerList = createAction(WINNER_LIST, (winner) => ({ winner }));
 
 const initialState = {
   list: [],
@@ -50,6 +54,8 @@ const initialState = {
   },
   round: 0,
   startCheck: false,
+  readyCheck: false,
+  winner: [],
 };
 
 //middleware
@@ -223,8 +229,6 @@ const startCheckAPI = (roomId) => {
   };
 };
 
-
-
 //게임 최종결과 페이지에서 결과 불러오기
 const finalResult = (roomId) => {
   return async function (dispatch, useState, { history }) {
@@ -235,6 +239,21 @@ const finalResult = (roomId) => {
       })
       .catch((error) => {
         console.log(error);
+      });
+  };
+};
+
+//최종 승리자 API
+const WinnerDB = (roomId) => {
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .winnerList(roomId)
+      .then((res) => {
+        console.log(res);
+        dispatch(winnerList(res.data.users));
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 };
@@ -270,6 +289,16 @@ export default handleActions(
       produce(state, (draft) => {
         draft.startCheck = action.payload.check;
       }),
+    [READY_CHECK]: (state, action) =>
+      produce(state, (draft) => {
+        draft.readyCheck = action.payload.check;
+      }),
+    [WINNER_LIST]: (state, action) =>
+      produce(state, (draft) => {
+        console.log(draft.winner);
+        console.log(action.payload);
+        draft.winner = action.payload.winner;
+      }),
   },
   initialState
 );
@@ -288,6 +317,8 @@ const actionCreators = {
   startCheckAPI,
   roundNoInfo,
   finalResult,
+  readyCheck,
+  WinnerDB,
 };
 
 export { actionCreators };

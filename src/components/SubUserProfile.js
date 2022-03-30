@@ -14,11 +14,11 @@ const SubUserProfile = (props) => {
   
   return (
     <>
-      {Role && is_Live === 'N' ? (
+      {Role && is_Live.includes('N') ? (
         <Wrap>
           <Basic src={BasicProfile} />
         </Wrap>
-      ) : Role && is_Live === 'Y' ? (
+      ) : Role && is_Live.includes('Y') ? (
         <WrapChange>
           <Basic src={BasicProfileDeath} />
         </WrapChange>

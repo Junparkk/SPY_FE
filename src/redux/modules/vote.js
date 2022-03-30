@@ -52,8 +52,6 @@ const getUserDB = (roomId) => {
   };
 };
 
-
-
 //낮시간 투표 선택인원 보내기
 const sendDayTimeVoteAPI = (chosenRoomId, userId, round, chosenId, roomId) => {
   return async function (dispatch, useState, { history }) {
@@ -205,10 +203,10 @@ const isVoteDB = (roomId) => {
   };
 };
 // 투표결과 확인
-const voteResult = (roomId) => {
+const voteResult = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
-      .gameResult(roomId)
+      .gameResult(roomId, userId)
       .then((res) => {
         console.log('@@@@ voteResult api 요청 받음', res.data.result);
         if (res.data.result === 0) {
@@ -249,11 +247,13 @@ export default handleActions(
       }),
     [LAWYER_NULL_VOTE]: (state, action) =>
       produce(state, (draft) => {
-        draft.isLawyerNull = !action.payload.vote;
+        draft.isLawyerNull = action.payload.vote;
+        console.log(action.payload.vote, '@@@@@@ 변호사 핸들러');
       }),
     [SPY_NULL_VOTE]: (state, action) =>
       produce(state, (draft) => {
-        draft.isSpyNull = !action.payload.vote;
+        draft.isSpyNull = action.payload.vote;
+        console.log(action.payload.vote);
       }),
     [IS_VOTE]: (state, action) =>
       produce(state, (draft) => {

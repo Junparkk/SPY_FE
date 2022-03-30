@@ -23,7 +23,7 @@ const initialState = {
 const GetUser = (userId, roomId) => {
   return function (dispatch, getState, { history }) {
     axios
-      .get(`https://mafia.milagros.shop/api/room/${roomId}/user/${userId}/info`, {})
+      .get(`https://mafia.milagros.shop/api/room/${roomId}/user/${userId}/info`)
       .then((res) => {
         dispatch(getuser(res.data.user));
       })
