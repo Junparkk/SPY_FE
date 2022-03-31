@@ -15,15 +15,21 @@ import { actionCreators as voteActions } from './redux/modules/vote';
 
 const UserVideoComponent = ({
   streamManager,
-  session,
-  subscribers,
   speaking,
+  id,
+  speakingId,
+  session,
 }) => {
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
   const Role = roomUserList.map((role) => role.role);
   const userInfo = useSelector((state) => state.user.userinfo);
   const is_Live = userInfo.isEliminated;
+
+  const UserSpeaking = speakingId;
+  const Id = id;
+  // console.log(Id);
+  // console.log(UserSpeaking);
 
   const Change = () => {
     setSubspeaking(!subspeaking);
@@ -32,11 +38,11 @@ const UserVideoComponent = ({
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };
 
-  React.useEffect(() => {
-    setSubspeaking(speaking);
-    console.log('변환했다');
-    console.log(subspeaking);
-  }, [speaking]);
+  // React.useEffect(() => {
+  //   setSubspeaking(speaking)
+  //   console.log('변환했다');
+  //   console.log(subspeaking);
+  // }, [speaking]);
 
   // const mySession = session;
 
@@ -55,7 +61,6 @@ const UserVideoComponent = ({
   //     console.log(subspeaking);
   //     console.log(event.connection.connectionId)
 
-  //     // this.Change();
   //   });
   // });
 

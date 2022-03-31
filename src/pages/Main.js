@@ -49,7 +49,6 @@ const Main = (props) => {
     document.documentElement.scrollHeight,
     document.documentElement.offsetHeight
   );
-  console.log(maxScroll);
   const dispatch = useDispatch();
   const islogin = localStorage.getItem('nickname');
   const userId = localStorage.getItem('userid');

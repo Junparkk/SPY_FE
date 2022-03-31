@@ -95,7 +95,7 @@ class Video extends Component {
       () => {
         var mySession = this.state.session;
 
-        // --- 3) Specify the actions when events take place in the session ---
+        // --- 3) Specify the actions when events take place in the session --
 
         // On every new Stream received...
         mySession.on('streamCreated', (event) => {
@@ -105,16 +105,24 @@ class Video extends Component {
           var subscribers = this.state.subscribers;
           subscribers.push(subscriber);
 
-          subscriber.on('publisherStartSpeaking', (event) => {
-            this.setState({ subspeaking: true });
-            console.log('섭스크라이버 시작', this.state.subspeaking);
-            console.log(event.connection.connectionId)
-          });
-          subscriber.on('publisherStopSpeaking', (event) => {
-            this.setState({ subspeaking: false });
-            console.log('섭스크라이버 종료', this.state.subspeaking);
-            console.log(event.connection.connectionId)
-          });
+          // subscriber.on('publisherStartSpeaking', (event) => {
+          //   this.setState({
+          //     subspeaking: true,
+          //     speakingId: event.connection.connectionId,
+          //   });
+          //   console.log('섭스크라이버 시작', this.state.subspeaking);
+          //   console.log(event.connection.connectionId);
+          //   console.log(this.state.speakingId);
+          // });
+          // subscriber.on('publisherStopSpeaking', (event) => {
+          //   this.setState({
+          //     subspeaking: false,
+          //     speakingId: event.connection.connectionId,
+          //   });
+          //   console.log('섭스크라이버 종료', this.state.subspeaking);
+          //   console.log(event.connection.connectionId);
+          //   console.log(this.state.speakingId);
+          // });
           // Update the state with the new subscribers
           this.setState({
             subscribers: subscribers,
@@ -167,13 +175,13 @@ class Video extends Component {
               publisher.on('publisherStartSpeaking', (event) => {
                 this.setState({ pubspeaking: true });
                 console.log('퍼블리셔시작', this.state.pubspeaking);
-                console.log(event.connection.connectionId)
+                console.log(event.connection.connectionId);
               });
 
               publisher.on('publisherStopSpeaking', (event) => {
                 this.setState({ pubspeaking: false });
                 console.log('퍼블리셔종료', this.state.pubspeaking);
-                console.log(event.connection.connectionId)
+                console.log(event.connection.connectionId);
               });
 
               // --- 6) Publish your stream ---
@@ -272,17 +280,20 @@ class Video extends Component {
                 />
               </div>
             ) : null}
-            {this.state.subscribers.map((sub, i) => (
-              <div key={i}>
-                <UserVideoComponent
-                  streamManager={sub}
-                  subscribers={this.state.subscribers}
-                  speaking={this.state.subspeaking}
-                  session={this.state.session}
-                  // publisher={this.state.publisher}
-                />
-              </div>
-            ))}
+            {this.state.subscribers.map((sub, i) => {
+              return (
+                <Wrap key={i}>
+                  <UserVideoComponent
+                    streamManager={sub}
+                    id={this.state.id}
+                    speakingId={this.state.speakingId}
+                    speaking={this.state.subspeaking}
+                    session={this.state.session}
+                    // publisher={this.state.publisher}
+                  />
+                </Wrap>
+              );
+            })}
           </VideoContainer>
         ) : null}
       </div>
@@ -390,5 +401,7 @@ const VideoContainer = styled.div`
     grid-template-columns: repeat(3, 1fr);
   }
 `;
+
+const Wrap = styled.div``;
 
 export default Video;
