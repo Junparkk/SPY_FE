@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import voteSpy from '../../images/voteSpy.png';
 import { createPortal } from 'react-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 const VoteSpy = () => {
   return createPortal(

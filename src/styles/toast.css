@@ -1,0 +1,82 @@
+.Toastify__toast--error {
+  border: 1px solid #eb5757;
+  border-radius: 50px !important;
+  background: #fae1e2 !important;
+  width: 50rem;
+}
+.Toastify__toast--error::after {
+  position: absolute;
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+  left: 265px;
+  padding-top: 14px !important;
+}
+.Toastify__toast--error::before {
+  position: relative;
+  z-index: 100000;
+  left: 12px;
+  top: 6px;
+}
+.Toastify__toast-container--top-center {
+  /* border: 1px solid #ff5d5d !important;
+  border-radius: 50px !important;
+  background: #000000d2 !important; */
+  top: center;
+  width: fit-content;
+  margin: 30vh auto;
+}
+
+.Toastify__toast--success {
+  border: 1px solid #cfff81 !important;
+  border-radius: 50px !important;
+  background: #fff183 !important;
+  width: 100%;
+}
+.Toastify__toast--success::before {
+  position: relative;
+  z-index: 100000;
+  left: 12px;
+  top: 6px;
+}
+.Toastify__toast--success::after {
+  position: absolute;
+  color: #f50909;
+  font-size: 15px;
+  font-weight: 700;
+  left: 265px;
+  padding-top: 14px !important;
+}
+.Toastify__toast--warning {
+  border: 1px solid #e78326 !important;
+  border-radius: 50px !important;
+  background: #fadfc5 !important;
+}
+.Toastify__toast--warning::before {
+  position: relative;
+  z-index: 100000;
+  left: 12px;
+  top: 6px;
+}
+.Toastify__toast--warning::after {
+  position: absolute;
+  color: #e78326;
+  font-size: 15px;
+  font-weight: 700;
+  left: 265px;
+  padding-top: 14px !important;
+}
+.Toastify__toast-body {
+  color: #444c63;
+  font-size: 24px;
+  padding-left: 20px;
+  line-height: 20px;
+  padding: 10px;
+  width: 100%;
+  font-weight: 400;
+  margin-left: 25px !important;
+}
+
+.Toastify__toast > button > svg {
+  display: none;
+}

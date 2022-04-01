@@ -101,7 +101,26 @@ const Result = (props) => {
     },
   ];
   //승자 목록
+  // console.log(list);
+  // const divideWinner = list && list[0] === 4;
+  // console.log(divideWinner);
+
+  // const [list, setList] = useState([]);
+  // useEffect(() => {
+  //   apis
+  //     .winnerList(roomId)
+  //     .then((res) => {
+  //       console.log(res);
+  //       setList(res.data.users);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
+
+  //승자 목록
   console.log(list);
+
   const divideWinner = list && list[0] === 4;
   console.log(divideWinner);
 
@@ -115,7 +134,7 @@ const Result = (props) => {
           {list.map((p, idx) => {
             return (
               <Winner
-                key={p.id}
+                key={idx}
                 src={
                   p.role === 1
                     ? BasicProfile
@@ -293,33 +312,6 @@ const LeaveRoom = styled.button`
   z-index: 50;
 `;
 
-const Restart = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 250px;
-  width: 4rem;
-  height: 8rem;
-  border: none;
-  border-radius: 16px;
-  background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  &.Change_Button {
-    position: absolute;
-  }
-  :hover {
-    cursor: pointer;
-  }
-  @media (max-width: 763px) {
-    width: 3rem;
-    height: 6rem;
-    right: 150px;
-    font-size: 14px;
-  }
-  z-index: 50;
-`;
 
 const Shared = styled.button`
   position: fixed;

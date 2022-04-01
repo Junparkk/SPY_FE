@@ -6,9 +6,11 @@ import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 import { RiQuestionnaireLine } from 'react-icons/ri';
+//이미지
 import HeaderTitleLogo from '../images/HeaderTitleLogo.png';
 import Ai from '../images/Ai.png';
 import basic from '../images/BasicProfile.png';
+import yellowNormal from '../images/YellowOutLineNormal.png';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
@@ -18,7 +20,6 @@ const socket = io.connect('https://mafia.milagros.shop');
 const IngameHeader = (props) => {
   const readyCnt = props.readyCnt;
   const isStart = props.status;
-  console.log(isStart, '@@@@@@@@@@@@@@@@@@@@@@@@@@@ 인게임 헤더');
 
   const [showModal, setShowModal] = useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
@@ -44,12 +45,12 @@ const IngameHeader = (props) => {
         {isStart === '' ? (
           readyCnt === undefined ? (
             <>
-              <BasicIcon src={basic} />
+              <BasicIcon src={yellowNormal} />
               <AiText>레디 X 1 </AiText>
             </>
           ) : (
             <>
-              <BasicIcon src={basic} />
+              <BasicIcon src={yellowNormal} />
               <AiText>레디 X {readyCnt}</AiText>
             </>
           )

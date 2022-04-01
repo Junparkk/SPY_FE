@@ -56,7 +56,7 @@ const LawyerVoteModal = (props) => {
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest} src={VoteBG}>
-        <Title>투표</Title>
+        <Title>변호사 투표</Title>
         <Contents>
           해고 당할 거 같은 직원에게 투표하세요.
           <br />
@@ -78,7 +78,7 @@ const LawyerVoteModal = (props) => {
                             ? BasicProfile
                             : BasicProfile_Death
                         }
-                        pointerEvents={submit ? 'none' : ''}
+                        pointer={p.isEliminated.includes('Y') || submit}
                         ref={ref}
                         key={p.id}
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -108,7 +108,7 @@ const LawyerVoteModal = (props) => {
                             ? BasicProfile
                             : BasicProfile_Death
                         }
-                        pointerEvents={submit ? 'none' : ''}
+                        pointer={p.isEliminated.includes('Y') || submit}
                         ref={ref}
                         key={p.id}
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -134,11 +134,11 @@ const LawyerVoteModal = (props) => {
                       <JobCheckImg
                         disabled={submit}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
-                        pointerEvents={submit ? 'none' : ''}
+                        pointer={p.isEliminated.includes('Y') || submit}
                         ref={ref}
                         key={p.id}
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -150,25 +150,6 @@ const LawyerVoteModal = (props) => {
 
                           <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
                         </Vote>
-                      </JobCheckImg>
-                    );
-                  })}
-              </VotePlayerWrap>
-            );
-          } else if (user_list.length <= 10) {
-            return (
-              <VotePlayerWrap>
-                {user_list &&
-                  user_list.map((p, idx) => {
-                    return (
-                      <JobCheckImg
-                        pointerEvents={submit ? 'none' : ''}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked()}
-                      >
-                        <Contents>{p.nickname}</Contents>
                       </JobCheckImg>
                     );
                   })}
@@ -344,6 +325,7 @@ const JobCheckImg = styled.div`
   width: 130px;
   height: 130px;
   border-radius: 50%;
+  pointer-events: ${(props) => (+props.pointer ? 'none' : null)};
   background: url('${(props) => props.src}') no-repeat center/contain;
   margin: auto;
   cursor: pointer;

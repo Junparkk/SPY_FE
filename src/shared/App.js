@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { history } from '../redux/configureStore';
 
@@ -12,8 +17,6 @@ import Ingame from '../pages/Ingame';
 import Tutorial from '../pages/Tutorial';
 import NotFound from '../pages/NotFound';
 
-import Fired from '../components/Fired';
-
 function App() {
   return (
     <>
@@ -21,7 +24,7 @@ function App() {
       <ConnectedRouter history={history}>
         
       <Switch>
-      <Route path="/test" exact component={Fired}></Route>
+      <Route path="/test" exact component={Result}></Route>
 
 
         <Route path="/lobby" exact component={Main}></Route>

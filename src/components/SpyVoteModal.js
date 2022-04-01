@@ -7,6 +7,7 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 이미지
 import SpyBG from '../images/SpyBG.png';
+import spyNothing from '../images/spyNothing.png';
 import BasicProfile from '../images/BasicProfile.png';
 import BasicProfile_Death from '../images/BasicProfile_Death.png';
 import Ai from '../images/Ai.png';
@@ -29,12 +30,12 @@ const SpyVoteModal = (props) => {
   const voteSpy = spy_list.sort((a, b) => b - a);
   const spyId = localStorage.getItem('userid');
 
-  console.log(voteSpy[0]);
+  console.log(spy_list);
+  console.log(voteSpy);
   console.log(spyId);
 
   // 투표 사람 클릭
-  const clicked = (idx, e) => {
-    e.preventDefault();
+  const clicked = (idx) => {
     setVoteBtnClicked(idx);
     const chosen = user_list[idx];
     setChosenId(chosen.user.id);
@@ -58,7 +59,7 @@ const SpyVoteModal = (props) => {
       {/* 높은애는 대기화면 나타내기(미완) */}
       {voteSpy[0] && voteSpy[0].user.id === parseInt(spyId) ? (
         <ModalBlock {...rest} src={SpyBG}>
-          <Title>투표</Title>
+          <Title>스파이 투표</Title>
           <Contents>해고 시킬 직원을 선택해주세요.</Contents>
 
           {/* 롤을 부여받은대로 보여줘야함 */}
@@ -76,11 +77,11 @@ const SpyVoteModal = (props) => {
                               ? BasicProfile
                               : BasicProfile_Death
                           }
-                          pointerEvents={submit ? 'none' : ''}
+                          pointer={p.isEliminated.includes('Y') || submit}
                           ref={ref}
                           key={p.id}
                           opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                          onClick={(e) => clicked(idx, e)}
+                          onClick={() => clicked(idx)}
                         >
                           {/* 닉네임과 선택해준 사람들의 이미지 */}
                           <Vote>
@@ -102,15 +103,15 @@ const SpyVoteModal = (props) => {
                         <JobCheckImg
                           disabled={submit}
                           src={
-                            p.isEliminated === 'N'
+                            p.isEliminated.includes('N')
                               ? BasicProfile
                               : BasicProfile_Death
                           }
-                          pointerEvents={submit ? 'none' : ''}
+                          pointer={p.isEliminated.includes('Y') || submit}
                           ref={ref}
                           key={p.id}
                           opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                          onClick={(e) => clicked(idx, e)}
+                          onClick={() => clicked(idx)}
                         >
                           {/* 닉네임과 선택해준 사람들의 이미지 */}
                           <Vote>
@@ -132,11 +133,11 @@ const SpyVoteModal = (props) => {
                         <JobCheckImg
                           disabled={submit}
                           src={
-                            p.isEliminated === 'N'
+                            p.isEliminated.includes('N')
                               ? BasicProfile
                               : BasicProfile_Death
                           }
-                          pointerEvents={submit ? 'none' : ''}
+                          pointer={p.isEliminated.includes('Y') || submit}
                           ref={ref}
                           key={p.id}
                           opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -324,6 +325,7 @@ const JobCheckImg = styled.div`
   width: 130px;
   height: 130px;
   border-radius: 50%;
+  pointer-events: ${(props) => (+props.pointer ? 'none' : null)};
   background: url('${(props) => props.src}') no-repeat center/contain;
   margin: auto;
   cursor: pointer;

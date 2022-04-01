@@ -18,7 +18,10 @@ const JobCheckModal = ({ roomId }, props) => {
   const userId = localStorage.getItem('userid');
 
   const user_list = useSelector((state) => state.vote.userList);
-  // console.log(user_list[0].id);
+
+  const spys = user_list.filter((user) => user.role === 4);
+
+  const spyNick = spys.map((a, index) => a.nickname).join(',  ');
 
   const findMe = user_list.filter((user) => user.userId === parseInt(userId));
   console.log(findMe);
@@ -50,6 +53,7 @@ const JobCheckModal = ({ roomId }, props) => {
       role: '산업 스파이',
       desc: '정체를 들키지 않고 지원들의 퇴직서를 받아내세요',
       image: spy,
+      nick: spyNick,
     },
   ];
 
@@ -102,6 +106,9 @@ const JobCheckModal = ({ roomId }, props) => {
                 <Contents size="40px">쉿!</Contents>
                 <Contents size="40px">당신은 {roles[3].role}</Contents>
                 <Contents size="20px">{roles[3].desc}</Contents>
+                <Contents size="20px">
+                  <span style={{ color: 'red' }}>스파이 : {spyNick}</span>
+                </Contents>
               </ModalSpy>
             </>
           );
