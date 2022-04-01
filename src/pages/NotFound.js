@@ -15,10 +15,10 @@ const NotFound = () => {
           <P>죄송합니다. 해당 페이지를 찾을 수 없습니다.</P>
           <BackBtn
             onClick={() => {
-              history.goBack();
+              history.replace('/lobby');
             }}
           >
-            뒤로가기
+            홈으로 가기
           </BackBtn>
         </Context>
       </BackroundImg>
@@ -57,7 +57,7 @@ const H1 = styled.h1`
   font-family: 'yg-jalnan';
   margin: 1.5rem auto 0 auto;
   padding: 0.5rem;
-  color: #494CB2;
+  color: #494cb2;
 `;
 
 const H2 = styled.h2`
@@ -66,7 +66,7 @@ const H2 = styled.h2`
   font-family: 'yg-jalnan';
   margin: 1rem auto 0 auto;
   padding: 0.5rem;
-  color: #494CB2;
+  color: #494cb2;
 `;
 
 const P = styled.p`
@@ -74,7 +74,7 @@ const P = styled.p`
   font-weight: 900;
   margin: auto;
   padding: 0.5rem;
-  color: #494CB2;
+  color: #494cb2;
 `;
 
 const BackBtn = styled.button`
