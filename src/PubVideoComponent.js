@@ -73,21 +73,7 @@ const VideoBox = styled.div`
   }
 `;
 
-const DeathVideo = styled.div`
-  width: 250px;
-  height: 250px;
-  border-radius: 250px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 1251px) {
-    width: 200px;
-    height: 200px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    border-radius: 200px;
-  }
-`;
+
 
 const Text = styled.div`
   color: #6164ce;

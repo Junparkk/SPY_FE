@@ -7,9 +7,7 @@ import styled from 'styled-components';
 import User from './redux/modules/user';
 
 import BasicProfileDeath from './images/BasicProfile_Death.png';
-import MapiaProfileDeath from './images/SpyProfile_Death.png';
-import ByunProfileDeath from './images/ByunProfile_Death.png';
-import TamProfileDeath from './images/TamProfile_Death.png';
+
 
 import { actionCreators as voteActions } from './redux/modules/vote';
 
@@ -27,9 +25,9 @@ const UserVideoComponent = ({
   // const Id = session.streamManagers.map(
   //   (i) => i.stream.connection.connectionId
   // );
-  const Id = session.streamManagers
+  const Id = session.streamManagers;
   // console.log(Id.indexOf(UserSpeaking));
-  console.log(Id)
+  console.log(Id);
   console.log(UserSpeaking);
 
   const getNicknameTag = () => {
@@ -72,11 +70,10 @@ const UserVideoComponent = ({
                 className={
                   UserSpeaking === Id[3] && subspeaking ? 'speaking' : ''
                 }
-              >``
+              >
                 <div className="streamcomponent">
                   <OpenViduVideoComponent streamManager={streamManager} />
                 </div>
-                <SubUserProfile />
               </VideoBox>
               <Text>
                 <span>{getNicknameTag()}</span>

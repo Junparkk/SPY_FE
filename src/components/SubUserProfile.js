@@ -11,7 +11,7 @@ const SubUserProfile = (props) => {
   const userInfo = useSelector((state) => state.user.userinfo);
   const Role = userInfo.role;
   const is_Live = userInfo.isEliminated;
-  
+
   return (
     <>
       {Role && is_Live.includes('N') ? (
@@ -31,17 +31,17 @@ const SubUserProfile = (props) => {
 
 const Wrap = styled.div`
   position: absolute;
-  margin: -90px 0px 0px 180px;
-  @media screen and (max-width: 1251px) {
+  margin: -80px 0px 0px 220px;
+  @media screen and (max-width: 1416px) {
     margin: -120px 0px 0px 150px;
   }
 `;
 
 const WrapChange = styled.div`
   position: absolute;
-  margin: -75px 0px 0px 180px;
-  @media screen and (max-width: 1251px) {
-    margin: -55px 0px 0px 150px;
+  margin: -80px 0px 0px 220px;
+  @media screen and (max-width: 1416px) {
+    margin: -120px 0px 0px 150px;
   }
 `;
 
@@ -53,7 +53,7 @@ const Basic = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 1251px) {
+  @media screen and (max-width: 1416px) {
     width: 60px;
     height: 60px;
     border-radius: 60px;

@@ -57,8 +57,8 @@ const PubUserProfile = (props) => {
 
 const Wrap = styled.div`
   position: absolute;
-  margin: -90px 0px 0px 180px;
-  @media screen and (max-width: 1251px) {
+  margin: -80px 0px 0px 220px;
+  @media screen and (max-width: 1416px) {
     margin: -120px 0px 0px 150px;
   }
 `;
@@ -71,7 +71,7 @@ const Basic = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 1251px) {
+  @media screen and (max-width: 1416px) {
     width: 60px;
     height: 60px;
     border-radius: 60px;

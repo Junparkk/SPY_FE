@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  actionCreators,
   actionCreators as roomActions,
 } from '../redux/modules/room';
 import vote, { actionCreators as voteActions } from '../redux/modules/vote';
@@ -82,11 +81,7 @@ function Ingame(props) {
 
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
-    localStorage.getItem('userid');
-    // dispatch(roomActions.enterRoomDB(userId, roomId));
-    socket.on('join_room', (roomNumber, nickName, socketId) => {
-      console.log(roomNumber, nickName, socketId);
-    });
+
     joinChat();
 
     socket.on('readyCnt', (num) => {
@@ -115,7 +110,7 @@ function Ingame(props) {
 
   useEffect(() => {
     dispatch(userActions.GetUser(userId, roomId));
-  });
+  },[]);
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
@@ -131,6 +126,7 @@ function Ingame(props) {
   const [isReady, setIsReady] = useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
   const changeMaxLength = roomUserList.length;
+  const userInfo = useSelector((state) => state.user.userinfo);
   const isVote = useSelector((state) => state.vote._isVote);
 
   //소켓으로 받아온 값 임시저장용
@@ -615,12 +611,12 @@ function Ingame(props) {
           <IngameHeader readyCnt={readyCnt} status={status} />
         </div>
         <VideoContainer>
-          <Video roomId={roomId} />
+          <Video roomId={roomId} roomUserList={roomUserList}/>
         </VideoContainer>
         {chatView ? (
-            <ChatBox>
-              <Chat socket={socket} username={username} roomId={roomId} />
-            </ChatBox>
+          <ChatBox>
+            <Chat socket={socket} username={username} roomId={roomId} />
+          </ChatBox>
         ) : null}
         {round >= 1 ? null : (
           <ButtonContainer>

@@ -4,6 +4,10 @@ import React, { Component } from 'react';
 import UserVideoComponent from '../UserVideoComponent';
 import styled from 'styled-components';
 import PubVideoComponent from '../PubVideoComponent';
+import OpenViduVideoComponent from '../OvVideo';
+import SubUserProfile from '../components/SubUserProfile';
+import PubUserProfile from '../components/PubUserProfile';
+import BasicProfileDeath from '../images/BasicProfile_Death.png';
 
 const OPENVIDU_SERVER_URL = 'https://wawoong.shop';
 const OPENVIDU_SERVER_SECRET = 'INDUSTRIAL_SPY';
@@ -22,7 +26,7 @@ class Video extends Component {
       pubspeaking: false,
       subspeaking: false,
       speakingId: undefined,
-      sessionId: undefined,
+      userId: undefined,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -110,18 +114,17 @@ class Video extends Component {
               subspeaking: true,
               speakingId: event.connection.connectionId,
             });
-            console.log('섭스크라이버 시작', this.state.subspeaking);
             console.log(this.state.speakingId);
           });
+
           subscriber.on('publisherStopSpeaking', (event) => {
             this.setState({
               subspeaking: false,
               speakingId: event.connection.connectionId,
             });
-            console.log('섭스크라이버 종료', this.state.subspeaking);
             console.log(this.state.speakingId);
           });
-          // Update the state with the new subscribers.
+
           this.setState({
             subscribers: subscribers,
           });
@@ -264,33 +267,316 @@ class Video extends Component {
     }
   }
   render() {
+    const id = this.state.subscribers.map(
+      (i) => i.stream.connection.connectionId
+    );
+    const idindex = id.indexOf(this.state.speakingId);
+    const userid = this.props.roomUserList.map((i) => i.nickname);
+    const DeathInfo = this.props.roomUserList.map((i) =>
+      i.isEliminated.includes('Y')
+    );
+    console.log(DeathInfo[1]);
+    console.log(userid);
     return (
-      /////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////
       //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2
       <div>
         {this.state.session !== undefined ? (
           <VideoContainer>
             {this.state.publisher !== undefined ? (
               <div>
-                <PubVideoComponent
-                  streamManager={this.state.publisher}
-                  pubspeaking={this.state.pubspeaking}
-                />
+                <PubVideoBox
+                  className={this.state.pubspeaking ? 'speaking' : ''}
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.publisher}
+                  />
+                  <PubUserProfile />
+                </PubVideoBox>
+                <Text>{userid[0]}</Text>
               </div>
             ) : null}
-            {this.state.subscribers.map((sub, i) => {
-              return (
-                <Wrap key={i}>
-                  <UserVideoComponent
-                    streamManager={sub}
-                    speakingId={this.state.speakingId}
-                    speaking={this.state.subspeaking}
-                    session={this.state.session}
-                    // publisher={this.state.publisher}
-                  />
-                </Wrap>
-              );
-            })}
+            {this.state.subscribers[0] ? (
+              <div>
+                {DeathInfo[1] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 0 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 0 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[0]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[1]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[1] ? (
+              <div>
+                {DeathInfo[2] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 1 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 1 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[1]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[2]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[2] ? (
+              <div>
+                {DeathInfo[3] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 2 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 2 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[2]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[3]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+
+            {this.state.subscribers[3] ? (
+              <div>
+                {DeathInfo[4] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 3 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 3 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[3]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[4]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[4] ? (
+              <div>
+                {DeathInfo[5] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 4 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 4 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[4]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[5]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[5] ? (
+              <div>
+                {DeathInfo[6] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 5 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 5 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[5]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[6]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[6] ? (
+              <div>
+                {DeathInfo[7] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 6 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 6 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[6]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[7]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[7] ? (
+              <div>
+                {DeathInfo[8] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 7 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 7 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[7]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[8]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[8] ? (
+              <div>
+                {DeathInfo[9] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 8 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 8 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[8]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[9]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
+            {this.state.subscribers[9] ? (
+              <div>
+                {DeathInfo[10] ? (
+                  <SubVideoBox
+                    className={
+                      idindex === 9 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <DeathVideoBox src={BasicProfileDeath} />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                ) : (
+                  <SubVideoBox
+                    className={
+                      idindex === 9 && this.state.subspeaking ? 'speaking' : ''
+                    }
+                  >
+                    <OpenViduVideoComponent
+                      streamManager={this.state.subscribers[9]}
+                    />
+                    <SubUserProfile />
+                  </SubVideoBox>
+                )}
+                <Text>{userid[10]}</Text>
+              </div>
+            ) : (
+              ''
+            )}
           </VideoContainer>
         ) : null}
       </div>
@@ -398,6 +684,71 @@ const VideoContainer = styled.div`
   }
 `;
 
-const Wrap = styled.div``;
+const Text = styled.div`
+  color: #6164ce;
+  font-size: 20px;
+  text-align: center;
+  font-family: 'yg-jalnan';
+  @media screen and (max-width: 1416px) {
+    margin: 20px;
+    font-size: 14px;
+  }
+`;
+
+const SubVideoBox = styled.div`
+  width: 250px;
+  height: 250px;
+  border-radius: 250px;
+  overflow: hidden;
+  margin: 30px auto 30px auto;
+  background-color: #ffe179;
+  box-shadow: 5px 5px 5px gray;
+  border: 8px solid #6164ce;
+  @media screen and (max-width: 1416px) {
+    width: 200px;
+    height: 200px;
+    border-radius: 200px;
+    margin: 30px auto 0px auto;
+  }
+  &.speaking {
+    border: 8px solid green;
+  }
+`;
+
+const DeathVideoBox = styled.div`
+  width: 250px;
+  height: 250px;
+  border-radius: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 1251px) {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 200px;
+  }
+`;
+
+const PubVideoBox = styled.div`
+  width: 250px;
+  height: 250px;
+  border-radius: 250px;
+  overflow: hidden;
+  margin: 30px auto 30px auto;
+  background-color: #ffe179;
+  box-shadow: 5px 5px 5px gray;
+  border: 8px solid #6164ce;
+  @media screen and (max-width: 1416px) {
+    width: 200px;
+    height: 200px;
+    border-radius: 200px;
+    margin: 30px auto 0px auto;
+  }
+  &.speaking {
+    border: 8px solid green;
+  }
+`;
 
 export default Video;

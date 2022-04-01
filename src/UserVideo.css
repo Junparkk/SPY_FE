@@ -1,6 +1,6 @@
 video {
+  
   width: 350px;
-  height: auto;
   @media screen and (max-width: 1251px) {
     width: 300px;
     height: auto;
