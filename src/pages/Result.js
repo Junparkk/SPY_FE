@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Video from './Video';
+import { apis } from '../shared/apis';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import blueDoor from '../images/blueDoor.png';
@@ -16,15 +17,18 @@ import BasicProfile from '../images/BasicProfile.png';
 import ByunProfile from '../images/ByunProfile.png';
 import SpyProfile from '../images/SpyProfile.png';
 import TamProfile from '../images/TamProfile.png';
+import io from 'socket.io-client';
 
 // 게임 결과 창
 
 const Result = (props) => {
+  const socket = io.connect('https://mafia.milagros.shop');
+
   //클릭 효과음
   const sound = new Audio(click);
 
   //방 버튼 스크롤 컨트롤
-  const [ScrollY, setScrollY] = React.useState(0);
+  const [ScrollY, setScrollY] = useState(0);
 
   const handleFollow = () => {
     setScrollY(window.scrollY);
@@ -46,7 +50,6 @@ const Result = (props) => {
     // dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
 
-  //room Id 필요한지..?
   const reStart = () => {
     sound.play();
     history.goBack();
@@ -55,27 +58,52 @@ const Result = (props) => {
   const shared = () => {
     sound.play();
   };
-  ////////////////////////////////////////////////////////////////////////
+
   const roomId = props.match.params.roomId;
   console.log(props);
 
   //결과페이지에서 결과 리스트 불러오기
+  // const [list, setList] = useState();
   // useEffect(() => {
-  //   dispatch(roomActions.WinnerDB(roomId));
+  //   apis
+  //     .winnerList(roomId)
+  //     .then((res) => {
+  //       console.log(res);
+  //       // setList(res.data.users);
+  //       socket.emit('winner', { roomId, users: res.data.users });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+
+  //   socket.on('winner', (users) => {
+  //     console.log(users);
+  //     setList(users);
+  //     console.log(list);
+  //   });
   // }, []);
-
+  const list = [
+    {
+      role: 3,
+      nickname: 'aaa',
+    },
+    {
+      role: 4,
+      nickname: '스파이',
+    },
+    {
+      role: 1,
+      nickname: '몰라시발',
+    },
+    {
+      role: 2,
+      nickname: '탐정',
+    },
+  ];
   //승자 목록
-  const winnerList = useSelector((state) => state.room.winner);
-  console.log(winnerList, '콘솔 확인');
-  console.log(winnerList[0], '콘솔 확인2');
-  // console.log(winnerList[0].role, '콘솔 확인3');
-  // 직업 구분 4번이면 스파이 아니면 시민
-  const divideWinner = winnerList && winnerList[0] === 4;
+  console.log(list);
+  const divideWinner = list && list[0] === 4;
   console.log(divideWinner);
-
-  // 승자 목록에서 [0] 유저의 롤이 4이면 스파이승리 아니면 시민 승리 제목
-  // const title = winnerList[0].role === 4
-  // console.log(title)
 
   return (
     <React.Fragment>
@@ -84,7 +112,7 @@ const Result = (props) => {
         <CEOComent src={divideWinner ? spyWin : citizenWin} />
         <H1 height="auto"> {divideWinner ? '스파이' : '사원들'}의 승리!</H1>
         <WinWrap>
-          {winnerList.map((p, idx) => {
+          {list.map((p, idx) => {
             return (
               <Winner
                 key={p.id}
@@ -108,7 +136,7 @@ const Result = (props) => {
       </Wrap>
 
       <Footer />
-      <Restart className={ScrollY > 0 ? 'Change_Button' : ''} onClick={reStart}>
+      {/* <Restart className={ScrollY > 0 ? 'Change_Button' : ''} onClick={reStart}>
         <span
           style={{
             fontFamily: 'yg-jalnan',
@@ -117,7 +145,7 @@ const Result = (props) => {
         >
           다<br />시<br />하<br />기
         </span>
-      </Restart>
+      </Restart> */}
       <LeaveRoom
         className={ScrollY > 0 ? 'Change_Button' : ''}
         onClick={leaveRoom}
@@ -186,13 +214,13 @@ const WinWrap = styled.div`
   height: 60%;
   display: grid;
   gap: 30px 50px;
-  grid-template-columns: repeat(5, 10rem);
+  grid-template-columns: repeat(4, 10rem);
   grid-template-rows: repeat(2, 1fr);
   justify-content: center;
   align-items: center;
 
   @media screen and (min-width: 1607px) {
-    grid-template-columns: repeat(5, 10rem);
+    grid-template-columns: repeat(4, 10rem);
   }
   @media screen and (min-width: 1065px) and (max-width: 1607px) {
     grid-template-columns: repeat(4, 10rem);
@@ -229,11 +257,12 @@ const Winner = styled.div`
 `;
 
 const NickName = styled.h3`
-  color: white;
   font-family: 'yg-jalnan';
-  margin: 0.25rem;
+  margin: 0.5rem;
   font-size: 1rem;
   align-items: center;
+  position: relative;
+  top: 8rem;
 `;
 
 const LeaveRoom = styled.button`

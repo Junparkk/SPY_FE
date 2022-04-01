@@ -87,13 +87,13 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
             '@@@@ resultDayTimeVoteAPI 요청 응답이 1일 경우 바로 결과 화면',
             res
           );
-          history.push('/result');
+          history.replace(`/result/${roomId}`)
         } else if (res.data.result === 2) {
           console.log(
             '@@@@ resultDayTimeVoteAPI 요청 응답이 2일 경우 바로 결과 화면',
             res
           );
-          history.push('/result');
+          history.replace(`/result/${roomId}`)
         }
       })
       .catch((err) => console.log(err));
@@ -217,10 +217,10 @@ const voteResult = (roomId, userId) => {
           console.log('@@@@ voteResult api 요청 값 0일때 emit(dayTime) 함');
         } else if (res.data.result === 1) {
           console.log('@@@@ voteResult api 요청 값 1일때 결과페이지');
-          history.push('/result');
+          history.replace(`/result/${roomId}`)
         } else if (res.data.result === 2) {
           console.log('@@@@ voteResult api 요청 값 2일때 결과페이지');
-          history.push('/result');
+          history.replace(`/result/${roomId}`)
         }
       })
       .catch((err) => console.log(err));

@@ -15,8 +15,8 @@ const PubUserProfile = (props) => {
   const roomUserList = useSelector((state) => state.vote.userList);
   const userNick = localStorage.getItem('nickname');
   const is_me = roomUserList.filter((user) => user.nickname === userNick);
-  const Role = is_me[0].role
-  const is_Live = is_me[0].isEliminated
+  const Role = is_me && is_me[0].role
+  const is_Live = is_me &&  is_me[0].isEliminated
 
   return (
     <Wrap>

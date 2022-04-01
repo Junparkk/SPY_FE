@@ -28,7 +28,7 @@ function App() {
         <Route path="/" exact component={LoginTitle}></Route>
         <Route path="/signup" exact component={SignUp}></Route>
         <Route path="/makingroom" exact component={MakingRoom}></Route>
-        <Route path="/result" exact component={Result}></Route>
+        <Route path="/result/:roomId" exact component={Result}></Route>
         <Route path="/room/:roomId" exact component={Ingame}></Route>
         <Route path="/tutorial" exact component={Tutorial}></Route>
         <Route exact component={NotFound} />
