@@ -74,16 +74,16 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
       .then(function (res) {
         if (res.data.result === 0) {
           console.log('낮투표 결과 확인 @@@@@@@@@@@@@@@', res.data.msg);
+          socket.emit('getMsg', {
+            roomId,
+            msg: res.data.msg,
+          });
           setTimeout(() => {
             socket.emit('getStatus', {
               roomId: roomId,
               status: 'voteNightLawyer',
             });
-            socket.emit('getMsg', {
-              roomId,
-              msg: res.data.msg,
-            });
-          }, 500);
+          }, 1500);
           console.log(
             '@@@@ resultDayTimeVoteAPI 요청 응답이 0일 경우 emit 상태(voteNightLawyer) 받음',
             res

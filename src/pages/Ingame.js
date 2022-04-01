@@ -65,7 +65,19 @@ function Ingame(props) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [Opacity, setOpacity] = useState(false);
 
-  const [msg, setMsg] = useState('');
+  const [msg, setMsg] = useState(() => {
+    socket.on('getMsgToMe', (voteMsg) => {
+      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+      setMsg(voteMsg);
+    });
+    socket.on('getMsg', (voteMsg) => {
+      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+      setMsg(voteMsg);
+    });
+  });
+
+  console.log(msg, '=====================');
+
   //채팅
   const Chatting = () => {
     setChatView(!chatView);
@@ -127,7 +139,7 @@ function Ingame(props) {
 
   useEffect(() => {
     dispatch(userActions.GetUser(userId, roomId));
-  });
+  }, []);
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
@@ -144,6 +156,7 @@ function Ingame(props) {
   const roomUserList = useSelector((state) => state.vote.userList);
   const changeMaxLength = roomUserList.length;
   const isVote = useSelector((state) => state.vote._isVote);
+  const userInfo = useSelector((state) => state.user.userinfo);
 
   //소켓으로 받아온 값 임시저장용
   const [status, setStatus] = useState('');
@@ -192,7 +205,6 @@ function Ingame(props) {
   //빈 값 넘겨주는 용도
   const lawyerNullVote = useSelector((state) => state.vote.isLawyerNull);
   const spyNullVote = useSelector((state) => state.vote.isSpyNull);
-  console.log(lawyerNullVote, '@@@@@@@@@ 눌렀으면 반응하자 ');
 
   //시작했는지 여부 확인용
   const isStart = useSelector((state) => state.room.startCheck);
@@ -220,7 +232,9 @@ function Ingame(props) {
   //소켓 으로 ready 받기
   const [readyCnt, setReadyCnt] = useState();
 
+  const [test, setTest] = useState(msg);
   useEffect(() => {
+    setTest(msg);
     console.log(msg, '@@@@@@@@@@@@@@@@useEffect');
   }, [msg]);
 
@@ -233,11 +247,13 @@ function Ingame(props) {
   if (host[0] && host[0].userId !== parseInt(userId)) {
     socket.on('getStatus', (gameStatus) => {
       setStatus(gameStatus.status);
+      setMsg(gameStatus.msg);
       dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
     });
   } else {
     socket.on('getStatusToMe', (gameStatus) => {
       dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
+      setMsg(gameStatus.msg);
     });
   }
 
@@ -285,34 +301,21 @@ function Ingame(props) {
       case 'invalidVoteCnt':
         console.log('######무효표 처리 시작 요청', Date().toString());
         clearTimeout(voteDaySetTimeOut);
-        invalidAndAiVoteCnt = setTimeout(invalidVoteCnt, 5000);
+        invalidAndAiVoteCnt = setTimeout(invalidVoteCnt, 500);
         break;
       case 'showResultDay':
-        socket.on('getMsgToMe', (voteMsg) => {
-          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
-          toast.success(voteMsg, {
-            draggable: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-          });
-        });
-        socket.on('getMsg', (voteMsg) => {
-          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
-          toast.success(voteMsg, {
-            draggable: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-          });
-        });
         console.log('######낮투표 결과 요청', Date().toString());
-        dayVoteResult = setTimeout(showResultDay, 3000);
+        dayVoteResult = setTimeout(showResultDay, 500);
         clearTimeout(invalidAndAiVoteCnt);
         break;
       case 'voteNightLawyer':
+        toast.success(msg, {
+          draggable: false,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         console.log('######변호사 투표 시작 요청', Date().toString());
         lawyerVote = setTimeout(voteNightLawyer, 8000);
         clearTimeout(dayVoteResult);
@@ -333,26 +336,6 @@ function Ingame(props) {
         clearTimeout(spyVoteCnt);
         break;
       case 'finalResult':
-        socket.on('getMsgToMe', (voteMsg) => {
-          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
-          toast.error(voteMsg, {
-            draggable: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-          });
-        });
-        socket.on('getMsg', (voteMsg) => {
-          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
-          toast.error(voteMsg, {
-            draggable: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-          });
-        });
         console.log('######라운드 종료 결과 요청', Date().toString());
         finalResultNight = setTimeout(finalResult, 3000);
         clearTimeout(modalSpyResult);
@@ -453,7 +436,7 @@ function Ingame(props) {
       console.log('@@@@ 낮 투표 결과 디스패치 다음');
       setTimeout(() => {
         setStatus('voteNightLawyer');
-      }, 500);
+      }, 1500);
     }
   }
 
@@ -464,6 +447,7 @@ function Ingame(props) {
     } else {
       setIsVotingLawyer(true);
     }
+
     console.log(lawyerNullVote, '@@@@@@@@@@ 타이머 밖에 있는 lawyerNullVote');
     const Timer = setTimeout(async () => {
       setIsLawyerModalShowing(false);
@@ -617,6 +601,13 @@ function Ingame(props) {
 
   //아침에 최종 결과 공지
   function finalResult() {
+    toast.error(msg, {
+      draggable: false,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 2000,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+    });
     const Timer = setTimeout(() => {
       console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId, userId));
