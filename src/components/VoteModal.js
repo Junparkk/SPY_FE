@@ -70,16 +70,15 @@ const VoteModal = (props) => {
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest} src={VoteBG}>
-        <Title>투표</Title>
+        <Title>낮 투표</Title>
         <Contents>가장 스파이로 의심되는 사람에게 투표하세요.</Contents>
         <VotePlayerWrap>
           {user_list &&
             user_list.map((p, idx) => {
               return (
                 <JobCheckImg
-                  disabled={submit}
                   src={p.isEliminated.includes('N') ? alive : dead}
-                  pointerEvents={submit ? 'none' : ''}
+                  pointer={p.isEliminated.includes('Y') || submit}
                   ref={ref}
                   key={p.id}
                   opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -266,6 +265,7 @@ const JobCheckImg = styled.div`
   width: 130px;
   height: 130px;
   border-radius: 50%;
+  pointer-events: ${(props) => (+props.pointer ? 'none' : null)};
   background: url('${(props) => props.src}') no-repeat center/contain;
   margin: auto;
   cursor: pointer;

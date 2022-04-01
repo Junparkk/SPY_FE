@@ -6,7 +6,7 @@ import { apis } from '../../shared/apis';
 import io from 'socket.io-client';
 
 // Toast alert
-import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const socket = io.connect('https://mafia.milagros.shop');
@@ -72,12 +72,18 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
     await apis
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
-        console.log('@@@@ resultDayTimeVoteAPI 요청 응답받음');
         if (res.data.result === 0) {
-          socket.emit('getStatus', {
-            roomId: roomId,
-            status: 'voteNightLawyer',
-          });
+          console.log('낮투표 결과 확인 @@@@@@@@@@@@@@@', res.data.msg);
+          setTimeout(() => {
+            socket.emit('getStatus', {
+              roomId: roomId,
+              status: 'voteNightLawyer',
+            });
+            socket.emit('getMsg', {
+              roomId,
+              msg: res.data.msg,
+            });
+          }, 500);
           console.log(
             '@@@@ resultDayTimeVoteAPI 요청 응답이 0일 경우 emit 상태(voteNightLawyer) 받음',
             res
@@ -87,13 +93,13 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
             '@@@@ resultDayTimeVoteAPI 요청 응답이 1일 경우 바로 결과 화면',
             res
           );
-          history.push('/result');
+          history.replace(`/result/${roomId}`);
         } else if (res.data.result === 2) {
           console.log(
             '@@@@ resultDayTimeVoteAPI 요청 응답이 2일 경우 바로 결과 화면',
             res
           );
-          history.push('/result');
+          history.replace(`/result/${roomId}`);
         }
       })
       .catch((err) => console.log(err));
@@ -107,12 +113,21 @@ const lawyerActDB = (roomId, userId) => {
     await apis
       .lawyerAct(roomId, userId)
       .then(function (res) {
+        toast.success('---변호사 답변---' + res.data.msg, {
+          draggable: false,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 5000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         console.log('@@@@ lawyerActDB 요청 답변 받음');
         console.log(res.data);
-        socket.emit('getStatus', {
-          roomId: roomId,
-          status: 'voteNightDetective',
-        });
+        setTimeout(() => {
+          socket.emit('getStatus', {
+            roomId: roomId,
+            status: 'voteNightDetective',
+          });
+        }, 500);
       })
       .catch((err) => {
         console.log(err.data);
@@ -127,11 +142,13 @@ const detectiveActDB = (roomId, userId) => {
     await apis
       .detectiveAct(roomId, userId)
       .then((res) => {
-        console.log('@@@@ detectiveActDB api 요청 후 답변 받음');
-        console.log(res.data.msg);
-        setTimeout(() => {
-          console.log('@@@@ detectiveActDB emit 상태(voteNightSpy) 받음');
-        }, 500);
+        toast.success('탐정투표 결과 모달22222' + res.data.msg, {
+          draggable: false,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 5000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -147,12 +164,17 @@ const spyActDB = (roomId, userId) => {
       .spyAct(roomId, userId)
       .then(function (res) {
         console.log('@@@@ spyActDB api 요청 후 답변 받음');
-        console.log(res.data);
-        socket.emit('getStatus', {
-          roomId: roomId,
-          status: 'showResultNight',
-        });
-        console.log('@@@@ detectiveActDB emit 상태(showResultNight) 받음');
+        console.log(res.data.msg);
+        setTimeout(() => {
+          socket.emit('getStatus', {
+            roomId: roomId,
+            status: 'showResultNight',
+          });
+          socket.emit('getMsg', {
+            roomId,
+            msg: res.data.msg,
+          });
+        }, 500);
       })
       .catch((err) =>
         console.log('스파이 캐치로 빠질경우 emit 상태 업데이트', err)
@@ -210,17 +232,19 @@ const voteResult = (roomId, userId) => {
       .then((res) => {
         console.log('@@@@ voteResult api 요청 받음', res.data.result);
         if (res.data.result === 0) {
-          socket.emit('getStatus', { roomId: roomId, status: 'dayTime' });
+          setTimeout(() => {
+            socket.emit('getStatus', { roomId: roomId, status: 'dayTime' });
+          }, 500);
           console.log(res);
           console.log('@@@@ voteResult api 요청 값 0일때');
 
           console.log('@@@@ voteResult api 요청 값 0일때 emit(dayTime) 함');
         } else if (res.data.result === 1) {
           console.log('@@@@ voteResult api 요청 값 1일때 결과페이지');
-          history.push('/result');
+          history.replace(`/result/${roomId}`);
         } else if (res.data.result === 2) {
           console.log('@@@@ voteResult api 요청 값 2일때 결과페이지');
-          history.push('/result');
+          history.replace(`/result/${roomId}`);
         }
       })
       .catch((err) => console.log(err));

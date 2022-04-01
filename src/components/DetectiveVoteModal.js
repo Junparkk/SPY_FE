@@ -60,7 +60,7 @@ const DetectiveVoteModal = (props) => {
     <Container>
       <Background onClick={_handleModal} />
       <ModalBlock {...rest} src={VoteBG}>
-        <Title>투표</Title>
+        <Title>탐정 투표</Title>
         <Contents>스파이로 의심되는 사람을 선택해주세요.</Contents>
 
         {/* 롤을 부여받은대로 보여줘야함 */}
@@ -78,7 +78,7 @@ const DetectiveVoteModal = (props) => {
                             ? BasicProfile
                             : BasicProfile_Death
                         }
-                        pointerEvents={submit ? 'none' : ''}
+                        pointer={p.isEliminated.includes('Y') || submit}
                         ref={ref}
                         key={p.id}
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -108,7 +108,7 @@ const DetectiveVoteModal = (props) => {
                             ? BasicProfile
                             : BasicProfile_Death
                         }
-                        pointerEvents={submit ? 'none' : ''}
+                        pointer={p.isEliminated.includes('Y') || submit}
                         ref={ref}
                         key={p.id}
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -134,11 +134,11 @@ const DetectiveVoteModal = (props) => {
                       <JobCheckImg
                         disabled={submit}
                         src={
-                          p.isEliminated === 'N'
+                          p.isEliminated.includes('N')
                             ? BasicProfile
                             : BasicProfile_Death
                         }
-                        pointerEvents={submit ? 'none' : ''}
+                        pointer={p.isEliminated.includes('Y') || submit}
                         ref={ref}
                         key={p.id}
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
@@ -325,6 +325,7 @@ const JobCheckImg = styled.div`
   width: 130px;
   height: 130px;
   border-radius: 50%;
+  pointer-events: ${(props) => (+props.pointer ? 'none' : null)};
   background: url('${(props) => props.src}') no-repeat center/contain;
   margin: auto;
   cursor: pointer;
@@ -352,6 +353,7 @@ const ChoiceBox = styled.div`
     width: 6rem;
   }
 `;
+
 // 투표 선택 시 본인 캐릭터 하단에 추가 됨
 const Choice = styled.div`
   display: flex;

@@ -38,7 +38,8 @@ import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
 import Fired from '../components/Fired';
 
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import '../styles/toast.css';
+
 import { GiNetworkBars } from 'react-icons/gi';
 
 const socket = io.connect('https://mafia.milagros.shop');
@@ -64,6 +65,7 @@ function Ingame(props) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [Opacity, setOpacity] = useState(false);
 
+  const [msg, setMsg] = useState('');
   //채팅
   const Chatting = () => {
     setChatView(!chatView);
@@ -111,7 +113,17 @@ function Ingame(props) {
       setReadyCnt(num.myReadyCnt);
       // dispatch(roomActions.readyCheck(false));
     });
+    // socket.on('getMsgToMe', (voteMsg) => {
+    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+    //   setMsg(voteMsg);
+    // });
+
+    // socket.on('getMsg', (voteMsg) => {
+    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+    //   setMsg(voteMsg);
+    // });
   }, []);
+  console.log(msg);
 
   useEffect(() => {
     dispatch(userActions.GetUser(userId, roomId));
@@ -135,7 +147,6 @@ function Ingame(props) {
 
   //소켓으로 받아온 값 임시저장용
   const [status, setStatus] = useState('');
-  const [msg, setMsg] = useState('');
 
   // 각 직업 투표시 띄울 모달
   const [isDayTimeModalShowing, setIsDayTimeModalShowing] = useState(false);
@@ -209,6 +220,10 @@ function Ingame(props) {
   //소켓 으로 ready 받기
   const [readyCnt, setReadyCnt] = useState();
 
+  useEffect(() => {
+    console.log(msg, '@@@@@@@@@@@@@@@@useEffect');
+  }, [msg]);
+
   //시작하는 기능
   useEffect(() => {
     console.log('======================시작됨=================', status);
@@ -217,17 +232,15 @@ function Ingame(props) {
 
   if (host[0] && host[0].userId !== parseInt(userId)) {
     socket.on('getStatus', (gameStatus) => {
-      console.log(gameStatus);
       setStatus(gameStatus.status);
-      setMsg(gameStatus.msg);
       dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
     });
   } else {
-    socket.on('getStatus', (gameStatus) => {
+    socket.on('getStatusToMe', (gameStatus) => {
       dispatch(roomActions.roundNoInfo(gameStatus.roundNo));
-      setMsg(gameStatus.msg);
     });
   }
+
   // 상태가 바뀔 때 마다 유저의 리스트를 받아옴
   useEffect(() => {
     dispatch(voteActions.getUserDB(roomId));
@@ -275,18 +288,31 @@ function Ingame(props) {
         invalidAndAiVoteCnt = setTimeout(invalidVoteCnt, 5000);
         break;
       case 'showResultDay':
+        socket.on('getMsgToMe', (voteMsg) => {
+          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+          toast.success(voteMsg, {
+            draggable: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        });
+        socket.on('getMsg', (voteMsg) => {
+          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+          toast.success(voteMsg, {
+            draggable: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        });
         console.log('######낮투표 결과 요청', Date().toString());
         dayVoteResult = setTimeout(showResultDay, 3000);
         clearTimeout(invalidAndAiVoteCnt);
         break;
       case 'voteNightLawyer':
-        toast.success('--낮투표 결과--' + msg, {
-          draggable: true,
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-          pauseOnFocusLoss: false,
-          pauseOnHover: false,
-        });
         console.log('######변호사 투표 시작 요청', Date().toString());
         lawyerVote = setTimeout(voteNightLawyer, 8000);
         clearTimeout(dayVoteResult);
@@ -297,13 +323,6 @@ function Ingame(props) {
         clearTimeout(lawyerVote);
         break;
       case 'voteNightSpy':
-        toast.success('탐정투표 결과 모달22222' + msg, {
-          draggable: true,
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-          pauseOnFocusLoss: false,
-          pauseOnHover: false,
-        });
         console.log('######스파이 투표 요청', Date().toString());
         spyVoteCnt = setTimeout(voteNightSpy, 13000);
         clearTimeout(detectiveVote);
@@ -314,6 +333,26 @@ function Ingame(props) {
         clearTimeout(spyVoteCnt);
         break;
       case 'finalResult':
+        socket.on('getMsgToMe', (voteMsg) => {
+          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+          toast.error(voteMsg, {
+            draggable: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        });
+        socket.on('getMsg', (voteMsg) => {
+          console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+          toast.error(voteMsg, {
+            draggable: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        });
         console.log('######라운드 종료 결과 요청', Date().toString());
         finalResultNight = setTimeout(finalResult, 3000);
         clearTimeout(modalSpyResult);
@@ -335,8 +374,9 @@ function Ingame(props) {
       // updateStatus();
       //백엔드에서 api 호출을 받고 showRole로 바꿔줌
     }
-    toast.success('게임이 시작했습니다', {
-      draggable: true,
+
+    toast.success('게임이 시작하였습니다 :)', {
+      draggable: false,
       position: toast.POSITION.TOP_CENTER,
       autoClose: 2000,
       pauseOnFocusLoss: false,
@@ -453,11 +493,12 @@ function Ingame(props) {
             .aiLawyerAct(roomId)
             .then((res) => {
               console.log(res, '@@@@@@@@@@@@@@@@@@ ai 변호사 api 요청');
-              socket.emit('getStatus', {
-                roomId: roomId,
-                status: 'voteNightDetective',
-              });
+
               setTimeout(() => {
+                socket.emit('getStatus', {
+                  roomId: roomId,
+                  status: 'voteNightDetective',
+                });
                 setStatus('voteNightDetective');
               }, 500);
               console.log('ai변호사 정상 실행.......', res);
@@ -489,20 +530,12 @@ function Ingame(props) {
 
       if (host[0] && host[0].userId === parseInt(userId)) {
         console.log('@@@@ 탐정 api 호스만 요청');
-        socket.emit('getStatus', { roomId: roomId, status: 'voteNightSpy' });
+
         setTimeout(() => {
+          socket.emit('getStatus', { roomId: roomId, status: 'voteNightSpy' });
           setStatus('voteNightSpy');
         }, 500);
       }
-
-      toast.success('탐정투표 결과 모달' + msg, {
-        draggable: true,
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 2000,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-      });
-      console.log('@@@@탐정 콘솔임 셋타임 아웃 다움 나 나옴');
     }, 10000);
 
     return () => clearTimeout(Timer1);
@@ -548,9 +581,13 @@ function Ingame(props) {
               setTimeout(() => {
                 console.log(res.data.msg);
                 socket.emit('getStatus', {
-                  roomId: roomId,
+                  roomId,
                   status: 'showResultNight',
                 });
+                socket.emit('getMsg', {
+                  roomId,
+                  msg: res.data.msg,
+                }); // getMsg, getMsgToMe
               }, 500)
             )
             .catch((err) => console.log(err));
@@ -560,7 +597,7 @@ function Ingame(props) {
     return () => clearTimeout(Timer);
   }
 
-  //밤 투표결과 확인 요청 (버튼으로 동작)
+  //밤 투표결과 확인 요청
   function showResultNight() {
     //스파이 투표여부 초기화
     if (spyNullVote === false) {
@@ -570,17 +607,12 @@ function Ingame(props) {
     if (lawyerNullVote === false) {
       dispatch(voteActions.lawyerNullVote(true));
     }
-    toast.error('밤투표결과확인' + msg, {
-      draggable: true,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
     setTimeout(() => {
       socket.emit('getStatus', { roomId: roomId, status: 'finalResult' });
-      setStatus('finalResult');
-    }, 2000);
+      if (host[0] && host[0].userId === parseInt(userId)) {
+        setStatus('finalResult');
+      }
+    }, 500);
   }
 
   //아침에 최종 결과 공지
@@ -592,11 +624,12 @@ function Ingame(props) {
     }, 2000);
     return () => clearTimeout(Timer);
   }
+
   //////////////////////////////////////////////////////////////////////
   return (
     <>
       <Wrap>
-        <ToastContainer />
+        <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}
         {isLawyerModalShowing && <LawyerVoteModal />}
@@ -618,9 +651,9 @@ function Ingame(props) {
           <Video roomId={roomId} />
         </VideoContainer>
         {chatView ? (
-            <ChatBox>
-              <Chat socket={socket} username={username} roomId={roomId} />
-            </ChatBox>
+          <ChatBox>
+            <Chat socket={socket} username={username} roomId={roomId} />
+          </ChatBox>
         ) : null}
         {round >= 1 ? null : (
           <ButtonContainer>
