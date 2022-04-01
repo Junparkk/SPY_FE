@@ -22,7 +22,7 @@ class Video extends Component {
       pubspeaking: false,
       subspeaking: false,
       speakingId: undefined,
-      id: undefined,
+      sessionId: undefined,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -105,25 +105,23 @@ class Video extends Component {
           var subscribers = this.state.subscribers;
           subscribers.push(subscriber);
 
-          // subscriber.on('publisherStartSpeaking', (event) => {
-          //   this.setState({
-          //     subspeaking: true,
-          //     speakingId: event.connection.connectionId,
-          //   });
-          //   console.log('섭스크라이버 시작', this.state.subspeaking);
-          //   console.log(event.connection.connectionId);
-          //   console.log(this.state.speakingId);
-          // });
-          // subscriber.on('publisherStopSpeaking', (event) => {
-          //   this.setState({
-          //     subspeaking: false,
-          //     speakingId: event.connection.connectionId,
-          //   });
-          //   console.log('섭스크라이버 종료', this.state.subspeaking);
-          //   console.log(event.connection.connectionId);
-          //   console.log(this.state.speakingId);
-          // });
-          // Update the state with the new subscribers
+          subscriber.on('publisherStartSpeaking', (event) => {
+            this.setState({
+              subspeaking: true,
+              speakingId: event.connection.connectionId,
+            });
+            console.log('섭스크라이버 시작', this.state.subspeaking);
+            console.log(this.state.speakingId);
+          });
+          subscriber.on('publisherStopSpeaking', (event) => {
+            this.setState({
+              subspeaking: false,
+              speakingId: event.connection.connectionId,
+            });
+            console.log('섭스크라이버 종료', this.state.subspeaking);
+            console.log(this.state.speakingId);
+          });
+          // Update the state with the new subscribers.
           this.setState({
             subscribers: subscribers,
           });
@@ -276,7 +274,7 @@ class Video extends Component {
               <div>
                 <PubVideoComponent
                   streamManager={this.state.publisher}
-                  speaking={this.state.pubspeaking}
+                  pubspeaking={this.state.pubspeaking}
                 />
               </div>
             ) : null}
@@ -285,7 +283,6 @@ class Video extends Component {
                 <Wrap key={i}>
                   <UserVideoComponent
                     streamManager={sub}
-                    id={this.state.id}
                     speakingId={this.state.speakingId}
                     speaking={this.state.subspeaking}
                     session={this.state.session}
@@ -384,7 +381,6 @@ class Video extends Component {
         .then((response) => {
           // console.log('TOKEN', response);
           resolve(response.data.token);
-          this.setState({ id: response.data.id });
         })
         .catch((error) => reject(error));
     });

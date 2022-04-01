@@ -9,12 +9,15 @@ import { actionCreators as voteActions } from './redux/modules/vote';
 
 const UserVideoComponent = ({
   streamManager,
-  speaking,
+  pubspeaking,
   session,
   publisher,
 }) => {
   const [subspeaking, setSubspeaking] = React.useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
+  const userInfo = useSelector((state) => state.user.userinfo);
+  const DeathInfo = userInfo.isEliminated;
+  const is_Live = DeathInfo.includes('N');
 
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -24,12 +27,22 @@ const UserVideoComponent = ({
     <>
       {streamManager !== undefined ? (
         <div>
-          <VideoBox className={speaking ? 'speaking' : ''}>
-            <div className="streamcomponent">
-              <OpenViduVideoComponent streamManager={streamManager} />
-            </div>
-            <PubUserProfile />
-          </VideoBox>
+          {is_Live ? (
+            <VideoBox className={pubspeaking ? 'speaking' : ''}>
+              <div className="streamcomponent">
+                <OpenViduVideoComponent streamManager={streamManager} />
+              </div>
+              <PubUserProfile />
+            </VideoBox>
+          ) : (
+            <VideoBox className={pubspeaking ? 'speaking' : ''}>
+              <div className="streamcomponent">
+                <OpenViduVideoComponent streamManager={streamManager} />
+              </div>
+              <PubUserProfile />
+            </VideoBox>
+          )}
+
           <Text>
             <span>{getNicknameTag()}</span>
           </Text>
@@ -57,6 +70,22 @@ const VideoBox = styled.div`
   }
   &.speaking {
     border: 5px solid green;
+  }
+`;
+
+const DeathVideo = styled.div`
+  width: 250px;
+  height: 250px;
+  border-radius: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 1251px) {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 200px;
   }
 `;
 

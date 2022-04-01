@@ -15,34 +15,32 @@ import { actionCreators as voteActions } from './redux/modules/vote';
 
 const UserVideoComponent = ({
   streamManager,
-  speaking,
-  id,
+  pubspeaking,
   speakingId,
+  speaking,
   session,
 }) => {
   const [subspeaking, setSubspeaking] = React.useState(false);
-  const roomUserList = useSelector((state) => state.vote.userList);
-  const Role = roomUserList.map((role) => role.role);
   const userInfo = useSelector((state) => state.user.userinfo);
   const is_Live = userInfo.isEliminated;
-
   const UserSpeaking = speakingId;
-  const Id = id;
-  // console.log(Id);
-  // console.log(UserSpeaking);
+  // const Id = session.streamManagers.map(
+  //   (i) => i.stream.connection.connectionId
+  // );
+  const Id = session.streamManagers
+  // console.log(Id.indexOf(UserSpeaking));
+  console.log(Id)
+  console.log(UserSpeaking);
 
-  const Change = () => {
-    setSubspeaking(!subspeaking);
-  };
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };
 
-  // React.useEffect(() => {
-  //   setSubspeaking(speaking)
-  //   console.log('변환했다');
-  //   console.log(subspeaking);
-  // }, [speaking]);
+  React.useEffect(() => {
+    setSubspeaking(speaking);
+    console.log('변환했다');
+    console.log(subspeaking);
+  }, [speaking]);
 
   // const mySession = session;
 
@@ -70,12 +68,15 @@ const UserVideoComponent = ({
         <div>
           {is_Live.includes('N') ? (
             <div>
-              <VideoBox className={subspeaking ? 'speaking' : ''}>
+              <VideoBox
+                className={
+                  UserSpeaking === Id[3] && subspeaking ? 'speaking' : ''
+                }
+              >``
                 <div className="streamcomponent">
                   <OpenViduVideoComponent streamManager={streamManager} />
                 </div>
                 <SubUserProfile />
-                <Button onClick={Change}>ㅇㅇㅇㅇ</Button>
               </VideoBox>
               <Text>
                 <span>{getNicknameTag()}</span>
@@ -85,22 +86,9 @@ const UserVideoComponent = ({
             <div>
               <VideoBox>
                 <div>
-                  <DeathVideo
-                    src={
-                      Role === 1
-                        ? BasicProfileDeath
-                        : Role === 2
-                        ? ByunProfileDeath
-                        : Role === 3
-                        ? TamProfileDeath
-                        : Role === 4
-                        ? MapiaProfileDeath
-                        : BasicProfileDeath
-                    }
-                  />
+                  <DeathVideo src={BasicProfileDeath} />
                 </div>
                 <SubUserProfile />
-                <Button onClick={Change}>ㅇㅇㅇㅇ</Button>
               </VideoBox>
               <DeathText>
                 <span>{getNicknameTag()}</span>
