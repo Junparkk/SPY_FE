@@ -631,7 +631,7 @@ function Ingame(props) {
           <IngameHeader readyCnt={readyCnt} status={status} />
         </div>
         <VideoContainer>
-          <Video roomId={roomId} roomUserList={roomUserList} />
+          <Video roomId={roomId} roomUserList={roomUserList} userinfo={userInfo} />
         </VideoContainer>
         {chatView ? (
           <ChatBox>
