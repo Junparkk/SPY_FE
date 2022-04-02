@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import vote, { actionCreators as voteActions } from '../redux/modules/vote';
 import { actionCreators as userActions } from '../redux/modules/user';
+import { useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
@@ -44,6 +45,7 @@ const socket = io.connect('https://mafia.milagros.shop');
 //socket 서버
 
 function Ingame(props) {
+  const history = useHistory();
   //채팅
   const dispatch = useDispatch();
   const userId = localStorage.getItem('userid');
@@ -265,7 +267,8 @@ function Ingame(props) {
       detectiveVote,
       spyVoteCnt,
       finalResultNight,
-      modalSpyResult;
+      modalSpyResult,
+      winnerFn;
 
     switch (status) {
       case 'isStart':
@@ -332,6 +335,14 @@ function Ingame(props) {
         finalResultNight = setTimeout(finalResult, 3000);
         clearTimeout(modalSpyResult);
         break;
+      case 'winner':
+        console.log(
+          '#####@@@@++++#게임 종료 결과 페이지 요청',
+          Date().toString()
+        );
+        winnerFn();
+        // winner = setTimeout(winnerFn, 1000);
+        break;
       default:
         console.log('실행안됨');
     }
@@ -359,6 +370,11 @@ function Ingame(props) {
     });
   };
   console.log('방장Status =========>', status);
+  const winnerFn = () => {
+    history.replace(`/result/${roomId}`);
+    console.log('낮 결과 다음 페이지 이동콘솔 @@@@ ++++===== ');
+  };
+
   //롤보여주기
   const showRole = () => {
     console.log('@@@@ showRole 함수 시작');
@@ -593,14 +609,14 @@ function Ingame(props) {
 
   //아침에 최종 결과 공지
   function finalResult() {
-    toast.error(msg, {
-      draggable: false,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
     const Timer = setTimeout(() => {
+      toast.error(msg, {
+        draggable: false,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+      });
       console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId, userId));
       setStatus('dayTime');
@@ -612,6 +628,7 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
+        {/* <VoteModal isMe={findMe} roomId={roomId} /> */}
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}

@@ -93,13 +93,26 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
             '@@@@ resultDayTimeVoteAPI 요청 응답이 1일 경우 바로 결과 화면',
             res
           );
-          history.replace(`/result/${roomId}`);
+          setTimeout(() => {
+            history.replace(`/result/${roomId}`);
+          }, 1500);
+          socket.emit('getStatus', {
+            roomId: roomId,
+            status: 'winner',
+          });
         } else if (res.data.result === 2) {
           console.log(
             '@@@@ resultDayTimeVoteAPI 요청 응답이 2일 경우 바로 결과 화면',
             res
           );
-          history.replace(`/result/${roomId}`);
+
+          setTimeout(() => {
+            history.replace(`/result/${roomId}`);
+          }, 1500);
+          socket.emit('getStatus', {
+            roomId: roomId,
+            status: 'winner',
+          });
         }
       })
       .catch((err) => console.log(err));
