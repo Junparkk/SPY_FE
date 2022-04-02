@@ -84,12 +84,7 @@ const DetectiveVoteModal = (props) => {
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
                         onClick={() => clicked(idx)}
                       >
-                        {/* 닉네임과 선택해준 사람들의 이미지 */}
-                        <Vote>
-                          <Nickname>{p.nickname}</Nickname>
-
-                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
-                        </Vote>
+                        <Nickname>{p.nickname}</Nickname>
                       </JobCheckImg>
                     );
                   })}
@@ -114,12 +109,7 @@ const DetectiveVoteModal = (props) => {
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
                         onClick={() => clicked(idx)}
                       >
-                        {/* 닉네임과 선택해준 사람들의 이미지 */}
-                        <Vote>
-                          <Nickname>{p.nickname}</Nickname>
-
-                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
-                        </Vote>
+                        <Nickname>{p.nickname}</Nickname>
                       </JobCheckImg>
                     );
                   })}
@@ -144,12 +134,7 @@ const DetectiveVoteModal = (props) => {
                         opacity={idx === voteBtnClicked ? '30%' : '100%'}
                         onClick={() => clicked(idx)}
                       >
-                        {/* 닉네임과 선택해준 사람들의 이미지 */}
-                        <Vote>
-                          <Nickname>{p.nickname}</Nickname>
-
-                          <ChoiceBox>{/* <Choice src={Ai} /> */}</ChoiceBox>
-                        </Vote>
+                        <Nickname>{p.nickname}</Nickname>
                       </JobCheckImg>
                     );
                   })}
