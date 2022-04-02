@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { history } from '../redux/configureStore';
+import { useMediaQuery } from 'react-responsive';
 
 import Main from '../pages/Main';
 import LoginTitle from '../pages/LoginTitle';
@@ -16,16 +17,20 @@ import Result from '../pages/Result';
 import Ingame from '../pages/Ingame';
 import Tutorial from '../pages/Tutorial';
 import NotFound from '../pages/NotFound';
-import ResultModal from '../components/ResultModal';
-import Slider from '../components/Slider/Slider';
+import Mobile from '../pages/Mobile';
+
 function App() {
-  return (
+  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1040px)' });
+
+  return isTabletOrMobile ? (
+    <>
+      <Mobile></Mobile>
+    </>
+  ) : (
     <>
       {/* <Header /> */}
       <ConnectedRouter history={history}>
         <Switch>
-          <Route path="/test" exact component={Slider}></Route>
-
           <Route path="/lobby" exact component={Main}></Route>
           <Route path="/" exact component={LoginTitle}></Route>
           <Route path="/signup" exact component={SignUp}></Route>

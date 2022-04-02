@@ -500,6 +500,7 @@ function Ingame(props) {
             })
             .catch(
               (err) => console.log('ai변호사 캐치문......', err),
+
               socket.emit('getStatus', {
                 roomId: roomId,
                 status: 'voteNightDetective',
@@ -585,7 +586,18 @@ function Ingame(props) {
                 }); // getMsg, getMsgToMe
               }, 500)
             )
-            .catch((err) => console.log(err));
+            .catch((err) =>
+              setTimeout(() => {
+                socket.emit('getStatus', {
+                  roomId,
+                  status: 'showResultNight',
+                });
+                socket.emit('getMsg', {
+                  roomId,
+                  msg: err,
+                }); // getMsg, getMsgToMe
+              }, 500)
+            );
         }
       }
     }, 10000);
@@ -632,7 +644,7 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        {/* <VoteModal isMe={findMe} roomId={roomId} /> */}
+        <VoteModal isMe={findMe} roomId={roomId} />
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}

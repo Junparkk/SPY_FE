@@ -159,7 +159,7 @@ const Wrap = styled.div`
 const TitleWrap = styled.div`
   width: 100%;
   padding: 80px 0px 0px 0px;
-  @media screen and (max-width: 663px) {
+  @media screen and (max-width: 1040px) {
     padding: 40px 0px 0px 0px;
   }
 `;
@@ -182,14 +182,14 @@ const HeaderTitle = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 663px) {
+  @media screen and (max-width: 1040px) {
     width: 70%;
   }
 `;
 
 const InputNick = styled.div`
   margin-top: 7%;
-  @media screen and (max-width: 663px) {
+  @media screen and (max-width: 1040px) {
     margin-top: -10%;
   }
 `;

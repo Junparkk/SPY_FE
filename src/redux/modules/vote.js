@@ -91,7 +91,7 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
               roomId: roomId,
               status: 'voteNightLawyer',
             });
-          }, 1500);
+          }, 3000);
           console.log(
             '@@@@ resultDayTimeVoteAPI 요청 응답이 0일 경우 emit 상태(voteNightLawyer) 받음',
             res
@@ -139,6 +139,12 @@ const lawyerActDB = (roomId, userId) => {
       })
       .catch((err) => {
         console.log(err.data);
+        setTimeout(() => {
+          socket.emit('getStatus', {
+            roomId: roomId,
+            status: 'voteNightDetective',
+          });
+        }, 500);
       });
   };
 };
