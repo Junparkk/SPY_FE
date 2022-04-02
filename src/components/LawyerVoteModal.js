@@ -34,6 +34,7 @@ const LawyerVoteModal = (props) => {
     setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
     console.log(chosen);
+    console.log(chosen.user, '초이슨 유저 리스트')
     console.log(chosen.user.id, '유저 아이디');
     console.log(chosen.roomId, '룸 아이디');
     console.log(chosen.user, '제발');

@@ -72,6 +72,14 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
     await apis
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
+        // const status = res.data.result === 0 ? 'voteNightLawyer' : 'winner';
+        // const msg = res.data.msg;
+        // console.log(`@@@ 받은 결과 값 ${res.data}`);
+
+        // setTimeout(() => {
+        //   socket.emit('getMsg', { roomId, msg });
+        //   socket.emit('getStatus', { roomId, status });
+        // }, 1500);
         if (res.data.result === 0) {
           console.log('낮투표 결과 확인 @@@@@@@@@@@@@@@', res.data.msg);
           socket.emit('getMsg', {
@@ -88,19 +96,19 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
             '@@@@ resultDayTimeVoteAPI 요청 응답이 0일 경우 emit 상태(voteNightLawyer) 받음',
             res
           );
-        } else if (res.data.result === 1) {
+        } else {
           console.log(
-            '@@@@ resultDayTimeVoteAPI 요청 응답이 1일 경우 바로 결과 화면',
+            '@@@@ resultDayTimeVoteAPI 요청 응답이 1, 2일 경우 바로 결과 화면',
             res
           );
+          setTimeout(() => {
+            socket.emit('getStatus', {
+              roomId: roomId,
+              status: 'winner',
+            });
+          }, 500);
           history.replace(`/result/${roomId}`);
-        } else if (res.data.result === 2) {
-          console.log(
-            '@@@@ resultDayTimeVoteAPI 요청 응답이 2일 경우 바로 결과 화면',
-            res
-          );
-          history.replace(`/result/${roomId}`);
-        }
+        } 
       })
       .catch((err) => console.log(err));
   };

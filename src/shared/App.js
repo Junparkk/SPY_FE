@@ -16,13 +16,16 @@ import Result from '../pages/Result';
 import Ingame from '../pages/Ingame';
 import Tutorial from '../pages/Tutorial';
 import NotFound from '../pages/NotFound';
-
+import ResultModal from '../components/ResultModal';
+import Slider from '../components/Slider/Slider';
 function App() {
   return (
     <>
       {/* <Header /> */}
       <ConnectedRouter history={history}>
         <Switch>
+          <Route path="/test" exact component={Slider}></Route>
+
           <Route path="/lobby" exact component={Main}></Route>
           <Route path="/" exact component={LoginTitle}></Route>
           <Route path="/signup" exact component={SignUp}></Route>

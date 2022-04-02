@@ -17,10 +17,13 @@ import BasicProfile from '../images/BasicProfile.png';
 import ByunProfile from '../images/ByunProfile.png';
 import SpyProfile from '../images/SpyProfile.png';
 import TamProfile from '../images/TamProfile.png';
+import io from 'socket.io-client';
 
 // 게임 결과 창
 
 const Result = (props) => {
+  const socket = io.connect('https://mafia.milagros.shop');
+
   //클릭 효과음
   const sound = new Audio(click);
 
@@ -42,10 +45,15 @@ const Result = (props) => {
   const dispatch = useDispatch();
 
   const leaveRoom = () => {
+    // 셋타임 아웃 - 몇초내로 방 자동 나가짐
+    // DB삭제 api
+    // 이 함수를 유즈이펙트에 넣기
     history.push('/lobby');
     sound.play();
     // dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
+
+  setTimeout(() => {}, 5000);
 
   const reStart = () => {
     sound.play();
@@ -56,29 +64,49 @@ const Result = (props) => {
     sound.play();
   };
 
-  const roomId = props.match.params.roomId;
-  console.log(props);
+ 
 
-  //결과페이지에서 결과 리스트 불러오기
-  const [list, setList] = useState([]);
+  const roomId = props.match.params.roomId;
+  console.log(roomId, '룸, 아이디');
+  const userId = localStorage.getItem('userid');
+  console.log(userId, '유져, 아이디');
+
   useEffect(() => {
-    apis
-      .winnerList(roomId)
-      .then((res) => {
-        console.log(res);
-        setList(res.data.users);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(roomActions.WinnerDB(roomId, userId));
   }, []);
 
+  // 방장
+  const users = useSelector((state) => state.room.winner);
+  console.log(users);
+  //   //결과페이지에서 결과 리스트 불러오기
+  //   // const [list, setList] = useState();
+
+  //   setTimeout(() => {
+  //     socket.emit('winner', {
+  //       roomId,
+  //       userId,
+  //     });
+  //   }, 0);
+
+  // 유저 전체 리스트 > 결과값 0 ~ 2 // 1 : role 1~3  승리 / ㅈㅈ
+  // const [list, setList] = useState(() => {
+  //   socket.on('winner', (users) => {
+  //     console.log(users, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+  //     setList(users);
+  //   });
+  //   socket.on('winnerToMe', (users) => {
+  //     console.log(users, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+  //     setList(users);
+  //   });
+  // });
+  // console.log(list, '소켓 값 받아옴 @@@@@@@@@@@@@@리스트 유즈스테이츠');
+
   //승자 목록
-  console.log(list);
-
-  const divideWinner = list && list[0] === 4;
-  console.log(divideWinner);
-
+  // const winUsers = list.users;
+  // const divideWinner = users && users[0] === 4;
+  
+  const divideWinner = users && users[0]?.role === 4;
+  
   return (
     <React.Fragment>
       <Header />
@@ -86,40 +114,32 @@ const Result = (props) => {
         <CEOComent src={divideWinner ? spyWin : citizenWin} />
         <H1 height="auto"> {divideWinner ? '스파이' : '사원들'}의 승리!</H1>
         <WinWrap>
-          {list.map((p, idx) => {
-            return (
-              <Winner
-                key={p.id}
-                src={
-                  p.role === 1
-                    ? BasicProfile
-                    : p.role === 2
-                    ? ByunProfile
-                    : p.role === 3
-                    ? TamProfile
-                    : p.role === 4
-                    ? SpyProfile
-                    : ''
-                }
-              >
-                <NickName> {p.nickname}</NickName>
-              </Winner>
-            );
-          })}
+          {users &&
+            users.map((p, idx) => {
+              return (
+                <Winner
+                  key={idx}
+                  src={
+                    p.role === 1
+                      ? BasicProfile
+                      : p.role === 2
+                      ? ByunProfile
+                      : p.role === 3
+                      ? TamProfile
+                      : p.role === 4
+                      ? SpyProfile
+                      : ''
+                  }
+                >
+                  <NickName> {p.nickname}</NickName>
+                </Winner>
+              );
+            })}
         </WinWrap>
       </Wrap>
 
       <Footer />
-      {/* <Restart className={ScrollY > 0 ? 'Change_Button' : ''} onClick={reStart}>
-        <span
-          style={{
-            fontFamily: 'yg-jalnan',
-            color: '#ffe179',
-          }}
-        >
-          다<br />시<br />하<br />기
-        </span>
-      </Restart> */}
+
       <LeaveRoom
         className={ScrollY > 0 ? 'Change_Button' : ''}
         onClick={leaveRoom}
@@ -262,34 +282,6 @@ const LeaveRoom = styled.button`
     width: 3rem;
     height: 6rem;
     right: 90px;
-    font-size: 14px;
-  }
-  z-index: 50;
-`;
-
-const Restart = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 250px;
-  width: 4rem;
-  height: 8rem;
-  border: none;
-  border-radius: 16px;
-  background: url('${blueDoor}') no-repeat 0 0 / 100% 100%;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  &.Change_Button {
-    position: absolute;
-  }
-  :hover {
-    cursor: pointer;
-  }
-  @media (max-width: 763px) {
-    width: 3rem;
-    height: 6rem;
-    right: 150px;
     font-size: 14px;
   }
   z-index: 50;

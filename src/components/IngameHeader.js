@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { history } from '../redux/configureStore';
 import { useSelector } from 'react-redux';
-import io from 'socket.io-client';
 
 import { RiQuestionnaireLine } from 'react-icons/ri';
 //이미지
@@ -16,7 +15,7 @@ import yellowNormal from '../images/YellowOutLineNormal.png';
 import click from '../sound/Click Sound.mp3';
 
 import RuleModal from './RuleModal';
-const socket = io.connect('https://mafia.milagros.shop');
+
 const IngameHeader = (props) => {
   const readyCnt = props.readyCnt;
   const isStart = props.status;
