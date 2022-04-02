@@ -292,6 +292,7 @@ const PwdBn = styled.button`
   height: 62px;
   border-radius: 50%;
   margin: 10px;
+  box-shadow: 5px 5px 5px gray;
   cursor: pointer;
 `;
 
@@ -305,6 +306,7 @@ const RoomBtn = styled.button`
   color: #eeeeee;
   border-radius: 45px;
   margin-top: 20px;
+  box-shadow: 5px 5px 5px gray;
   cursor: pointer;
 `;
 
@@ -414,10 +416,11 @@ const BackBt = styled.div`
   cursor: pointer;
   color: #ffe179;
   padding: 10px;
-  top: 850px;
+  bottom: 50px;
   right: 50px;
   z-index: 5;
   font-size: 50px;
+  box-shadow: 5px 5px 5px gray;
   @media screen and (max-width: 986px) {
     top: 100px;
     right: 30px;

@@ -8,6 +8,7 @@ import { actionCreators as roomActions } from '../redux/modules/room';
 import vote, { actionCreators as voteActions } from '../redux/modules/vote';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { useHistory } from 'react-router-dom';
+
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { useRef } from 'react';
@@ -44,9 +45,9 @@ const socket = io.connect('https://mafia.milagros.shop');
 //socket 서버
 
 function Ingame(props) {
+  const history = useHistory();
   //채팅
   const dispatch = useDispatch();
-  const history = useHistory();
   const userId = localStorage.getItem('userid');
   const roomId = props.match.params.roomId;
   const [username, setUsername] = useState('');
@@ -188,7 +189,7 @@ function Ingame(props) {
 
   //해고 명단 ID 리스트에 본인 ID가 있다면 true반환
   const _isFired = isFireds[0].includes(parseInt(userId));
-  console.log(_isFired,'죽은사람 명단, ID')
+  console.log(_isFired, '죽은사람 명단, ID');
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
@@ -368,7 +369,7 @@ function Ingame(props) {
       pauseOnHover: false,
     });
   };
-  console.log('방장Status =========>', status);
+
   //롤보여주기
   const showRole = () => {
     console.log('@@@@ showRole 함수 시작');
@@ -611,14 +612,14 @@ function Ingame(props) {
 
   //아침에 최종 결과 공지
   function finalResult() {
-    toast.error(msg, {
-      draggable: false,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
     const Timer = setTimeout(() => {
+      toast.error(msg, {
+        draggable: false,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+      });
       console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId, userId));
 
@@ -631,6 +632,7 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
+        {/* <VoteModal isMe={findMe} roomId={roomId} /> */}
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}
@@ -650,48 +652,61 @@ function Ingame(props) {
           <IngameHeader readyCnt={readyCnt} status={status} />
         </div>
         <VideoContainer>
-          <Video roomId={roomId} roomUserList={roomUserList} />
+          <Video
+            roomId={roomId}
+            roomUserList={roomUserList}
+            userinfo={userInfo}
+          />
         </VideoContainer>
         {chatView ? (
           <ChatBox>
             <Chat socket={socket} username={username} roomId={roomId} />
           </ChatBox>
         ) : null}
-        {round >= 1 ? null : (
-          <ButtonContainer>
-            <RiArrowGoBackFill
-              style={{
-                width: '35px',
-                minWidth: '35px',
-                height: '35px',
-                borderRadius: '35px',
-                backgroundColor: '#9296fd',
-                cursor: 'pointer',
-                color: '#ffe179',
-                padding: '10px',
-                marginLeft: '100px',
-                zIndex: '5',
-              }}
-              onClick={leaveRoom}
-            />
-            {findMe[0] && findMe[0].isHost === 'N' ? (
-              isReady ? (
-                <ReadyButton onClick={() => cancelReady()}>
-                  준비취소
-                </ReadyButton>
+        <ButtonContainer>
+          {round >= 1 ? null : (
+            <>
+              <GoBack>
+                <RiArrowGoBackFill
+                  style={{
+                    width: '50px',
+                    minWidth: '50px',
+                    height: '50px',
+                    borderRadius: '50px',
+                    backgroundColor: '#9296fd',
+                    cursor: 'pointer',
+                    color: '#ffe179',
+                    padding: '10px',
+                    marginLeft: '100px',
+                    zIndex: '5',
+                    boxShadow: '5px 5px 5px gray',
+                  }}
+                  onClick={leaveRoom}
+                />
+              </GoBack>
+            </>
+          )}
+          {round >= 1 ? null : (
+            <div>
+              {findMe[0] && findMe[0].isHost === 'N' ? (
+                isReady ? (
+                  <ReadyButton onClick={() => cancelReady()}>
+                    준비취소
+                  </ReadyButton>
+                ) : (
+                  <ReadyButton onClick={() => doReady()}>준 비</ReadyButton>
+                )
               ) : (
-                <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
-              )
-            ) : (
-              <StartButton onClick={() => doStart()}>시작</StartButton>
-            )}
-            {chatView ? (
-              <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
-            ) : (
-              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
-            )}
-          </ButtonContainer>
-        )}
+                <StartButton onClick={() => doStart()}>시 작</StartButton>
+              )}
+            </div>
+          )}
+          {chatView ? (
+            <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+          ) : (
+            <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+          )}
+        </ButtonContainer>
       </Wrap>
     </>
   );
@@ -712,8 +727,12 @@ const ButtonContainer = styled.div`
   position: absolute;
   left: 10%;
   bottom: 50px;
-  @media screen and (max-width: 763px) {
+  @media screen and (max-width: 794px) {
     left: 0%;
+  }
+  @media screen and (max-width: 663px) {
+    position: fixed;
+    left: -100px;
   }
 `;
 
@@ -722,47 +741,102 @@ const VideoContainer = styled.div`
 `;
 
 const ReadyButton = styled.div`
-  width: 6.2%;
+  width: 150px;
   min-width: 90px;
-  height: 59px;
-  border-radius: 35px;
+  height: 80px;
+  font-size: 22px;
+  border-radius: 50px;
   background-color: #9296fd;
   text-align: center;
-  line-height: 59px;
+  line-height: 80px;
   font-family: 'yg-jalnan';
   color: white;
   z-index: 5;
   margin-left: 100px;
   cursor: pointer;
+  box-shadow: 5px 5px 5px gray;
+  @media screen and (max-width: 794px) and (min-width: 663px) {
+    margin-left: 75px;
+    width: 120px;
+    height: 63px;
+    font-size: 18px;
+    border-radius: 45px;
+    line-height: 63px;
+  }
+  @media screen and (max-width: 663px) {
+    margin-left: 0px;
+    width: 100px;
+    height: 57px;
+    font-size: 16px;
+    border-radius: 35px;
+    line-height: 57px;
+  }
 `;
 const StartButton = styled.div`
-  width: 6.2%;
+  width: 150px;
   min-width: 90px;
-  height: 59px;
-  border-radius: 35px;
+  height: 80px;
+  font-size: 22px;
+  border-radius: 50px;
   background-color: #9296fd;
   text-align: center;
-  line-height: 59px;
+  line-height: 80px;
   font-family: 'yg-jalnan';
   color: white;
   z-index: 5;
   margin-left: 100px;
   cursor: pointer;
+  box-shadow: 5px 5px 5px gray;
+  @media screen and (max-width: 663px) {
+    margin-left: 0px;
+    width: 100px;
+    height: 57px;
+    font-size: 16px;
+    border-radius: 35px;
+    line-height: 57px;
+    bottom: 0;
+  }
+  @media screen and (max-width: 794px) and (min-width: 663px) {
+    margin-left: 75px;
+    width: 120px;
+    height: 63px;
+    font-size: 18px;
+    border-radius: 45px;
+    line-height: 63px;
+  }
 `;
 
 const ChatButton = styled.div`
-  width: 6.2%;
+  width: 150px;
   min-width: 90px;
-  height: 59px;
-  border-radius: 35px;
+  height: 80px;
+  font-size: 22px;
+  border-radius: 50px;
   background-color: #9296fd;
   text-align: center;
-  line-height: 59px;
+  line-height: 80px;
   font-family: 'yg-jalnan';
   color: white;
   z-index: 5;
   margin-left: 100px;
   cursor: pointer;
+  box-shadow: 5px 5px 5px gray;
+  @media screen and (max-width: 663px) {
+    margin-left: 0px;
+    width: 100px;
+    height: 57px;
+    font-size: 14px;
+    border-radius: 35px;
+    line-height: 57px;
+  }
+  @media screen and (max-width: 794px) and (min-width: 663px) {
+    margin-left: 75px;
+    width: 120px;
+    height: 63px;
+    font-size: 18px;
+    border-radius: 45px;
+    line-height: 63px;
+  }
 `;
 
 const ChatBox = styled.div`
@@ -771,6 +845,19 @@ const ChatBox = styled.div`
   top: 50px;
   float: right;
   z-index: 500;
+`;
+
+const GoBack = styled.div`
+  @media screen and (max-width: 663px) {
+    display: none;
+  }
+`;
+
+const GoBackMobile = styled.div`
+  display: none;
+  @media screen and (max-width: 663px) {
+    display: flex;
+  }
 `;
 
 export default Ingame;

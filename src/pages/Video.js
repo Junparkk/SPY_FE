@@ -5,7 +5,6 @@ import UserVideoComponent from '../UserVideoComponent';
 import styled from 'styled-components';
 import PubVideoComponent from '../PubVideoComponent';
 import OpenViduVideoComponent from '../OvVideo';
-import SubUserProfile from '../components/SubUserProfile';
 import PubUserProfile from '../components/PubUserProfile';
 import BasicProfileDeath from '../images/BasicProfile_Death.png';
 
@@ -270,15 +269,17 @@ class Video extends Component {
     const id = this.state.subscribers.map(
       (i) => i.stream.connection.connectionId
     );
-    const idindex = id.indexOf(this.state.speakingId);
-    const userid = this.props.roomUserList.map((i) => i.nickname);
-    const DeathInfo = this.props.roomUserList.map((i) =>
-      i.isEliminated.includes('Y')
+    const idIndex = id.indexOf(this.state.speakingId);
+    const userId = this.props.roomUserList.map((i) => i.nickname);
+    const theOther = this.props.roomUserList.filter(
+      (i) => i.nickname !== userNick
     );
-    console.log(DeathInfo[1]);
-    console.log(userid);
+    const DeathInfo = theOther.map((i) => i.isEliminated.includes('N'));
+    const userInfo = this.props.userInfo;
+
+    console.log(theOther);
     return (
-      ////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////
       //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2
       <div>
         {this.state.session !== undefined ? (
@@ -290,92 +291,63 @@ class Video extends Component {
                 >
                   <OpenViduVideoComponent
                     streamManager={this.state.publisher}
+                    deathinfo={DeathInfo}
+                    userinfo={userInfo}
                   />
                   <PubUserProfile />
                 </PubVideoBox>
-                <Text>{userid[0]}</Text>
               </div>
             ) : null}
             {this.state.subscribers[0] ? (
               <div>
-                {DeathInfo[1] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 0 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 0 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[0]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[1]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 0 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[0]}
+                    userid={userId}
+                    deathinfo={DeathInfo[0]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[1] ? (
               <div>
-                {DeathInfo[2] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 1 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 1 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[1]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[2]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 1 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[1]}
+                    userid={userId}
+                    deathinfo={DeathInfo[1]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[2] ? (
               <div>
-                {DeathInfo[3] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 2 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 2 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[2]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[3]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 2 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[2]}
+                    userid={userId}
+                    deathinfo={DeathInfo[2]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
@@ -383,196 +355,126 @@ class Video extends Component {
 
             {this.state.subscribers[3] ? (
               <div>
-                {DeathInfo[4] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 3 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 3 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[3]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[4]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 3 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[3]}
+                    userid={userId}
+                    deathinfo={DeathInfo[3]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[4] ? (
               <div>
-                {DeathInfo[5] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 4 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 4 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[4]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[5]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 4 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[4]}
+                    userid={userId}
+                    deathinfo={DeathInfo[4]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[5] ? (
               <div>
-                {DeathInfo[6] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 5 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 5 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[5]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[6]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 5 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[5]}
+                    userid={userId}
+                    deathinfo={DeathInfo[5]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[6] ? (
               <div>
-                {DeathInfo[7] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 6 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 6 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[6]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[7]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 6 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[6]}
+                    userid={userId}
+                    deathinfo={DeathInfo[6]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[7] ? (
               <div>
-                {DeathInfo[8] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 7 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 7 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[7]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[8]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 7 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[7]}
+                    userid={userId}
+                    deathinfo={DeathInfo[7]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[8] ? (
               <div>
-                {DeathInfo[9] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 8 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 8 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[8]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[9]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 8 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[8]}
+                    userid={userId}
+                    deathinfo={DeathInfo[8]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
             )}
             {this.state.subscribers[9] ? (
               <div>
-                {DeathInfo[10] ? (
-                  <SubVideoBox
-                    className={
-                      idindex === 9 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <DeathVideoBox src={BasicProfileDeath} />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                ) : (
-                  <SubVideoBox
-                    className={
-                      idindex === 9 && this.state.subspeaking ? 'speaking' : ''
-                    }
-                  >
-                    <OpenViduVideoComponent
-                      streamManager={this.state.subscribers[9]}
-                    />
-                    <SubUserProfile />
-                  </SubVideoBox>
-                )}
-                <Text>{userid[10]}</Text>
+                <SubVideoBox
+                  className={
+                    idIndex === 9 && this.state.subspeaking ? 'speaking' : ''
+                  }
+                >
+                  <OpenViduVideoComponent
+                    streamManager={this.state.subscribers[9]}
+                    userid={userId}
+                    deathinfo={DeathInfo[9]}
+                    userinfo={userInfo}
+                  />
+                </SubVideoBox>
               </div>
             ) : (
               ''
@@ -591,7 +493,7 @@ class Video extends Component {
    * These methods retrieve the mandatory user token from OpenVidu Server.
    * This behavior MUST BE IN YOUR SERVER-SIDE IN PRODUCTION (by using
    * the API REST, openvidu-java-client or openvidu-node-client):
-   *   1) Initialize a Session in OpenVidu Server	(POST /openvidu/api/sessions)
+   *   1) Initialize a Session in OpenVidu Server   (POST /openvidu/api/sessions)
    *   2) Create a Connection in OpenVidu Server (POST /openvidu/api/sessions/<SESSION_ID>/connection)
    *   3) The Connection.token must be consumed in Session.connect() method
    */
@@ -665,7 +567,7 @@ class Video extends Component {
           }
         )
         .then((response) => {
-          // console.log('TOKEN', response);
+          // console.log('TOKEN', response)
           resolve(response.data.token);
         })
         .catch((error) => reject(error));
@@ -712,22 +614,6 @@ const SubVideoBox = styled.div`
   }
   &.speaking {
     border: 8px solid green;
-  }
-`;
-
-const DeathVideoBox = styled.div`
-  width: 250px;
-  height: 250px;
-  border-radius: 250px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 1251px) {
-    width: 200px;
-    height: 200px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    border-radius: 200px;
   }
 `;
 

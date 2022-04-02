@@ -8,10 +8,7 @@ import socketio from 'socket.io-client';
 
 const Winner = () => {
   const socket = socketio();
-  // const myface = document.getElementById('myface');
-  // const muteBtn = document.getElementById('mute');
-  // const cameraBtn = document.getElementById('camera');
-  // const camerasSelect = document.getElementById('cameras');
+
 
   const myface = useRef();
   const muteBtn = useRef();

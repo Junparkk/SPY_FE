@@ -8,7 +8,7 @@ import Logo from '../images/Mapia.png';
 import Title from '../images/Title.png';
 import Building from '../images/Building.png';
 import '../shared/App.css';
-import click from '../sound/Click Sound.mp3'
+import click from '../sound/Click Sound.mp3';
 import { useSelector } from 'react-redux';
 
 function LoginTitle() {
@@ -57,13 +57,11 @@ function LoginTitle() {
   });
 
   //클릭 효과음
-  const sound = new Audio(click)
+  const sound = new Audio(click);
 
   const ClickSound = () => {
-    sound.play()
-  }
-
-
+    sound.play();
+  };
 
   //닉네임 서버 전달
   const dispatch = useDispatch();
@@ -77,13 +75,13 @@ function LoginTitle() {
   const randomNickClick = () => {
     dispatch(userActions.RandomNickDB());
     setNickname(randomUser);
-    sound.play()
+    sound.play();
   };
 
   const randomNickDefault = () => {
     dispatch(userActions.RandomNickDB());
     setNickname(randomUser);
-  }
+  };
   useEffect(() => {
     randomNickDefault();
     setNickname('');
@@ -143,7 +141,7 @@ function LoginTitle() {
             <StartBt onClick={Login}>start!</StartBt>
           </div>
         </TitleWrap>
-        <div>{ScrollY > 2376 ? handleTop() : ''}</div>
+        <div>{ScrollY > 2250 ? handleTop() : ''}</div>
         <LoginBackground src={Building} />
       </Wrap>
     </>
@@ -152,7 +150,7 @@ function LoginTitle() {
 
 const Wrap = styled.div`
   width: 100%;
-  height: 3503px;
+  height: auto;
   background-color: #ffe179;
   text-align: center;
   background-size: cover;
@@ -214,10 +212,8 @@ const LoginBackground = styled.div`
   width: 100%;
   height: 2488px;
   background-image: url('${(props) => props.src}');
-  background-size: cover;
-  @media screen and (max-width: 1296px) {
-    display: none;
-  }
+  background-size: contain;
+  background-repeat: no-repeat;
 `;
 
 export default LoginTitle;

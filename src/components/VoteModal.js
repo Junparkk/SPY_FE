@@ -72,28 +72,22 @@ const VoteModal = (props) => {
       <ModalBlock {...rest} src={VoteBG}>
         <Title>낮 투표</Title>
         <Contents>가장 스파이로 의심되는 사람에게 투표하세요.</Contents>
+
         <VotePlayerWrap>
           {user_list &&
             user_list.map((p, idx) => {
               return (
-                <JobCheckImg
-                  src={p.isEliminated.includes('N') ? alive : dead}
-                  pointer={p.isEliminated.includes('Y') || submit}
-                  ref={ref}
-                  key={p.id}
-                  opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                  onClick={() => clicked(idx)}
-                >
-                  <Vote>
-                    <Nickname>{p.nickname}</Nickname>
-
-                    <ChoiceBox>
-                      {Array.from({ length: vote.voteCnt }, (voter, index) => {
-                        return <Choice key={index} src={Ai} />;
-                      })}
-                    </ChoiceBox>
-                  </Vote>
-                </JobCheckImg>
+                <Wrapper>
+                  <JobCheckImg
+                    src={p.isEliminated.includes('N') ? alive : dead}
+                    pointer={p.isEliminated.includes('Y') || submit}
+                    ref={ref}
+                    key={p.id}
+                    opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                    onClick={() => clicked(idx)}
+                  ></JobCheckImg>
+                  <Nickname>{p.nickname}</Nickname>
+                </Wrapper>
               );
             })}
         </VotePlayerWrap>
@@ -142,21 +136,15 @@ const Background = styled.div`
 const ModalBlock = styled.div`
   position: absolute;
   border-radius: 20px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  margin-top: 10rem;
   align-items: center;
   padding: 3rem;
   background: url('${(props) => props.src}') no-repeat center/cover;
-  width: 70%;
-  height: 100%;
-  @media (max-width: 1120px) {
-    width: 80%;
-  }
-  @media (max-width: 50rem) {
-    width: 90%;
-  }
-  min-height: 35rem;
+  width: 50rem;
+  height: 35rem;
+  max-width: 100rem;
   animation: modal-show 1s;
   @keyframes modal-show {
     from {
@@ -165,7 +153,7 @@ const ModalBlock = styled.div`
     }
     to {
       opacity: 1;
-      margin-top: 0;
+      margin-top: 50px;
     }
   }
 `;
@@ -181,18 +169,22 @@ const VotePlayerWrap = styled.div`
   align-items: center;
 
   @media screen and (min-width: 1607px) {
-    grid-template-columns: repeat(5, 10rem);
+    grid-template-columns: repeat(5, 1fr);
   }
   @media screen and (min-width: 1065px) and (max-width: 1607px) {
-    grid-template-columns: repeat(4, 10rem);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 20px 10px;
   }
   @media screen and (min-width: 551px) and (max-width: 1065px) {
     grid-template-columns: repeat(4, 7rem);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 20px 10px;
   }
+`;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -232,20 +224,12 @@ const Contents = styled.div`
   @media screen and (min-width: 0px) and (max-width: 551px) {
   }
 `;
-//캐릭터 모음 Wrap
-const Vote = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  top: 7rem;
-`;
 
 const Nickname = styled.div`
   color: white;
   font-family: 'yg-jalnan';
-  margin: 0.25rem;
   font-size: 1rem;
+  margin-top: 1rem;
   @media screen and (min-width: 1607px) {
     font-size: 1rem;
   }
@@ -279,34 +263,6 @@ const JobCheckImg = styled.div`
     height: 100px;
   }
   @media screen and (min-width: 0px) and (max-width: 551px) {
-  }
-`;
-
-// 선택받은 사람에게 나타날수 있게 한 Wrap
-const ChoiceBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 8rem;
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    width: 6rem;
-  }
-`;
-// 투표 선택 시 본인 캐릭터 하단에 추가 됨
-const Choice = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  width: 15px;
-  height: 15px;
-  position: relative;
-  margin: 2px;
-  border-radius: 50%;
-  background: url('${(props) => props.src}') no-repeat center/contain;
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    width: 10px;
-    height: 10px;
   }
 `;
 
