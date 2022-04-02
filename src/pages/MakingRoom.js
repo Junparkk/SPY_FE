@@ -76,7 +76,7 @@ const Markingroom = () => {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
         pauseOnFocusLoss: false,
-          pauseOnHover: false,
+        pauseOnHover: false,
       });
       return;
     } else {
@@ -87,7 +87,6 @@ const Markingroom = () => {
         autoClose: 3000,
       });
     }
-    
   };
 
   return (
@@ -160,17 +159,20 @@ const Markingroom = () => {
                   <Ant
                     key={index}
                     onClick={() => {
-                      // if (index + 1 < 6) {
-                      //   toast.error('게임 최소 인원은 6명입니다. 다시 설정해주세요.', {
-                      //     draggable: true,
-                      //     position: toast.POSITION.TOP_CENTER,
-                      //     autoClose: 3000,
-                      //     pauseOnFocusLoss: false,
-                      //     pauseOnHover: false,
-                      //   });
+                      if (index + 1 < 6) {
+                        toast.error(
+                          '게임 최소 인원은 6명입니다. 다시 설정해주세요.',
+                          {
+                            draggable: true,
+                            position: toast.POSITION.TOP_CENTER,
+                            autoClose: 3000,
+                            pauseOnFocusLoss: false,
+                            pauseOnHover: false,
+                          }
+                        );
 
-                      //   return;
-                      // }
+                        return;
+                      }
                       AntNum();
                       setCount(index + 1);
                     }}
@@ -323,7 +325,7 @@ const RightArea = styled.div`
 `;
 
 const RoomSet = styled.div`
-  width: 66%;
+  width: 445px;
   max-width: 654px;
   min-width: 330px;
   height: 707px;
@@ -355,15 +357,17 @@ const SetTitle = styled.p`
 `;
 
 const AntDiv = styled.div`
-  display: flex;
-  flex-flow: row wrap;
   width: 100%;
-  margin: 49px auto 40px auto;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  margin: 3rem auto;
+  grid-template-columns: repeat(5, 5rem);
+  grid-template-rows: repeat(2, 1fr);
   clear: both;
-  @media screen and (max-width: 1173px) {
-    margin: auto;
+  @media screen and (min-width: 1607px) {
+    grid-template-columns: repeat(5, 10rem);
+  }
+  @media screen and (min-width: 1040px) {
+    grid-template-columns: repeat(5, 5rem);
   }
 `;
 

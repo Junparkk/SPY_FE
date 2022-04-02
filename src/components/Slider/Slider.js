@@ -22,7 +22,9 @@ const Slider = ({ showModal, setShowModal }) => {
   const [check, setCheck] = useState(false);
   //useSelector 튜토리얼 api 전용
   const tuto = useSelector((state) => state.room.tuto);
- 
+  console.log(tuto);
+  console.log(dataSlider);
+  console.log(currentSlide);
   //클릭 효과음
   const sound = new Audio(click);
 

@@ -67,78 +67,81 @@ const DetectiveVoteModal = (props) => {
         {(() => {
           if (user_list.length <= 6) {
             return (
-              <VotePlayerWrap>
+              <SixVotePlayerWrap>
                 {user_list &&
                   user_list.map((p, idx) => {
                     return (
-                      <JobCheckImg
-                        disabled={submit}
-                        src={
-                          p.isEliminated.includes('N')
-                            ? BasicProfile
-                            : BasicProfile_Death
-                        }
-                        pointer={p.isEliminated.includes('Y') || submit}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
+                      <Wrapper>
+                        <JobCheckImg
+                          disabled={submit}
+                          src={
+                            p.isEliminated.includes('N')
+                              ? BasicProfile
+                              : BasicProfile_Death
+                          }
+                          pointer={p.isEliminated.includes('Y') || submit}
+                          ref={ref}
+                          key={p.id}
+                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                          onClick={() => clicked(idx)}
+                        ></JobCheckImg>
                         <Nickname>{p.nickname}</Nickname>
-                      </JobCheckImg>
+                      </Wrapper>
                     );
                   })}
-              </VotePlayerWrap>
+              </SixVotePlayerWrap>
             );
           } else if (user_list.length <= 8) {
             return (
-              <VotePlayerWrap>
+              <EightVotePlayerWrap>
                 {user_list &&
                   user_list.map((p, idx) => {
                     return (
-                      <JobCheckImg
-                        disabled={submit}
-                        src={
-                          p.isEliminated.includes('N')
-                            ? BasicProfile
-                            : BasicProfile_Death
-                        }
-                        pointer={p.isEliminated.includes('Y') || submit}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
+                      <Wrapper>
+                        <JobCheckImg
+                          disabled={submit}
+                          src={
+                            p.isEliminated.includes('N')
+                              ? BasicProfile
+                              : BasicProfile_Death
+                          }
+                          pointer={p.isEliminated.includes('Y') || submit}
+                          ref={ref}
+                          key={p.id}
+                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                          onClick={() => clicked(idx)}
+                        ></JobCheckImg>
                         <Nickname>{p.nickname}</Nickname>
-                      </JobCheckImg>
+                      </Wrapper>
                     );
                   })}
-              </VotePlayerWrap>
+              </EightVotePlayerWrap>
             );
           } else if (user_list.length <= 10) {
             return (
-              <VotePlayerWrap>
+              <TenVotePlayerWrap>
                 {user_list &&
                   user_list.map((p, idx) => {
                     return (
-                      <JobCheckImg
-                        disabled={submit}
-                        src={
-                          p.isEliminated.includes('N')
-                            ? BasicProfile
-                            : BasicProfile_Death
-                        }
-                        pointer={p.isEliminated.includes('Y') || submit}
-                        ref={ref}
-                        key={p.id}
-                        opacity={idx === voteBtnClicked ? '30%' : '100%'}
-                        onClick={() => clicked(idx)}
-                      >
+                      <Wrapper>
+                        <JobCheckImg
+                          disabled={submit}
+                          src={
+                            p.isEliminated.includes('N')
+                              ? BasicProfile
+                              : BasicProfile_Death
+                          }
+                          pointer={p.isEliminated.includes('Y') || submit}
+                          ref={ref}
+                          key={p.id}
+                          opacity={idx === voteBtnClicked ? '30%' : '100%'}
+                          onClick={() => clicked(idx)}
+                        ></JobCheckImg>
                         <Nickname>{p.nickname}</Nickname>
-                      </JobCheckImg>
+                      </Wrapper>
                     );
                   })}
-              </VotePlayerWrap>
+              </TenVotePlayerWrap>
             );
           }
         })()}
@@ -187,21 +190,15 @@ const Background = styled.div`
 const ModalBlock = styled.div`
   position: absolute;
   border-radius: 20px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  margin-top: 10rem;
   align-items: center;
   padding: 3rem;
   background: url('${(props) => props.src}') no-repeat center/cover;
-  width: 70%;
-  height: 100%;
-  @media (max-width: 1120px) {
-    width: 80%;
-  }
-  @media (max-width: 50rem) {
-    width: 90%;
-  }
-  min-height: 35rem;
+  width: 60rem;
+  height: 40rem;
+  max-width: 100rem;
   animation: modal-show 1s;
   @keyframes modal-show {
     from {
@@ -210,34 +207,43 @@ const ModalBlock = styled.div`
     }
     to {
       opacity: 1;
-      margin-top: 0;
+      margin-top: 10rem;
     }
   }
 `;
-
-const VotePlayerWrap = styled.div`
+const SixVotePlayerWrap = styled.div`
   width: 100%;
-  height: 60%;
+  height: 100%;
   display: grid;
-  gap: 30px 50px;
-  grid-template-columns: repeat(5, 10rem);
+  gap: 30px 30px;
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   justify-content: center;
   align-items: center;
-
-  @media screen and (min-width: 1607px) {
-    grid-template-columns: repeat(5, 10rem);
-  }
-  @media screen and (min-width: 1065px) and (max-width: 1607px) {
-    grid-template-columns: repeat(4, 10rem);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 20px 10px;
-  }
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    grid-template-columns: repeat(4, 7rem);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 20px 10px;
-  }
+`;
+const EightVotePlayerWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  gap: 30px 30px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  justify-content: center;
+  align-items: center;
+`;
+const TenVotePlayerWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  gap: 30px 30px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  justify-content: center;
+  align-items: center;
+`;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -245,17 +251,9 @@ const Title = styled.div`
   font-family: 'yg-jalnan';
   margin: 1rem;
   font-size: 4rem;
-  @media screen and (min-width: 1607px) {
+
+  @media screen and (max-width: 1040px) {
     font-size: 4rem;
-  }
-  @media screen and (min-width: 1065px) and (max-width: 1607px) {
-    font-size: 4rem;
-  }
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    font-size: 3rem;
-  }
-  @media screen and (min-width: 0px) and (max-width: 551px) {
-    font-size: 2rem;
   }
 `;
 
@@ -264,43 +262,21 @@ const Contents = styled.div`
   font-family: 'yg-jalnan';
   margin: 1rem;
   font-size: 2rem;
-  @media screen and (min-width: 1607px) {
-    font-size: 2rem;
-  }
-  @media screen and (min-width: 1065px) and (max-width: 1607px) {
-    font-size: 2rem;
-  }
 
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
+  @media screen and (max-width: 1040px) {
     font-size: 1.25rem;
   }
-  @media screen and (min-width: 0px) and (max-width: 551px) {
-  }
-`;
-//캐릭터 모음 Wrap
-const Vote = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  top: 7rem;
 `;
 
 const Nickname = styled.div`
   color: white;
   font-family: 'yg-jalnan';
-  margin: 0.25rem;
+  width: auto;
   font-size: 1rem;
-  @media screen and (min-width: 1607px) {
-    font-size: 1rem;
-  }
-  @media screen and (min-width: 1065px) and (max-width: 1607px) {
+  margin-top: 1rem;
+  text-align: center;
+  @media screen and (max-width: 1040px) {
     font-size: 0.75rem;
-  }
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    font-size: 0.75rem;
-  }
-  @media screen and (min-width: 0px) and (max-width: 551px) {
   }
 `;
 
@@ -315,54 +291,18 @@ const JobCheckImg = styled.div`
   margin: auto;
   cursor: pointer;
   opacity: ${(props) => props.opacity};
-  @media screen and (min-width: 1065px) and (max-width: 1607px) {
-    width: 90px;
-    height: 90px;
-  }
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    width: 100px;
-    height: 100px;
-  }
-  @media screen and (min-width: 0px) and (max-width: 551px) {
+  @media screen and (max-width: 1040px) {
+    width: 120px;
+    height: 120px;
   }
 `;
 
-// 선택받은 사람에게 나타날수 있게 한 Wrap
-const ChoiceBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 8rem;
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    width: 6rem;
-  }
-`;
-
-// 투표 선택 시 본인 캐릭터 하단에 추가 됨
-const Choice = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  width: 15px;
-  height: 15px;
-  position: relative;
-  margin: 2px;
-  border-radius: 50%;
-  background: url('${(props) => props.src}') no-repeat center/contain;
-  @media screen and (min-width: 551px) and (max-width: 1065px) {
-    width: 10px;
-    height: 10px;
-  }
-`;
 const SendBtn = styled.button`
-  width: 6rem;
-  height: 3rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 1.5rem;
   background-color: #9296fd;
-  position: absolute;
-  bottom: 3rem;
+  margin-top: 2px;
   font-size: 1rem;
   font-family: 'yg-jalnan';
   color: #fff;

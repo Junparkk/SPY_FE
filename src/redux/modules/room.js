@@ -244,12 +244,13 @@ const finalResult = (roomId) => {
 };
 
 //최종 승리자 API
-const WinnerDB = (roomId) => {
+const WinnerDB = (roomId, userId) => {
+  console.log('@@@@ winner api 요청됨');
   return async function (dispatch, useState, { history }) {
     await apis
-      .winnerList(roomId)
+      .winnerList(roomId, userId)
       .then((res) => {
-        console.log(res);
+        console.log(res.data.users, '@@@@ 값 ');
         dispatch(winnerList(res.data.users));
       })
       .catch((err) => {
@@ -257,7 +258,6 @@ const WinnerDB = (roomId) => {
       });
   };
 };
-
 export default handleActions(
   {
     [SET_ROOM]: (state, action) =>

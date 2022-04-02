@@ -66,7 +66,10 @@ export const apis = {
   aiSpyAct: (roomId) => api.patch(`/room/${roomId}/aiSpyAct`),
   finalResult: (roomId) => api.get(`/room/${roomId}/winner`),
   //승자 목록 불러오기
-  winnerList: (roomId) =>
-    api.get(`/room/${roomId}/winner
- `),
+  //   winnerList: (roomId) =>
+  //     api.get(`/room/${roomId}/winner
+  //  `),
+  winnerList: (roomId, userId) =>
+    api.get(`/room/${roomId}/user/${userId}/winner
+   `),
 };

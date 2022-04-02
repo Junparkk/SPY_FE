@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
+import Slider from '../components/Slider/Slider';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
 
-import { IoMdClose } from 'react-icons/io';
-import Slider from '../components/Slider/Slider';
 const RuleModal = ({ showModal, setShowModal }) => {
-  // const [modal, setModal] = useState(true);
   //클릭 효과음
   const sound = new Audio(click);
   const close = () => {
