@@ -10,7 +10,6 @@ import Advertisement from '../images/Advertisement.png';
 import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
 import RoomCard from '../components/RoomCard';
-import InviteAlarm from '../components/InviteAlarm';
 import PasswordModal from '../components/PasswordModal';
 
 import { actionCreators as roomActions } from '../redux/modules/room';
