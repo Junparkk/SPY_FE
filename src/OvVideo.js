@@ -40,7 +40,7 @@ export default class OpenViduVideoComponent extends Component {
             ) : DeathInfo === false ? (
               <DeathVideoBox src={BasicProfileDeath}>
                 <div style={{ display: 'none' }}>
-                  <video autoPlay={true} ref={this.videoRef} muted={true}/>
+                  <video autoPlay={true} ref={this.videoRef} muted={true} />
                 </div>
               </DeathVideoBox>
             ) : (
