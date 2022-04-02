@@ -411,11 +411,11 @@ const BackBt = styled.div`
   background-color: #9296fd;
   cursor: pointer;
   color: #ffe179;
-  padding: 10px;
+  padding: 15px;
   bottom: 50px;
   right: 50px;
   z-index: 5;
-  font-size: 50px;
+  font-size: 40px;
   box-shadow: 5px 5px 5px gray;
   @media screen and (max-width: 986px) {
     top: 100px;
