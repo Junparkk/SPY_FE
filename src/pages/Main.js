@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import blueDoor from '../images/blueDoor.png';
 import Header from '../components/Header';
 import click from '../sound/Click Sound.mp3';
+import Advertisement from '../images/Advertisement.png';
 
 import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
@@ -39,6 +40,11 @@ const Main = (props) => {
   const MakingRoom = () => {
     sound.play();
     history.push('/makingroom');
+  };
+
+  const Servey = () => {
+    sound.play();
+    window.location.href = 'https://forms.gle/Ejgiz8yHU56zrBZNA';
   };
 
   //모든 브라우저 스크롤 맥스값
@@ -78,6 +84,7 @@ const Main = (props) => {
         >
           <Header />
         </div>
+        <Adv src={Advertisement} onClick={Servey} />
         <Container>
           {room_list &&
             room_list.map((p, idx) => {
@@ -112,8 +119,6 @@ const Main = (props) => {
             })}
         </Container>
         <EnterRoomBtn
-          //이게 왜 안되는지 모르겠네
-          className={ScrollY > maxScroll - 1000 ? 'change' : ''}
           onClick={MakingRoom}
         >
           <span
@@ -125,7 +130,7 @@ const Main = (props) => {
             방<br />만<br />들<br />기
           </span>
         </EnterRoomBtn>
-        <Footer />
+          <Footer />
       </Wrap>
     </React.Fragment>
   );
@@ -145,11 +150,31 @@ const Wrap = styled.div`
   background-color: #ffe179;
   overflow: auto;
 `;
+
+const Adv = styled.div`
+  margin: 100px auto 50px auto;
+  width: 808px;
+  height: 100px;
+  cursor: pointer;
+  box-shadow: 5px 5px 5px gray;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 960px) {
+    width: 566.2px;
+    height: 70px;
+  }
+  @media screen and (max-width: 663px) {
+    width: 485px;
+    height: 60px;
+  }
+`;
+
 const Container = styled.div`
   display: grid;
   /* background-color: #ffe179; */
   /* height: 100%; */
-  padding-top: 200px;
+  padding-top: 0px;
   grid-template-columns: repeat(5, 150px);
   grid-template-rows: repeat(auto-fit, 300px);
   gap: 0px 100px;
@@ -183,9 +208,6 @@ const EnterRoomBtn = styled.button`
   font-weight: bold;
   font-size: 18px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  &.change {
-    position: absolute;
-  }
   :hover {
     cursor: pointer;
   }

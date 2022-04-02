@@ -40,7 +40,7 @@ export default class OpenViduVideoComponent extends Component {
             ) : DeathInfo === false ? (
               <DeathVideoBox src={BasicProfileDeath}>
                 <div style={{ display: 'none' }}>
-                  <video autoPlay={true} ref={this.videoRef} muted={true}/>
+                  <video autoPlay={true} ref={this.videoRef} muted={true} />
                 </div>
               </DeathVideoBox>
             ) : (
@@ -49,10 +49,10 @@ export default class OpenViduVideoComponent extends Component {
               </VideoBox>
             )}
           </div>
-          <Text>
-            <span>{this.getNicknameTag()}</span>
-          </Text>
         </div>
+        <Text>
+          <span>{this.getNicknameTag()}</span>
+        </Text>
       </>
     );
   }
@@ -65,8 +65,9 @@ const Text = styled.div`
   color: #6164ce;
   text-align: center;
   font-family: 'yg-jalnan';
-  @media screen and (max-width: 1251px) {
-    margin: 20px;
+  @media screen and (max-width: 1416px) {
+    margin: 20px 0px 0px 20px;
+    font-size: 14px;
   }
 `;
 
@@ -77,7 +78,7 @@ const DeathVideoBox = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 1251px) {
+  @media screen and (max-width: 1416px) {
     width: 200px;
     height: 200px;
     background-size: cover;
@@ -93,7 +94,7 @@ const VideoBox = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 1251px) {
+  @media screen and (max-width: 1416px) {
     width: 200px;
     height: 200px;
     background-size: cover;

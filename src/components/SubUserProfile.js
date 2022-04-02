@@ -31,17 +31,17 @@ const SubUserProfile = (props) => {
 
 const Wrap = styled.div`
   position: absolute;
-  margin: -80px 0px 0px 220px;
+  margin: -80px 0px 0px 180px;
   @media screen and (max-width: 1416px) {
-    margin: -120px 0px 0px 150px;
+    margin: -50px 0px 0px 140px;
   }
 `;
 
 const WrapChange = styled.div`
   position: absolute;
-  margin: -80px 0px 0px 220px;
+  margin: -80px 0px 0px 180px;
   @media screen and (max-width: 1416px) {
-    margin: -120px 0px 0px 150px;
+    margin: -50px 0px 0px 140px;
   }
 `;
 

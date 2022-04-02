@@ -57,20 +57,17 @@ const IngameHeader = (props) => {
         ) : (
           <RoundText>현재 라운드 : {round} </RoundText>
         )}
-        <div>
-          <RiQuestionnaireLine
-            onClick={openModal}
-            style={{
-              position: 'fixed',
-              right: '20px',
-              fontSize: '36px',
-              cursor: 'pointer',
-              padding: '20px',
-              color: '#dddddd',
-              marginRight: '10px',
-            }}
-          />
-        </div>
+        <RiQuestionnaireLine
+          onClick={openModal}
+          style={{
+            position: 'absolute',
+            right: '20px',
+            fontSize: '36px',
+            cursor: 'pointer',
+            padding: '20px',
+            color: '#dddddd',
+          }}
+        />
         <RuleModal showModal={showModal} setShowModal={setShowModal} />
       </Wrap>
     </React.Fragment>
@@ -80,8 +77,15 @@ const RoundText = styled.span`
   font-size: 30px;
   font-family: 'yg-jalnan';
   color: #ffe179;
-  margin: auto;
-  margin: 25px 0px 0px 80px;
+  margin: 25px 0px 0px 50px;
+  @media screen and (max-width: 956px) {
+    font-size: 20px;
+    margin: 30px 0px 0px 20px;
+  }
+  @media screen and (max-width: 663px) {
+    font-size: 14px;
+    margin: 33px 0px 0px 15px;
+  }
 `;
 
 const HeaderTitle = styled.div`
@@ -90,6 +94,13 @@ const HeaderTitle = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 956px) {
+    width: 120px;
+    margin: 20px 10px 10px 20px;
+  }
+  @media screen and (max-width: 506px) {
+    display: none;
+  }
 `;
 const Aicon = styled.div`
   width: 200px;
@@ -97,6 +108,12 @@ const Aicon = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 956px) {
+    margin: 20px 10px 20px 10px;
+  }
+  @media screen and (max-width: 663px) {
+    margin: 20px 10px 20px 20px;
+  }
 `;
 const BasicIcon = styled.div`
   width: 200px;
@@ -104,12 +121,26 @@ const BasicIcon = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
+  @media screen and (max-width: 956px) {
+    margin: 20px 10px 20px 10px;
+  }
+  @media screen and (max-width: 663px) {
+    margin: 20px 10px 20px 10px;
+  }
 `;
 const AiText = styled.span`
   font-size: 30px;
   font-family: 'yg-jalnan';
   color: #ffe179;
   margin: 25px 0px 0px -120px;
+  @media screen and (max-width: 956px) {
+    font-size: 20px;
+    margin: 30px 0px 0px -160px;
+  }
+  @media screen and (max-width: 663px) {
+    font-size: 14px;
+    margin: 33px 0px 0px -160px;
+  }
 `;
 
 const Wrap = styled.div`

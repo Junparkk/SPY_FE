@@ -631,48 +631,61 @@ function Ingame(props) {
           <IngameHeader readyCnt={readyCnt} status={status} />
         </div>
         <VideoContainer>
-          <Video roomId={roomId} roomUserList={roomUserList} userinfo={userInfo} />
+          <Video
+            roomId={roomId}
+            roomUserList={roomUserList}
+            userinfo={userInfo}
+          />
         </VideoContainer>
         {chatView ? (
           <ChatBox>
             <Chat socket={socket} username={username} roomId={roomId} />
           </ChatBox>
         ) : null}
-        {round >= 1 ? null : (
-          <ButtonContainer>
-            <RiArrowGoBackFill
-              style={{
-                width: '35px',
-                minWidth: '35px',
-                height: '35px',
-                borderRadius: '35px',
-                backgroundColor: '#9296fd',
-                cursor: 'pointer',
-                color: '#ffe179',
-                padding: '10px',
-                marginLeft: '100px',
-                zIndex: '5',
-              }}
-              onClick={leaveRoom}
-            />
-            {findMe[0] && findMe[0].isHost === 'N' ? (
-              isReady ? (
-                <ReadyButton onClick={() => cancelReady()}>
-                  준비취소
-                </ReadyButton>
+        <ButtonContainer>
+          {round >= 1 ? null : (
+            <>
+              <GoBack>
+                <RiArrowGoBackFill
+                  style={{
+                    width: '50px',
+                    minWidth: '50px',
+                    height: '50px',
+                    borderRadius: '50px',
+                    backgroundColor: '#9296fd',
+                    cursor: 'pointer',
+                    color: '#ffe179',
+                    padding: '10px',
+                    marginLeft: '100px',
+                    zIndex: '5',
+                    boxShadow: '5px 5px 5px gray',
+                  }}
+                  onClick={leaveRoom}
+                />
+              </GoBack>
+            </>
+          )}
+          {round >= 1 ? null : (
+            <div>
+              {findMe[0] && findMe[0].isHost === 'N' ? (
+                isReady ? (
+                  <ReadyButton onClick={() => cancelReady()}>
+                    준비취소
+                  </ReadyButton>
+                ) : (
+                  <ReadyButton onClick={() => doReady()}>준 비</ReadyButton>
+                )
               ) : (
-                <ReadyButton onClick={() => doReady()}>준비</ReadyButton>
-              )
-            ) : (
-              <StartButton onClick={() => doStart()}>시작</StartButton>
-            )}
-            {chatView ? (
-              <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
-            ) : (
-              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
-            )}
-          </ButtonContainer>
-        )}
+                <StartButton onClick={() => doStart()}>시 작</StartButton>
+              )}
+            </div>
+          )}
+          {chatView ? (
+            <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+          ) : (
+            <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+          )}
+        </ButtonContainer>
       </Wrap>
     </>
   );
@@ -693,8 +706,12 @@ const ButtonContainer = styled.div`
   position: absolute;
   left: 10%;
   bottom: 50px;
-  @media screen and (max-width: 763px) {
+  @media screen and (max-width: 794px) {
     left: 0%;
+  }
+  @media screen and (max-width: 663px) {
+    position: fixed;
+    left: -100px;
   }
 `;
 
@@ -703,47 +720,102 @@ const VideoContainer = styled.div`
 `;
 
 const ReadyButton = styled.div`
-  width: 6.2%;
+  width: 150px;
   min-width: 90px;
-  height: 59px;
-  border-radius: 35px;
+  height: 80px;
+  font-size: 22px;
+  border-radius: 50px;
   background-color: #9296fd;
   text-align: center;
-  line-height: 59px;
+  line-height: 80px;
   font-family: 'yg-jalnan';
   color: white;
   z-index: 5;
   margin-left: 100px;
   cursor: pointer;
+  box-shadow: 5px 5px 5px gray;
+  @media screen and (max-width: 794px) and (min-width: 663px) {
+    margin-left: 75px;
+    width: 120px;
+    height: 63px;
+    font-size: 18px;
+    border-radius: 45px;
+    line-height: 63px;
+  }
+  @media screen and (max-width: 663px) {
+    margin-left: 0px;
+    width: 100px;
+    height: 57px;
+    font-size: 16px;
+    border-radius: 35px;
+    line-height: 57px;
+  }
 `;
 const StartButton = styled.div`
-  width: 6.2%;
+  width: 150px;
   min-width: 90px;
-  height: 59px;
-  border-radius: 35px;
+  height: 80px;
+  font-size: 22px;
+  border-radius: 50px;
   background-color: #9296fd;
   text-align: center;
-  line-height: 59px;
+  line-height: 80px;
   font-family: 'yg-jalnan';
   color: white;
   z-index: 5;
   margin-left: 100px;
   cursor: pointer;
+  box-shadow: 5px 5px 5px gray;
+  @media screen and (max-width: 663px) {
+    margin-left: 0px;
+    width: 100px;
+    height: 57px;
+    font-size: 16px;
+    border-radius: 35px;
+    line-height: 57px;
+    bottom: 0;
+  }
+  @media screen and (max-width: 794px) and (min-width: 663px) {
+    margin-left: 75px;
+    width: 120px;
+    height: 63px;
+    font-size: 18px;
+    border-radius: 45px;
+    line-height: 63px;
+  }
 `;
 
 const ChatButton = styled.div`
-  width: 6.2%;
+  width: 150px;
   min-width: 90px;
-  height: 59px;
-  border-radius: 35px;
+  height: 80px;
+  font-size: 22px;
+  border-radius: 50px;
   background-color: #9296fd;
   text-align: center;
-  line-height: 59px;
+  line-height: 80px;
   font-family: 'yg-jalnan';
   color: white;
   z-index: 5;
   margin-left: 100px;
   cursor: pointer;
+  box-shadow: 5px 5px 5px gray;
+  @media screen and (max-width: 663px) {
+    margin-left: 0px;
+    width: 100px;
+    height: 57px;
+    font-size: 14px;
+    border-radius: 35px;
+    line-height: 57px;
+  }
+  @media screen and (max-width: 794px) and (min-width: 663px) {
+    margin-left: 75px;
+    width: 120px;
+    height: 63px;
+    font-size: 18px;
+    border-radius: 45px;
+    line-height: 63px;
+  }
 `;
 
 const ChatBox = styled.div`
@@ -752,6 +824,19 @@ const ChatBox = styled.div`
   top: 50px;
   float: right;
   z-index: 500;
+`;
+
+const GoBack = styled.div`
+  @media screen and (max-width: 663px) {
+    display: none;
+  }
+`;
+
+const GoBackMobile = styled.div`
+  display: none;
+  @media screen and (max-width: 663px) {
+    display: flex;
+  }
 `;
 
 export default Ingame;
