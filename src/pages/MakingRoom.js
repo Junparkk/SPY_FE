@@ -76,7 +76,7 @@ const Markingroom = () => {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
         pauseOnFocusLoss: false,
-          pauseOnHover: false,
+        pauseOnHover: false,
       });
       return;
     } else {
@@ -87,7 +87,6 @@ const Markingroom = () => {
         autoClose: 3000,
       });
     }
-    
   };
 
   return (
@@ -410,7 +409,7 @@ const BackBt = styled.div`
   cursor: pointer;
   color: #ffe179;
   padding: 10px;
-  top: 850px;
+  bottom: 50px;
   right: 50px;
   z-index: 5;
   font-size: 50px;

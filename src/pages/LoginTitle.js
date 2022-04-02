@@ -8,7 +8,7 @@ import Logo from '../images/Mapia.png';
 import Title from '../images/Title.png';
 import Building from '../images/Building.png';
 import '../shared/App.css';
-import click from '../sound/Click Sound.mp3'
+import click from '../sound/Click Sound.mp3';
 import { useSelector } from 'react-redux';
 
 function LoginTitle() {
@@ -57,13 +57,11 @@ function LoginTitle() {
   });
 
   //클릭 효과음
-  const sound = new Audio(click)
+  const sound = new Audio(click);
 
   const ClickSound = () => {
-    sound.play()
-  }
-
-
+    sound.play();
+  };
 
   //닉네임 서버 전달
   const dispatch = useDispatch();
@@ -77,13 +75,13 @@ function LoginTitle() {
   const randomNickClick = () => {
     dispatch(userActions.RandomNickDB());
     setNickname(randomUser);
-    sound.play()
+    sound.play();
   };
 
   const randomNickDefault = () => {
     dispatch(userActions.RandomNickDB());
     setNickname(randomUser);
-  }
+  };
   useEffect(() => {
     randomNickDefault();
     setNickname('');
@@ -161,7 +159,7 @@ const Wrap = styled.div`
 const TitleWrap = styled.div`
   width: 100%;
   padding: 80px 0px 0px 0px;
-  @media screen and (max-width: 663px) {
+  @media screen and (max-width: 1040px) {
     padding: 40px 0px 0px 0px;
   }
 `;
@@ -184,14 +182,14 @@ const HeaderTitle = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url('${(props) => props.src}');
-  @media screen and (max-width: 663px) {
+  @media screen and (max-width: 1040px) {
     width: 70%;
   }
 `;
 
 const InputNick = styled.div`
   margin-top: 7%;
-  @media screen and (max-width: 663px) {
+  @media screen and (max-width: 1040px) {
     margin-top: -10%;
   }
 `;
