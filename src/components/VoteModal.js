@@ -31,6 +31,9 @@ const VoteModal = (props) => {
     const chosen = user_list[idx];
     setChosenId(chosen.userId);
     setChosenRoomId(chosen.roomId);
+    console.log(chosen, '초이슨 낮투표')
+    console.log(chosenId, '초이슨ID 낮투표')
+    console.log(chosenRoomId, '초이슨RoomID 낮투표')
   };
   console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   const submitClicked = () => {

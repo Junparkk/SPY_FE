@@ -25,6 +25,9 @@ const SpyVoteModal = (props) => {
   const Alive = user_list.filter((user) => user.isEliminated === 'N');
   const ref = useRef();
 
+  //빈 값 넘겨줄 때
+  const spyNullVote = useSelector((state) => state.vote.isSpyNull);
+
   //스파이 목록 중 낮은 ID값 한테 투표권 주기
   const spy_list = user_list.filter((user) => user.role === 4);
   const voteSpy = spy_list.sort((a, b) => b - a);
@@ -36,10 +39,17 @@ const SpyVoteModal = (props) => {
 
   // 투표 사람 클릭
   const clicked = (idx) => {
-    setVoteBtnClicked(idx);
-    const chosen = user_list[idx];
-    setChosenId(chosen.user.id);
-    setChosenRoomId(chosen.roomId);
+    if (setVoteBtnClicked === null) {
+      spyNullVote(true);
+    } else {
+      setVoteBtnClicked(idx);
+      const chosen = user_list[idx];
+      setChosenId(chosen.userId);
+      setChosenRoomId(chosen.roomId);
+      console.log(chosen, '초이슨 스파이');
+      console.log(chosenId, '초이슨ID 스파이');
+      console.log(chosenRoomId, '초이슨RoomID 스파이');
+    }
   };
   console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   // 투표 값 서버로 전달
@@ -48,6 +58,7 @@ const SpyVoteModal = (props) => {
       dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
       dispatch(voteActions.spyNullVote(false));
       setSubmit(true);
+      console.log(chosenId, '선택한 ID 스파이');
     } else {
       window.alert('해고 시킬 직원을 선택해주세요. :)');
     }

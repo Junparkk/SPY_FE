@@ -166,11 +166,9 @@ function Ingame(props) {
   const isFired = roomUserList.filter((user) =>
     user.isEliminated.includes('Y')
   ); // 해고당한 명단
-  console.log(aiSpy);
   const isFireds = isFired.map((user) => {
     return user.userId;
   });
-  console.log(isFireds, '죽은사람 모달들');
 
   const _isFired = isFireds.includes(parseInt(userId));
   // 유저리스트에서 본인 정보만 뽑아
@@ -208,17 +206,10 @@ function Ingame(props) {
   //소켓 으로 ready 받기
   const [readyCnt, setReadyCnt] = useState();
 
-  const [test, setTest] = useState(msg);
-  useEffect(() => {
-    setTest(msg);
-    console.log(msg, '@@@@@@@@@@@@@@@@useEffect');
-  }, [msg]);
-
   const [isResult, setIsResult] = useState(0);
 
   //시작하는 기능
   useEffect(() => {
-    console.log('======================시작됨=================', status);
     return () => setStatus('isStart');
   }, [isStart]);
 
@@ -236,7 +227,6 @@ function Ingame(props) {
       setIsResult(gameStatus.isResult);
     });
   }
-  console.log(isResult, '@@@@@@@');
 
   // 상태가 바뀔 때 마다 유저의 리스트를 받아옴
   useEffect(() => {
@@ -270,6 +260,16 @@ function Ingame(props) {
         showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
       case 'dayTime':
+        setTimeout(() => {
+          toast.success('아침이 밝았습니다.', {
+            draggable: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        }, 5000);
+
         console.log('######데이 시작 요청', Date().toString());
         clearTimeout(finalResultNight);
         clearTimeout(showRoleSetTimeOut);
@@ -422,11 +422,9 @@ function Ingame(props) {
       console.log('@@@@ 낮 투표 결과 디스패치 다음');
       setTimeout(() => {
         setStatus('voteNightLawyer');
-      }, 1000);
+      }, 3000);
     }
   }
-
-  console.log(status, '=============현재상태');
 
   //결과가 나오면 페이지 이동
   function winnerFn() {
@@ -436,13 +434,16 @@ function Ingame(props) {
 
   //변호사 투표
   function voteNightLawyer() {
-    if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
-      _isFired ? setIsFired(true) : setIsLawyerModalShowing(true);
-    } else {
-      setIsVotingLawyer(true);
-    }
-
-    console.log(lawyerNullVote, '@@@@@@@@@@ 타이머 밖에 있는 lawyerNullVote');
+    console.log(roomUserList, 'check----------------');
+    console.log(isFired, 'check----------------------');
+    setTimeout(() => {
+      if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
+        console.log(isFired, 'check----------------------2');
+        _isFired ? setIsFired(true) : setIsLawyerModalShowing(true);
+      } else {
+        setIsVotingLawyer(true);
+      }
+    }, 3000);
     const Timer = setTimeout(async () => {
       setIsLawyerModalShowing(false);
       setIsVotingLawyer(false);
@@ -538,12 +539,11 @@ function Ingame(props) {
         isSpy[0] &&
         isSpy[0].isAi === 'N' &&
         isSpy[0].userId === parseInt(userId) &&
-        isSpy[0].isEliminated.includes('N')
+        isSpy[0].isEliminated.includes('N') &&
+        spyNullVote === true
       ) {
-        if (spyNullVote === true) {
           console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
           dispatch(voteActions.spyActDB(roomId, null));
-        }
       }
 
       if (host[0] && host[0].userId === parseInt(userId)) {
