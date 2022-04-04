@@ -82,16 +82,6 @@ function Ingame(props) {
     setChatView(!chatView);
     sound.play();
   };
-  //채팅창 드레그
-  const trackPos = (data) => {
-    setPosition({ x: data.x, y: data.y });
-  };
-  const handleStart = () => {
-    setOpacity(true);
-  };
-  const handleEnd = () => {
-    setOpacity(false);
-  };
 
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
@@ -177,19 +167,12 @@ function Ingame(props) {
     user.isEliminated.includes('Y')
   ); // 해고당한 명단
   console.log(aiSpy);
-  //빈배열
-  const isFireds = [];
-  //해고 명단 반복문 돌려서 ID값 isFireds에 넣기
-  isFired.forEach((id) => {
-    isFireds.push(Object.values(id));
+  const isFireds = isFired.map((user) => {
+    return user.userId;
   });
-  // 처음 시작할 때 isFireds는 빈배열이기에 오류가 나서 밑에 코드 작성
-  // 빈배열일때 undefined ID넣기
-  if (isFireds.length === 0) isFireds.push('undefined Id');
+  console.log(isFireds, '죽은사람 모달들');
 
-  //해고 명단 ID 리스트에 본인 ID가 있다면 true반환
-  const _isFired = isFireds[0].includes(parseInt(userId));
-  console.log(_isFired, '죽은사람 명단, ID');
+  const _isFired = isFireds.includes(parseInt(userId));
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
@@ -414,7 +397,7 @@ function Ingame(props) {
         socket.emit('getStatus', { roomId: roomId, status: 'invalidVoteCnt' });
         setStatus('invalidVoteCnt');
       }
-    }, 10000);
+    }, 13000);
     return () => clearTimeout(notiJobRoleTimer);
   };
 
@@ -644,7 +627,6 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        <VoteModal isMe={findMe} roomId={roomId} />
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}

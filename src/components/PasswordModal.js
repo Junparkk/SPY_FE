@@ -55,7 +55,6 @@ const PasswordModal = (props) => {
                 borderRadius: '20px',
                 width: '60%',
                 minWidth: '200px',
-                color: '#f4f4fe',
               }}
               onChange={onChangePwd}
               value={pwd}

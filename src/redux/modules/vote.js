@@ -156,7 +156,7 @@ const detectiveActDB = (roomId, userId) => {
     await apis
       .detectiveAct(roomId, userId)
       .then((res) => {
-        toast.success('탐정투표 결과 모달22222' + res.data.msg, {
+        toast.success(res.data.msg, {
           draggable: false,
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,

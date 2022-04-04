@@ -40,7 +40,7 @@
   }
   
   .chat-window .chat-body {
-    height: calc(800px - (45px + 70px));
+    height: calc(600px - (45px + 70px));
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: #9296Fd99;
     position: relative;
@@ -135,8 +135,29 @@
     font-size: 0.7rem;
     font-weight: 600;
   }
+
+  #whisper {
+    justify-content: flex-start;
+  }
   
+  #whisper .message-content {
+    justify-content: flex-start;
+    background-color: #ffe179;
+    border-radius: 20px 20px 20px 0px;
+  }
   
+  #whisper .message-meta {
+    justify-content: flex-start;
+    margin : 3px 0px 0px 0px;
+    margin-bottom: 3px;
+  }
+  #whisper .message-time {
+    justify-content: flex-start;
+    margin : 3px 0px 0px 5px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
   #you {
     justify-content: flex-end;
   }
@@ -154,6 +175,29 @@
     margin-bottom: 3px;
   }
   #you .message-time {
+    justify-content: flex-end;
+    margin : 3px 5px 0px 0px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  #whisperyou {
+    justify-content: flex-end;
+  }
+  
+  #whisperyou .message-content {
+    justify-content: flex-end;
+    background-color: #868686;
+    color: #fefefe;
+    border-radius: 20px 20px 0px 20px;
+  }
+  
+  #whisperyou .message-meta {
+    justify-content: flex-end;
+    margin-right: 5px;
+    margin-bottom: 3px;
+  }
+  #whisperyou .message-time {
     justify-content: flex-end;
     margin : 3px 5px 0px 0px;
     font-size: 0.7rem;

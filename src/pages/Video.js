@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import React, { Component } from 'react';
-import UserVideoComponent from '../UserVideoComponent';
 import styled from 'styled-components';
-import PubVideoComponent from '../PubVideoComponent';
 import OpenViduVideoComponent from '../OvVideo';
 import PubUserProfile from '../components/PubUserProfile';
 import BasicProfileDeath from '../images/BasicProfile_Death.png';

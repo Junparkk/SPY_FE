@@ -32,6 +32,11 @@ const Slider = ({ showModal, setShowModal }) => {
     setCurrentSlide(0);
   }, []);
 
+  const close = () => {
+    setShowModal((prev) => !prev);
+    sound.play();
+  };
+
   const nextSlide = () => {
     setCurrentSlide(currentSlide === slideLength - 1 ? 0 : currentSlide + 1);
     sound.play();
@@ -80,6 +85,7 @@ const Slider = ({ showModal, setShowModal }) => {
           ></div>
         ))}
       </div>
+      <CloseModal onClick={close}>SKIP</CloseModal>
     </div>
   );
 };
@@ -105,6 +111,25 @@ const Desc = styled.div`
     line-height: 25px;
     width: 35%;
   }
+`;
+
+const CloseModal = styled.button`
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  background-color: #9296fd;
+  bottom: 60px;
+  left: 45.5%;
+  width: 11%;
+  min-width: 60px;
+  height: 55px;
+  border-radius: 30px;
+  box-shadow: 5px 5px 5px #bbbbbbbb;
+  font-family: 'yg-jalnan';
+  color: #dddddd;
+  font-size: 1.5rem;
+  padding: 0;
+  z-index: 10;
 `;
 
 export default Slider;

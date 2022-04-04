@@ -6,12 +6,6 @@ import Slider from '../components/Slider/Slider';
 import click from '../sound/Click Sound.mp3';
 
 const RuleModal = ({ showModal, setShowModal }) => {
-  //클릭 효과음
-  const sound = new Audio(click);
-  const close = () => {
-    setShowModal((prev) => !prev)
-    sound.play();
-  }
 
   const modalRef = useRef();
 
@@ -40,11 +34,8 @@ const RuleModal = ({ showModal, setShowModal }) => {
         <ModalBg onClick={closeBtn} ref={modalRef}>
           <WrapModal showModal={showModal}>
             <div>
-              <Slider />
+              <Slider setShowModal={setShowModal} />
             </div>
-            <CloseModal onClick={close}>
-              닫기
-            </CloseModal>
           </WrapModal>
         </ModalBg>
       ) : null}
@@ -80,23 +71,5 @@ const ModalBg = styled.div`
   align-items: center;
 `;
 
-const CloseModal = styled.button`
-  cursor: pointer;
-  border: none;
-  position: absolute;
-  background-color: #9296fd;
-  top: 30px;
-  right: 60px;
-  width: 9%;
-  min-width: 60px;
-  height: 48px;
-  border-radius: 30px;
-  box-shadow: 3px 3px 3px #bbbbbbbb;
-  font-family: 'yg-jalnan';
-  color: #dddddd;
-  font-size: 1.2rem;
-  padding: 0;
-  z-index: 10;
-`;
 
 export default RuleModal;

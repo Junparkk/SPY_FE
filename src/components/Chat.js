@@ -55,12 +55,19 @@ function Chat({ socket, username, roomId }) {
       setCurrentMessage('');
     }
   };
-
   useEffect(() => {
     socket.on('receive_message', (data) => {
       setMessageList((list) => [...list, data]);
     });
   }, [socket]);
+
+  useEffect(() => {
+    const List = roomUserList.map((u) => ({
+      value: u.socketId,
+      name: u.nickname,
+    }));
+    return List;
+  }, [roomUserList]);
 
   const not_To_me = () => {
     alert('자기자신에게는 귓속말을 할 수 없어요');
@@ -89,11 +96,29 @@ function Chat({ socket, username, roomId }) {
                 <>
                   <div
                     className="message"
-                    id={userNick === messageContent.author ? 'you' : 'other'}
+                    id={
+                      userNick === messageContent.author
+                        ? 'you'
+                        : userNick === messageContent.author &&
+                          messageContent.socketId !== ''
+                        ? 'whisperyou'
+                        : messageContent.socketId !== ''
+                        ? 'whisper'
+                        : 'other'
+                    }
                   >
                     <div>
                       <div className="message-meta">
-                        <p id="author">{messageContent.author}</p>
+                        {userNick === messageContent.author ? (
+                          <p id="author"></p>
+                        ) : userNick === messageContent.author &&
+                          messageContent.socketId !== '' ? (
+                          <p id="author">귓속말</p>
+                        ) : messageContent.socketId !== '' ? (
+                          <p id="author">{messageContent.author}님의 귓속말</p>
+                        ) : (
+                          <p id="author">{messageContent.author}</p>
+                        )}
                       </div>
                       <div className="message-content">
                         <p>{messageContent.message}</p>
