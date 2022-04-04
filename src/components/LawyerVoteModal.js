@@ -27,17 +27,21 @@ const LawyerVoteModal = (props) => {
   const [chosenRoomId, setChosenRoomId] = useState(0);
   const ref = useRef();
 
+  //빈 값 넘겨줄 때
+  const lawyerNullVote = useSelector((state) => state.vote.isLawyerNull);
   const clicked = (idx) => {
-    setVoteBtnClicked(idx);
-    console.log(idx);
-    const chosen = user_list[idx];
-    setChosenId(chosen.user.id);
-    setChosenRoomId(chosen.roomId);
-    console.log(chosen);
-    console.log(chosen.user, '초이슨 유저 리스트')
-    console.log(chosen.user.id, '유저 아이디');
-    console.log(chosen.roomId, '룸 아이디');
-    console.log(chosen.user, '제발');
+    if (setVoteBtnClicked === null) {
+      lawyerNullVote(true);
+    } else {
+      setVoteBtnClicked(idx);
+      console.log(idx);
+      const chosen = user_list[idx];
+      setChosenId(chosen.user.id);
+      setChosenRoomId(chosen.roomId);
+      console.log(chosen, '초이슨 변호사');
+      console.log(chosenId, '초이슨ID  변호사');
+      console.log(chosenRoomId, '초이슨RoomID 변호사');
+    }
   };
 
   const submitClicked = () => {

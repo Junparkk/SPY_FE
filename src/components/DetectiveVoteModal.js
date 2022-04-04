@@ -42,9 +42,9 @@ const DetectiveVoteModal = (props) => {
     const chosen = user_list[idx];
     setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
-    console.log(chosen, '해당유저 정보');
-    console.log(chosen.user.id, '유저 아이디');
-    console.log(chosen.roomId, '룸 아이디');
+    console.log(chosen, '초이슨 탐정')
+    console.log(chosenId, '초이슨ID  탐정')
+    console.log(chosenRoomId, '초이슨RoomID 탐정')
   };
 
   const submitClicked = () => {

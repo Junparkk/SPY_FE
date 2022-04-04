@@ -258,6 +258,21 @@ const WinnerDB = (roomId, userId) => {
       });
   };
 };
+
+//방데이터 삭제 API
+const deleteDB = (roomId) => {
+  console.log('@@@@ delete api 요청됨');
+  return async function (dispatch, useState, { history }) {
+    await apis
+      .deleteRoom(roomId)
+      .then((res) => {
+        console.log(res, '@@@@ 값 ');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
 export default handleActions(
   {
     [SET_ROOM]: (state, action) =>
@@ -319,6 +334,7 @@ const actionCreators = {
   finalResult,
   readyCheck,
   WinnerDB,
+  deleteDB,
 };
 
 export { actionCreators };

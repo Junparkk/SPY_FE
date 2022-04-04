@@ -1,6 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 import { produce } from 'immer';
 import axios from 'axios';
+import { apis } from '../../shared/apis';
+
 // toast
 import { toast } from 'react-toastify';
 
@@ -44,7 +46,7 @@ const LoginDB = (nickname) => {
   return function (dispatch, getState, { history }) {
     axios
       .post('https://mafia.milagros.shop/api/user', {
-        nickname: nickname,
+        nickname,
       })
       .then((response) => {
         toast.success(`${nickname} 님 반가워요`);

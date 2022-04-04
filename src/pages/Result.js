@@ -48,36 +48,48 @@ const Result = (props) => {
     // 셋타임 아웃 - 몇초내로 방 자동 나가짐
     // DB삭제 api
     // 이 함수를 유즈이펙트에 넣기
-    history.push('/lobby');
+    history.replace('/lobby');
     sound.play();
     // dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
 
   setTimeout(() => {}, 5000);
 
-  const reStart = () => {
-    sound.play();
-    history.goBack();
-  };
+  // const reStart = () => {
+  //   sound.play();
+  //   history.goBack();
+  // };
 
   const shared = () => {
     sound.play();
   };
 
- 
-
   const roomId = props.match.params.roomId;
   console.log(roomId, '룸, 아이디');
   const userId = localStorage.getItem('userid');
   console.log(userId, '유져, 아이디');
+  const roomUserList = useSelector((state) => state.vote.userList);
+  const host = roomUserList.filter((user) => user.isHost === 'Y');
+  console.log(host, 's나는 방장이다 맨 ');
+  console.log(roomUserList, '@@@@리스트');
+  console.log(host[0] && host[0].userId === parseInt(userId), '방장인지 확인')
 
+  // 승자명단
+  const users = useSelector((state) => state.room.winner);
+  console.log(users);
   useEffect(() => {
     dispatch(roomActions.WinnerDB(roomId, userId));
   }, []);
 
-  // 방장
-  const users = useSelector((state) => state.room.winner);
-  console.log(users);
+  // 결과페이지에서 일정 시간이 지나면 방나가기 기능이 실현 되도록
+  useEffect(() => {
+    setTimeout(() => {
+      if (users[0]) {
+        dispatch(roomActions.deleteDB(roomId));
+      }
+    }, 5000);
+  });
+
   //   //결과페이지에서 결과 리스트 불러오기
   //   // const [list, setList] = useState();
 
@@ -104,9 +116,9 @@ const Result = (props) => {
   //승자 목록
   // const winUsers = list.users;
   // const divideWinner = users && users[0] === 4;
-  
+
   const divideWinner = users && users[0]?.role === 4;
-  
+
   return (
     <React.Fragment>
       <Header />

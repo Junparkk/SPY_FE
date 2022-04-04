@@ -9,6 +9,8 @@ const api = axios.create({
 });
 
 export const apis = {
+  // user
+  login: (nickname) => api.post('user', nickname),
   // room
   lobby: () => api.get('/lobby'),
   player: (roomId) => api.get(`/room/${roomId}/users`),
@@ -24,6 +26,7 @@ export const apis = {
   statusCheck: (roomId) => api.get(`/room/${roomId}/status_1`),
   statusCheck2: (roomId, userId) =>
     api.get(`/room/${roomId}/user/${userId}/status`),
+  deleteRoom: (roomId) => api.delete(`/room/${roomId}/delete`),
   // post: (postId) => api.get(`/api/posts/${postId}`),
   // add: (title, price, imgurl, content) =>
   //   api.post('/api/posts', title, price, imgurl, content),
@@ -65,10 +68,6 @@ export const apis = {
   aiLawyerAct: (roomId) => api.patch(`/room/${roomId}/aiLawyerAct`),
   aiSpyAct: (roomId) => api.patch(`/room/${roomId}/aiSpyAct`),
   finalResult: (roomId) => api.get(`/room/${roomId}/winner`),
-  //승자 목록 불러오기
-  //   winnerList: (roomId) =>
-  //     api.get(`/room/${roomId}/winner
-  //  `),
   winnerList: (roomId, userId) =>
     api.get(`/room/${roomId}/user/${userId}/winner
    `),

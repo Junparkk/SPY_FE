@@ -5,13 +5,30 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Web site created using create-react-app" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-224759881-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'UA-224759881-1');
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -28,7 +45,7 @@
     <div id="root"></div>
     <!-- 신분 확인 모달창 -->
     <div id="JobCheckModal"></div>
-     <!-- 투표 모달창 -->
+    <!-- 투표 모달창 -->
     <div id="VoteModal"></div>
     <!-- 패스워드 모달창 -->
     <div id="PasswordModal"></div>
@@ -38,7 +55,6 @@
     <div id="VoteLawyer"></div>
     <div id="VoteSpy"></div>
 
-  
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

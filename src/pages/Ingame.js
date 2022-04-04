@@ -176,20 +176,15 @@ function Ingame(props) {
   const isFired = roomUserList.filter((user) =>
     user.isEliminated.includes('Y')
   ); // 해고당한 명단
-  console.log(aiSpy);
-  //빈배열
-  const isFireds = [];
-  //해고 명단 반복문 돌려서 ID값 isFireds에 넣기
-  isFired.forEach((id) => {
-    isFireds.push(Object.values(id));
+  const isFireds = isFired.map((user) => {
+    return user.userId;
   });
-  // 처음 시작할 때 isFireds는 빈배열이기에 오류가 나서 밑에 코드 작성
-  // 빈배열일때 undefined ID넣기
-  if (isFireds.length === 0) isFireds.push('undefined Id');
+  console.log(isFireds, '죽은사람 모달들');
 
-  //해고 명단 ID 리스트에 본인 ID가 있다면 true반환
-  const _isFired = isFireds[0].includes(parseInt(userId));
-  console.log(_isFired, '죽은사람 명단, ID');
+  const _isFired = isFireds.includes(parseInt(userId));
+
+  console.log(_isFired, '죽은 사람의 ID 값')
+
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
@@ -555,12 +550,11 @@ function Ingame(props) {
         isSpy[0] &&
         isSpy[0].isAi === 'N' &&
         isSpy[0].userId === parseInt(userId) &&
-        isSpy[0].isEliminated.includes('N')
+        isSpy[0].isEliminated.includes('N') &&
+        spyNullVote === true
       ) {
-        if (spyNullVote === true) {
           console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
           dispatch(voteActions.spyActDB(roomId, null));
-        }
       }
 
       if (host[0] && host[0].userId === parseInt(userId)) {
@@ -644,7 +638,6 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        <VoteModal isMe={findMe} roomId={roomId} />
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}

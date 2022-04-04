@@ -35,8 +35,8 @@ const initialState = {
   },
   userId: [],
   users: [],
-  isLawyerNull: true,
-  isSpyNull: true,
+  isLawyerNull: false,
+  isSpyNull: false,
   _isVote: false,
 };
 
