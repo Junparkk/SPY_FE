@@ -10,6 +10,7 @@ function Chat({ socket, username, roomId }) {
   const [change, setChange] = useState(false);
   const [sendtype, setSendtype] = useState('send_message');
   const [toUser, setToUser] = useState('');
+  const [userList, setUsetList] = useState([]);
   const roomUserList = useSelector((state) => state.vote.userList);
   const userSocketId = useSelector((state) => state.user.userinfo).socketId;
   //채팅창 드레그
@@ -32,7 +33,7 @@ function Chat({ socket, username, roomId }) {
     setChange(!change);
   };
 
-  const List = roomUserList.map((u) => ({
+  const List = userList.map((u) => ({
     value: u.socketId,
     name: u.nickname,
   }));
@@ -59,15 +60,16 @@ function Chat({ socket, username, roomId }) {
     socket.on('receive_message', (data) => {
       setMessageList((list) => [...list, data]);
     });
-  }, [socket]);
+    socket.emit('currUsers', { roomId });
 
-  useEffect(() => {
-    const List = roomUserList.map((u) => ({
-      value: u.socketId,
-      name: u.nickname,
-    }));
-    return List;
-  }, [roomUserList]);
+    socket.on('currUsers', (user) => {
+      setUsetList(user);
+    });
+    socket.on('currUsersToMe', (user) => {
+      setUsetList(user);
+    });
+  }, [socket]);
+  console.log(userList);
 
   const not_To_me = () => {
     alert('자기자신에게는 귓속말을 할 수 없어요');
