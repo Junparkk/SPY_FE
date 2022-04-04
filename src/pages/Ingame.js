@@ -180,6 +180,7 @@ function Ingame(props) {
   //빈배열
   const isFireds = [];
   //해고 명단 반복문 돌려서 ID값 isFireds에 넣기
+
   isFired.forEach((id) => {
     isFireds.push(Object.values(id));
   });
@@ -190,6 +191,7 @@ function Ingame(props) {
   //해고 명단 ID 리스트에 본인 ID가 있다면 true반환
   const _isFired = isFireds[0].includes(parseInt(userId));
   console.log(_isFired, '죽은사람 명단, ID');
+
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
@@ -225,17 +227,10 @@ function Ingame(props) {
   //소켓 으로 ready 받기
   const [readyCnt, setReadyCnt] = useState();
 
-  const [test, setTest] = useState(msg);
-  useEffect(() => {
-    setTest(msg);
-    console.log(msg, '@@@@@@@@@@@@@@@@useEffect');
-  }, [msg]);
-
   const [isResult, setIsResult] = useState(0);
 
   //시작하는 기능
   useEffect(() => {
-    console.log('======================시작됨=================', status);
     return () => setStatus('isStart');
   }, [isStart]);
 
@@ -253,7 +248,6 @@ function Ingame(props) {
       setIsResult(gameStatus.isResult);
     });
   }
-  console.log(isResult, '@@@@@@@');
 
   // 상태가 바뀔 때 마다 유저의 리스트를 받아옴
   useEffect(() => {
@@ -287,6 +281,16 @@ function Ingame(props) {
         showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
       case 'dayTime':
+        setTimeout(() => {
+          toast.success('아침이 밝았습니다.', {
+            draggable: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+          });
+        }, 5000);
+
         console.log('######데이 시작 요청', Date().toString());
         clearTimeout(finalResultNight);
         clearTimeout(showRoleSetTimeOut);
@@ -439,11 +443,9 @@ function Ingame(props) {
       console.log('@@@@ 낮 투표 결과 디스패치 다음');
       setTimeout(() => {
         setStatus('voteNightLawyer');
-      }, 1000);
+      }, 3000);
     }
   }
-
-  console.log(status, '=============현재상태');
 
   //결과가 나오면 페이지 이동
   function winnerFn() {
@@ -453,13 +455,16 @@ function Ingame(props) {
 
   //변호사 투표
   function voteNightLawyer() {
-    if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
-      _isFired ? setIsFired(true) : setIsLawyerModalShowing(true);
-    } else {
-      setIsVotingLawyer(true);
-    }
-
-    console.log(lawyerNullVote, '@@@@@@@@@@ 타이머 밖에 있는 lawyerNullVote');
+    console.log(roomUserList, 'check----------------');
+    console.log(isFired, 'check----------------------');
+    setTimeout(() => {
+      if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
+        console.log(isFired, 'check----------------------2');
+        _isFired ? setIsFired(true) : setIsLawyerModalShowing(true);
+      } else {
+        setIsVotingLawyer(true);
+      }
+    }, 3000);
     const Timer = setTimeout(async () => {
       setIsLawyerModalShowing(false);
       setIsVotingLawyer(false);
@@ -644,7 +649,6 @@ function Ingame(props) {
   return (
     <>
       <Wrap>
-        <VoteModal isMe={findMe} roomId={roomId} />
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}
