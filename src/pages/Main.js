@@ -117,9 +117,7 @@ const Main = (props) => {
               }
             })}
         </Container>
-        <EnterRoomBtn
-          onClick={MakingRoom}
-        >
+        <EnterRoomBtn onClick={MakingRoom}>
           <span
             style={{
               fontFamily: 'yg-jalnan',
@@ -129,7 +127,7 @@ const Main = (props) => {
             방<br />만<br />들<br />기
           </span>
         </EnterRoomBtn>
-          <Footer />
+        <Footer />
       </Wrap>
     </React.Fragment>
   );

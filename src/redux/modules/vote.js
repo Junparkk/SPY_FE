@@ -72,16 +72,9 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
     await apis
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
-        // const status = res.data.result === 0 ? 'voteNightLawyer' : 'winner';
-        // const msg = res.data.msg;
-        // console.log(`@@@ 받은 결과 값 ${res.data}`);
-
-        // setTimeout(() => {
-        //   socket.emit('getMsg', { roomId, msg });
-        //   socket.emit('getStatus', { roomId, status });
-        // }, 1500);
         if (res.data.result === 0) {
-          console.log('낮투표 결과 확인 @@@@@@@@@@@@@@@', res.data.msg);
+          console.log('낮투표 결과 확인 @@@@@@@@@@@@@@@', res.data.msg, res);
+          dispatch(getUserDB(roomId));
           socket.emit('getMsg', {
             roomId,
             msg: res.data.msg,
@@ -108,7 +101,7 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
             });
           }, 500);
           history.replace(`/result/${roomId}`);
-        } 
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -121,7 +114,7 @@ const lawyerActDB = (roomId, userId) => {
     await apis
       .lawyerAct(roomId, userId)
       .then(function (res) {
-        toast.success('---변호사 답변---' + res.data.msg, {
+        toast.success(res.data.msg, {
           draggable: false,
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,
@@ -156,7 +149,7 @@ const detectiveActDB = (roomId, userId) => {
     await apis
       .detectiveAct(roomId, userId)
       .then((res) => {
-        toast.success('탐정투표 결과 모달22222' + res.data.msg, {
+        toast.success(res.data.msg, {
           draggable: false,
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,

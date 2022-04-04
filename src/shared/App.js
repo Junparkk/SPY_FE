@@ -10,6 +10,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import Main from '../pages/Main';
 import LoginTitle from '../pages/LoginTitle';
+
 import MakingRoom from '../pages/MakingRoom';
 import Result from '../pages/Result';
 import Ingame from '../pages/Ingame';
