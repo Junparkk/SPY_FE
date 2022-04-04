@@ -21,6 +21,8 @@ import IngameHeader from '../components/IngameHeader';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
+import SpyActive from '../sound/Heartbeat fast.mp3'
+import role from '../sound/RoleGive.mp3'
 
 //컴포넌트
 import VoteModal from '../components/VoteModal';
@@ -58,6 +60,8 @@ function Ingame(props) {
 
   //클릭 효과음
   const sound = new Audio(click);
+  const spyActive = new Audio(SpyActive)
+  const Role = new Audio(role)
 
   //채팅창 드레그
   const nodeRef = useRef(null);
@@ -257,6 +261,7 @@ function Ingame(props) {
         roleGive();
         break;
       case 'showRole':
+        Role.play()
         console.log('######역할 불러오기 요청', Date().toString());
         showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
@@ -313,6 +318,7 @@ function Ingame(props) {
       case 'voteNightSpy':
         console.log('######스파이 투표 요청', Date().toString());
         spyVoteCnt = setTimeout(voteNightSpy, 13000);
+        spyActive.play()
         clearTimeout(detectiveVote);
         break;
       case 'showResultNight':

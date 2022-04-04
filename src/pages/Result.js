@@ -9,7 +9,11 @@ import WinEffect from '../images/WinEffect.gif';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
+
+//효과음
 import click from '../sound/Click Sound.mp3';
+import win from '../sound/Win.mp3';
+
 //이미지
 import citizenWin from '../images/citizenWin.png'; // 시민 승리시 회장 모습
 import spyWin from '../images/spyWin.png'; // 스파이 승리시 회장 모습
@@ -26,6 +30,7 @@ const Result = (props) => {
 
   //클릭 효과음
   const sound = new Audio(click);
+  const Win = new Audio(win);
 
   //방 버튼 스크롤 컨트롤
   const [ScrollY, setScrollY] = useState(0);
@@ -41,6 +46,10 @@ const Result = (props) => {
     watch();
     return () => window.removeEventListener('scroll', handleFollow);
   });
+
+  React.useEffect(() => {
+    Win.play();
+  }, []);
 
   const dispatch = useDispatch();
 
@@ -72,7 +81,7 @@ const Result = (props) => {
   const host = roomUserList.filter((user) => user.isHost === 'Y');
   console.log(host, 's나는 방장이다 맨 ');
   console.log(roomUserList, '@@@@리스트');
-  console.log(host[0] && host[0].userId === parseInt(userId), '방장인지 확인')
+  console.log(host[0] && host[0].userId === parseInt(userId), '방장인지 확인');
 
   // 승자명단
   const users = useSelector((state) => state.room.winner);

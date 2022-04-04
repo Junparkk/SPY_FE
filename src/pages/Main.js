@@ -4,8 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import blueDoor from '../images/blueDoor.png';
 import Header from '../components/Header';
-import click from '../sound/Click Sound.mp3';
 import Advertisement from '../images/Advertisement.png';
+
+//효과음
+import click from '../sound/Click Sound.mp3';
+import OpenDoor from '../sound/Door Open.mp3';
+
 
 import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
@@ -33,8 +37,9 @@ const Main = (props) => {
     return () => window.removeEventListener('scroll', handleFollow);
   });
 
-  //클릭 효과음
+  //효과음
   const sound = new Audio(click);
+  const DoorOpen = new Audio(OpenDoor)
 
   const MakingRoom = () => {
     sound.play();
@@ -92,6 +97,7 @@ const Main = (props) => {
                   <Cards
                     key={idx}
                     onClick={() => {
+                      DoorOpen.play()
                       console.log('비번 없는 방 입장');
                       const moveTimer = setTimeout(() => {
                         dispatch(roomActions.enterRoomDB(userId, p.id));
@@ -106,6 +112,7 @@ const Main = (props) => {
                 return (
                   <Cards
                     onClick={() => {
+                      DoorOpen.play()
                       dispatch(roomActions.privateRoom(p.id, true));
                       console.log('나는 널이 아니오');
                       console.log('비번달기용', p.roomPwd);
@@ -127,7 +134,7 @@ const Main = (props) => {
             방<br />만<br />들<br />기
           </span>
         </EnterRoomBtn>
-        <Footer />
+          <Footer />
       </Wrap>
     </React.Fragment>
   );
@@ -142,8 +149,8 @@ const Cards = styled.div`
   height: 300px;
 `;
 const Wrap = styled.div`
-  height: 100vh;
-  min-height: 900px;
+  height: auto;
+  min-height: 100vh;
   background-color: #ffe179;
   overflow: auto;
 `;
@@ -216,5 +223,7 @@ const EnterRoomBtn = styled.button`
     font-size: 14px;
   }
 `;
+
+
 
 export default Main;
