@@ -69,7 +69,6 @@ function Chat({ socket, username, roomId }) {
       setUsetList(user);
     });
   }, [socket]);
-  console.log(userList);
 
   const not_To_me = () => {
     alert('자기자신에게는 귓속말을 할 수 없어요');

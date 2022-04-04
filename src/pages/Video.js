@@ -275,7 +275,6 @@ class Video extends Component {
     const DeathInfo = theOther.map((i) => i.isEliminated.includes('N'));
     const userInfo = this.props.userInfo;
 
-    console.log(theOther);
     return (
       ///////////////////////////////////////////////////////
       //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2

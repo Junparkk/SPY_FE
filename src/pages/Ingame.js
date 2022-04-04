@@ -155,6 +155,7 @@ function Ingame(props) {
   const [isVotingDetective, setIsVotingDetective] = useState(false); // 탐정 투표 시
   const [iVotingSpy, setIsVotingSpy] = useState(false); // 스파이 투표 시
   const [isFired_, setIsFired] = useState(false); //해고 당한 사람이 투표 되는동안 볼 모달
+  const [changeDay, setChangeDay] = useState(''); //낮과 밤을 셋팅
 
   //본인 확인 용도
   const host = roomUserList.filter((user) => user.isHost === 'Y');
@@ -260,6 +261,7 @@ function Ingame(props) {
         showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
       case 'dayTime':
+        setChangeDay('afternoon');
         setTimeout(() => {
           toast.success('아침이 밝았습니다.', {
             draggable: false,
@@ -291,6 +293,7 @@ function Ingame(props) {
         clearTimeout(invalidAndAiVoteCnt);
         break;
       case 'voteNightLawyer':
+        setChangeDay('night');
         toast.success(msg, {
           draggable: false,
           position: toast.POSITION.TOP_CENTER,
@@ -542,8 +545,8 @@ function Ingame(props) {
         isSpy[0].isEliminated.includes('N') &&
         spyNullVote === true
       ) {
-          console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
-          dispatch(voteActions.spyActDB(roomId, null));
+        console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
+        dispatch(voteActions.spyActDB(roomId, null));
       }
 
       if (host[0] && host[0].userId === parseInt(userId)) {
@@ -626,7 +629,7 @@ function Ingame(props) {
   //////////////////////////////////////////////////////////////////////
   return (
     <>
-      <Wrap>
+      <Wrap className={changeDay === 'night' ? 'night' : ''}>
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}
@@ -710,10 +713,8 @@ const Wrap = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #ffe179;
-  //반응형 손봐야함
-  @media screen and (min-width: 663px) {
-    width: 100%;
-    height: 100vh;
+  &.night {
+    background-color: #32346b;
   }
 `;
 const ButtonContainer = styled.div`
