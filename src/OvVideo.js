@@ -4,10 +4,11 @@ import Loading from './images/VideoLoading.png';
 import SubUserProfile from '../src/components/SubUserProfile';
 import BasicProfileDeath from './images/BasicProfile_Death.png';
 
-export default class OpenViduVideoComponent extends Component {
+class OpenViduVideoComponent extends Component {
   constructor(props) {
     super(props);
     this.videoRef = React.createRef();
+    this.state = { mute: false };
   }
 
   getNicknameTag() {
@@ -29,6 +30,9 @@ export default class OpenViduVideoComponent extends Component {
 
   render() {
     const DeathInfo = this.props.deathinfo;
+    const Mute = () => {
+      this.setState({ mute: !this.state.mute });
+    };
     return (
       <>
         <div>
@@ -51,20 +55,32 @@ export default class OpenViduVideoComponent extends Component {
               </div>
             ) : (
               <VideoBox src={Loading}>
-                <video autoPlay={true} ref={this.videoRef} />
+                <video
+                  autoPlay={true}
+                  ref={this.videoRef}
+                  muted={this.state.mute}
+                />
               </VideoBox>
             )}
           </div>
         </div>
         <Text>
           <span>{this.getNicknameTag()}</span>
+          {this.state.mute ? (
+            <Mic onClick={Mute}>&nbsp;🤐</Mic>
+          ) : (
+            <Mic onClick={Mute}>&nbsp;😀</Mic>
+          )}
         </Text>
       </>
     );
   }
 }
 
+export default OpenViduVideoComponent;
+
 const Text = styled.div`
+  display: flex;
   position: absolute;
   font-size: 18px;
   margin: 25px 0px 0px 25px;
@@ -107,4 +123,11 @@ const VideoBox = styled.div`
     background-repeat: no-repeat;
     border-radius: 200px;
   }
+`;
+
+const Mic = styled.div`
+  font-size: 22px;
+  border-radius: 20px;
+  color: black;
+  cursor: pointer;
 `;

@@ -10,7 +10,6 @@ import Advertisement from '../images/Advertisement.png';
 import click from '../sound/Click Sound.mp3';
 import OpenDoor from '../sound/Door Open.mp3';
 
-
 import JobCheckModal from '../components/JobCheckModal';
 import VoteModal from '../components/VoteModal';
 import RoomCard from '../components/RoomCard';
@@ -39,7 +38,7 @@ const Main = (props) => {
 
   //효과음
   const sound = new Audio(click);
-  const DoorOpen = new Audio(OpenDoor)
+  const DoorOpen = new Audio(OpenDoor);
 
   const MakingRoom = () => {
     sound.play();
@@ -97,7 +96,7 @@ const Main = (props) => {
                   <Cards
                     key={idx}
                     onClick={() => {
-                      DoorOpen.play()
+                      DoorOpen.play();
                       console.log('비번 없는 방 입장');
                       const moveTimer = setTimeout(() => {
                         dispatch(roomActions.enterRoomDB(userId, p.id));
@@ -112,7 +111,7 @@ const Main = (props) => {
                 return (
                   <Cards
                     onClick={() => {
-                      DoorOpen.play()
+                      DoorOpen.play();
                       dispatch(roomActions.privateRoom(p.id, true));
                       console.log('나는 널이 아니오');
                       console.log('비번달기용', p.roomPwd);
@@ -134,7 +133,7 @@ const Main = (props) => {
             방<br />만<br />들<br />기
           </span>
         </EnterRoomBtn>
-          <Footer />
+        <Footer />
       </Wrap>
     </React.Fragment>
   );
@@ -223,7 +222,5 @@ const EnterRoomBtn = styled.button`
     font-size: 14px;
   }
 `;
-
-
 
 export default Main;

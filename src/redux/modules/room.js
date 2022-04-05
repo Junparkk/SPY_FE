@@ -101,6 +101,7 @@ const leaveRoomDB = (nickname, roomId) => {
         dispatch(leaveUser(response.data.user));
         console.log(response);
         window.location.replace('/lobby');
+        socket.emit('currUsers', { roomId });
       })
       .catch((error) => {
         window.alert(error);

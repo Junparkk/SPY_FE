@@ -138,7 +138,7 @@ class Video extends Component {
           // console.warn(exception);
         });
 
-        // --- 4) Connect to the session with a valid user token ---
+        // --- 4) Connect to the session with a valid user token --
 
         // 'getToken' method is simulating what your server-side should do.
         // 'token' parameter should be retrieved and returned by your own backend

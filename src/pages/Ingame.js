@@ -1,13 +1,14 @@
 import '../components/Chat.css';
 import '../shared/App.css';
 import io from 'socket.io-client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Chat from '../components/Chat.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import vote, { actionCreators as voteActions } from '../redux/modules/vote';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { useHistory } from 'react-router-dom';
+
 
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
@@ -21,8 +22,9 @@ import IngameHeader from '../components/IngameHeader';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
-import SpyActive from '../sound/Heartbeat fast.mp3'
-import role from '../sound/RoleGive.mp3'
+import SpyActive from '../sound/Heartbeat fast.mp3';
+import role from '../sound/RoleGive.mp3';
+import morning from '../sound/Morning.mp3';
 
 //컴포넌트
 import VoteModal from '../components/VoteModal';
@@ -36,6 +38,7 @@ import VoteSpy from '../components/VoteWaitingModal/VoteSpy';
 import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
 import ResultModal from '../components/ResultModal';
 import Fired from '../components/Fired';
+import CountDown from '../components/CountDown';
 
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
 import '../styles/toast.css';
@@ -56,12 +59,29 @@ function Ingame(props) {
   const [room, setRoom] = useState('');
   const [showChat, setShowChat] = useState(false);
   const [chatView, setChatView] = useState(false);
-  const userNick = localStorage.getItem('nickname');
+  const [userList, setUsetList] = useState([]);
+  const [min, setMin] = useState(0);
+  const [secs, setSecs] = useState(0);
+  const minsec = { minutes: min, seconds: secs };
+
+  const userInfo = useSelector((state) => state.user.userinfo);
+
+  //새로고침 막기
+  const doNotReload = (event) => {
+    if (
+      (event.ctrlKey === true &&
+        (event.keyCode === 78 || event.keyCode === 82)) ||
+      event.keyCode === 116
+    ) {
+      return window.confirm('새로고침하면 게임이 정상작동하지 않아요:(');
+    }
+  };
 
   //클릭 효과음
   const sound = new Audio(click);
-  const spyActive = new Audio(SpyActive)
-  const Role = new Audio(role)
+  const spyActive = new Audio(SpyActive);
+  const Role = new Audio(role);
+  const Morning = new Audio(morning);
 
   //채팅창 드레그
   const nodeRef = useRef(null);
@@ -122,28 +142,46 @@ function Ingame(props) {
     //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
     //   setMsg(voteMsg);
     // });
-  }, []);
-  console.log(msg);
+  }, [socket]);
 
   useEffect(() => {
     dispatch(userActions.GetUser(userId, roomId));
+    document.onkeydown = doNotReload;
   }, []);
+
+  useEffect(() => {
+    socket.emit('currUsers', { roomId });
+
+    socket.on('currUsers', (user) => {
+      setUsetList(user);
+    });
+    socket.on('currUsersToMe', (user) => {
+      setUsetList(user);
+    });
+  }, [socket]);
+  function useForceUpdate() {
+    const [, updateState] = useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
+    console.log('리렌더링!!');
+  }
+  const forceUpdate = useForceUpdate;
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
     socket.emit('join_room', { roomId, userId });
     setShowChat(true);
   };
+
   const leaveRoom = () => {
     sound.play();
     dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
+
   ////////////////////////////////////////////////////////////////////
   const round = useSelector((state) => state.room.round);
   const [isReady, setIsReady] = useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
   const changeMaxLength = roomUserList.length;
-  const userInfo = useSelector((state) => state.user.userinfo);
   const isVote = useSelector((state) => state.vote._isVote);
 
   //소켓으로 받아온 값 임시저장용
@@ -178,6 +216,9 @@ function Ingame(props) {
   const _isFired = isFireds.includes(parseInt(userId));
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
+    (user) => user.userId === parseInt(userId)
+  );
+  const findMeSocket = userList.filter(
     (user) => user.userId === parseInt(userId)
   );
 
@@ -261,12 +302,20 @@ function Ingame(props) {
         roleGive();
         break;
       case 'showRole':
-        Role.play()
+        Role.play();
         console.log('######역할 불러오기 요청', Date().toString());
         showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
       case 'dayTime':
+        setMin(2);
         setChangeDay('afternoon');
+        toast.success(msg, {
+          draggable: false,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         setTimeout(() => {
           toast.success('아침이 밝았습니다.', {
             draggable: false,
@@ -280,9 +329,10 @@ function Ingame(props) {
         console.log('######데이 시작 요청', Date().toString());
         clearTimeout(finalResultNight);
         clearTimeout(showRoleSetTimeOut);
-        dayTimeSetTimeOut = setTimeout(dayTime, 10000);
+        dayTimeSetTimeOut = setTimeout(dayTime, 100000);
         break;
       case 'voteDay':
+        setMin(0);
         console.log('######투표 시작 요청', Date().toString());
         clearTimeout(dayTimeSetTimeOut);
         voteDaySetTimeOut = setTimeout(voteDay, 5000);
@@ -316,9 +366,9 @@ function Ingame(props) {
         clearTimeout(lawyerVote);
         break;
       case 'voteNightSpy':
+        spyActive.play();
         console.log('######스파이 투표 요청', Date().toString());
         spyVoteCnt = setTimeout(voteNightSpy, 13000);
-        spyActive.play()
         clearTimeout(detectiveVote);
         break;
       case 'showResultNight':
@@ -352,14 +402,14 @@ function Ingame(props) {
       }, 500);
       // updateStatus();
       //백엔드에서 api 호출을 받고 showRole로 바꿔줌
+      toast.success('역할이 부여됩니다 :)', {
+        draggable: false,
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+      });
     }
-    toast.success('게임이 시작하였습니다 :)', {
-      draggable: false,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
   };
 
   //롤보여주기
@@ -617,13 +667,6 @@ function Ingame(props) {
   //아침에 최종 결과 공지
   function finalResult() {
     const Timer = setTimeout(() => {
-      toast.error(msg, {
-        draggable: false,
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 2000,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-      });
       console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId, userId));
 
@@ -654,6 +697,9 @@ function Ingame(props) {
         >
           <IngameHeader readyCnt={readyCnt} status={status} />
         </div>
+        <Timer className={changeDay === 'night' ? 'change' : ''}>
+          <CountDown minsec={minsec} />
+        </Timer>
         <VideoContainer>
           <Video
             roomId={roomId}
@@ -691,7 +737,7 @@ function Ingame(props) {
           )}
           {round >= 1 ? null : (
             <div>
-              {findMe[0] && findMe[0].isHost === 'N' ? (
+              {findMeSocket[0] && findMeSocket[0].isHost === 'N' ? (
                 isReady ? (
                   <ReadyButton onClick={() => cancelReady()}>
                     준비취소
@@ -705,9 +751,13 @@ function Ingame(props) {
             </div>
           )}
           {chatView ? (
-            <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+            <div>
+              <ChatButton onClick={Chatting}>채팅창닫기</ChatButton>
+            </div>
           ) : (
-            <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+            <div>
+              <ChatButton onClick={Chatting}>채팅창열기</ChatButton>
+            </div>
           )}
         </ButtonContainer>
       </Wrap>
@@ -854,10 +904,14 @@ const GoBack = styled.div`
   }
 `;
 
-const GoBackMobile = styled.div`
-  display: none;
-  @media screen and (max-width: 663px) {
-    display: flex;
+const Timer = styled.div`
+  text-align: center;
+  margin-top: 30px;
+  font-size: 40px;
+  font-family: 'yg-jalnan';
+  color: #9296fd;
+  &.change {
+    color: #ffe179;
   }
 `;
 

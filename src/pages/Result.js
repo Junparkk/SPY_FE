@@ -57,7 +57,7 @@ const Result = (props) => {
     // 셋타임 아웃 - 몇초내로 방 자동 나가짐
     // DB삭제 api
     // 이 함수를 유즈이펙트에 넣기
-    history.replace('/lobby');
+    window.location.replace('/lobby');
     sound.play();
     // dispatch(roomActions.leaveRoomDB(userId, roomId));
   };
