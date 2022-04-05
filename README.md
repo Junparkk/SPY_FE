@@ -1,6 +1,6 @@
 # 홈페이지 👉 [Industrial S.P.Y](https://www.spygame.shop) 
 
-## 🕵🏿‍♂️ [Industrial S.P.Y](https://github.com/kiwihannah/mafia_bk) BE repository
+## 🕵🏿‍♂️ [Industrial S.P.Y](https://github.com/Junparkk/SPY_FE) FE repository
 ---
 
 ![KakaoTalk_20220319_203528257](https://user-images.githubusercontent.com/83942678/161703589-32311d1b-f290-4e7f-a111-06b93a06e74c.png)
@@ -21,12 +21,12 @@
 
 ---
 
-## 👨‍👩‍👧‍👧 백엔드 팀원 깃헙 주소
+## 👨‍👩‍👧‍👧 프론트엔드 팀원 깃헙 주소
 
-- 백엔드
-  - 정한나 (https://hannah1009.tistory.com/)
-  - 오세웅 (https://namu445.tistory.com/)
-  - 최창용 (https://velog.io/@daonez)
+- 프론트엔드
+  - 박효준 (https://github.com/Junparkk)
+  - 김양수 (https://github.com/Ryangsu)
+  - 신병우 (https://github.com/ShinByoungWoo)
 
 ---
 
@@ -62,6 +62,6 @@
 
 ## 🔥 이슈 및 트러블슈팅
 
-[상세보기] (https://pattern-beluga-3d8.notion.site/47080a5b44d34c12a0831b82f910d708)
+[상세보기] (https://pattern-beluga-3d8.notion.site/23911097ceab446e8690d09e85cddc2b)
 
 ---
