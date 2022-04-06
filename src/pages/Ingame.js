@@ -16,7 +16,6 @@ import { useRef } from 'react';
 import axios from 'axios';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 import { OpenVidu } from 'openvidu-browser';
-import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
 import IngameHeader from '../components/IngameHeader';
 

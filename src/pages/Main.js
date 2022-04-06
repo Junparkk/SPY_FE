@@ -63,9 +63,12 @@ const Main = (props) => {
   const userId = localStorage.getItem('userid');
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
+  const room_length = room_list.map((room) => room).length;
 
   const _private = useSelector((state) => state.room.roomState.privateState);
 
+    console.log(ScrollY)
+    console.log(maxScroll)
   //방 리스트 불러오기
   useEffect(() => {
     dispatch(roomActions.getRoomAPI());
@@ -76,7 +79,7 @@ const Main = (props) => {
       {/* 패스워드 모달 */}
       {_private ? <PasswordModal /> : null}
       {/* 대기실 화면 */}
-      <Wrap>
+      <Wrap className={room_length < 9 ? 'change' : ''}>
         <div
           style={{
             position: 'fixed',
@@ -123,7 +126,7 @@ const Main = (props) => {
               }
             })}
         </Container>
-        <EnterRoomBtn onClick={MakingRoom}>
+        <EnterRoomBtn className={maxScroll - ScrollY < 1250 ? 'change' : '' } onClick={MakingRoom}>
           <span
             style={{
               fontFamily: 'yg-jalnan',
@@ -133,8 +136,10 @@ const Main = (props) => {
             방<br />만<br />들<br />기
           </span>
         </EnterRoomBtn>
-        <Footer />
       </Wrap>
+      <FooterBox>
+        <Footer />
+      </FooterBox>
     </React.Fragment>
   );
 };
@@ -149,9 +154,14 @@ const Cards = styled.div`
 `;
 const Wrap = styled.div`
   height: auto;
-  min-height: 100vh;
+  min-height: 100%;
   background-color: #ffe179;
   overflow: auto;
+  padding-bottom: 100px;
+  &.change {
+    /* height: 1200px;
+    min-height: 1200px; */
+  }
 `;
 
 const Adv = styled.div`
@@ -200,6 +210,10 @@ const Container = styled.div`
 
 const EnterRoomBtn = styled.button`
   position: fixed;
+  &.change{
+    position: absolute;
+    bottom: -260px;
+  }
   bottom: 20px;
   right: 100px;
   width: 4rem;
@@ -221,6 +235,11 @@ const EnterRoomBtn = styled.button`
     right: 30px;
     font-size: 14px;
   }
+`;
+
+const FooterBox = styled.div`
+  width: 100%;
+  position: relative;
 `;
 
 export default Main;
