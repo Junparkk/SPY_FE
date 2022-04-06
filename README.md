@@ -70,9 +70,19 @@
 ![게임진행1](https://user-images.githubusercontent.com/82128525/161945715-3bea4566-4688-41cf-82c0-d38385bc652c.gif)
 ![게임진행2](https://user-images.githubusercontent.com/82128525/161945725-79b2759d-e314-4786-a073-6dd20f73ac4d.gif)
 
-### 4. 결과 페이지
+### 4. 실시간 채팅 기능
+
+![채팅](https://user-images.githubusercontent.com/82128525/161959286-012b398b-4421-4ea7-9be2-f1bf2b415ec2.gif)
+
+### 5. 결과 페이지
 
 ![결과페이지](https://user-images.githubusercontent.com/82128525/161945744-4a62dde0-aa8e-4461-8c93-5dd1a483bd47.gif)
+
+---
+
+## 🚩 Flow chart
+
+![스크린샷 2022-04-06 오후 7 49 16](https://user-images.githubusercontent.com/82128525/161958772-08892389-1214-426d-bd94-9130ee475ea9.png)
 
 ---
 
@@ -89,14 +99,6 @@
 | react-toastify       | 알람 토스트 라이브러리                 | 8.2.0  |
 | styled-components       | CSS-in-JS 라이브러리                 | 5.3.3  |
 | openvidu-browser       | 화상채팅 라이브러리               | 2.21.0  |
-
----
-
-## 🌠 기능소개
-
-- 화상 채팅
-- 텍스트 채팅
-- 실시간 게임이 진행되는 로직
 
 ---
 
