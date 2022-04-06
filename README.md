@@ -40,15 +40,15 @@
 
 | 라이브러리    | 설명                       | 버전   |
 | ------------- | -------------------------- | ------ |
-| Express       | Node.js                    | 4.17.1 |
-| MYSQL         | 참조관계가 많은 데이터 특성. MySQL 적용 | 5.13.3 |
-|sequelize      |                        |7.0.0 |
-| CORS          | Request resouRce 제한      | 2.8.5  |
-| Swagger       | API 문서화                 | 4.1.6  |
-| jest          | 테스트                      | 27.5.1  |
-| socket.io       | 실시간 통신                 | 4.4.1  |
-| letsencrypt       | ssl 보안                 | 2.1.10  |
-| axios       | 프론트 백 데이터 연결               | 0.26.1  |
+| socket.io-client       | 웹소켓 라이브러리                    | 4.4.1 |
+| redux         | 상태 관리 | 4.1.2 |
+|redux-thunk      |  리덕스 미들웨어                      |2.4.1 |
+| redux-actions          | 액션 관리      | 2.6.5  |
+| immer       | 불변성 유지                 | 9.0.12  |
+| axios          | HTTP 클라이언트 라이브러리                      | 0.26.0 |
+| react-toastify       | 알람 토스트 라이브러리                 | 8.2.0  |
+| styled-components       | CSS-in-JS 라이브러리                 | 5.3.3  |
+| openvidu-browser       | 화상채팅 라이브러리               | 2.21.0  |
 
 ---
 
