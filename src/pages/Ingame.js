@@ -129,7 +129,6 @@ function Ingame(props) {
     //   setMsg(voteMsg);
     // });
   }, []);
-  console.log(msg);
 
   useEffect(() => {
     dispatch(userActions.GetUser(userId, roomId));
@@ -183,7 +182,7 @@ function Ingame(props) {
 
   const _isFired = isFireds.includes(parseInt(userId));
 
-  console.log(_isFired, '죽은 사람의 ID 값')
+  console.log(_isFired, '죽은 사람의 ID 값');
 
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
@@ -274,6 +273,13 @@ function Ingame(props) {
         showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
       case 'dayTime':
+        toast.success(msg, {
+          draggable: false,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         setTimeout(() => {
           toast.success('아침이 밝았습니다.', {
             draggable: false,
@@ -358,13 +364,6 @@ function Ingame(props) {
       // updateStatus();
       //백엔드에서 api 호출을 받고 showRole로 바꿔줌
     }
-    toast.success('게임이 시작하였습니다 :)', {
-      draggable: false,
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-    });
   };
 
   //롤보여주기
@@ -556,8 +555,8 @@ function Ingame(props) {
         isSpy[0].isEliminated.includes('N') &&
         spyNullVote === true
       ) {
-          console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
-          dispatch(voteActions.spyActDB(roomId, null));
+        console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
+        dispatch(voteActions.spyActDB(roomId, null));
       }
 
       if (host[0] && host[0].userId === parseInt(userId)) {
@@ -619,16 +618,9 @@ function Ingame(props) {
     }, 500);
   }
 
-  //아침에 최종 결과 공지
+  //최종 결과 공지
   function finalResult() {
     const Timer = setTimeout(() => {
-      toast.error(msg, {
-        draggable: false,
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 2000,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-      });
       console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId, userId));
 

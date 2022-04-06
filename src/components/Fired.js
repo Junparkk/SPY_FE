@@ -82,7 +82,7 @@ const ModalBasic = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #2291e3;
+  background-color: #212121;
   width: 60rem;
   @media (max-width: 1120px) {
     width: 50rem;
