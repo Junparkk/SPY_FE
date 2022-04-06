@@ -44,9 +44,35 @@
 
 ---
 
-## 🖥 Project Architecture
+## 🖥 와이어 프레임
 
-![industrialSPY_final](https://user-images.githubusercontent.com/83942678/161703516-543bfb52-5b01-40bb-b08a-5f84918ad327.png)
+<div align='center'>
+<img src="https://user-images.githubusercontent.com/82128525/161918874-bd6a8fdb-0548-4bbb-9a51-869d4ddfab2a.png" width="300" height="200">
+<img src="https://user-images.githubusercontent.com/82128525/161918892-7b1efd19-2ebe-482f-bd39-30145a85e313.png" width="300" height="200">
+<img src="https://user-images.githubusercontent.com/82128525/161918897-db1cbd27-bf0c-48f2-9640-3781daffed11.png" width="300" height="200">
+</div>
+
+---
+
+## 🎮 주요 기능 소개
+
+### 1. 랜덤 닉네임 로그인
+
+![랜덤닉로그인](https://user-images.githubusercontent.com/82128525/161944631-a9b28791-fea1-4cbe-a3e9-ebfbcfebbd3f.gif)
+
+### 2. 투표 기능
+
+![변호사투표](https://user-images.githubusercontent.com/82128525/161945380-2d0f7f31-8496-486d-8c2b-f1cf629a57c5.gif)
+![탐정투표](https://user-images.githubusercontent.com/82128525/161945398-fa1870b2-3003-4cfd-a453-e7c9f6b7f8a4.gif)
+
+### 3. 게임 진행
+
+![게임진행1](https://user-images.githubusercontent.com/82128525/161945715-3bea4566-4688-41cf-82c0-d38385bc652c.gif)
+![게임진행2](https://user-images.githubusercontent.com/82128525/161945725-79b2759d-e314-4786-a073-6dd20f73ac4d.gif)
+
+### 4. 결과 페이지
+
+![결과페이지](https://user-images.githubusercontent.com/82128525/161945744-4a62dde0-aa8e-4461-8c93-5dd1a483bd47.gif)
 
 ---
 
