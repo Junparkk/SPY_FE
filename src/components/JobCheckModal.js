@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import tam from '../images/tam.png';
 import basic from '../images/basic.png';
 import byun from '../images/byun.png';
 import spy from '../images/spy.png';
-import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const JobCheckModal = ({ roomId }, props) => {
   const { _handleModal, children, ...rest } = props;
-  console.log(props);
-  const dispatch = useDispatch();
-  // const [roomId, setRoomId] = useState()
-  const [_roomId, setRoomId] = useState({ roomId });
-  const room_id = _roomId.roomId;
   const userId = localStorage.getItem('userid');
 
   const user_list = useSelector((state) => state.vote.userList);
@@ -24,10 +18,8 @@ const JobCheckModal = ({ roomId }, props) => {
   const spyNick = spys.map((a, index) => a.nickname).join(',  ');
 
   const findMe = user_list.filter((user) => user.userId === parseInt(userId));
-  console.log(findMe);
   const myRole = findMe[0]?.role;
 
-  console.log(myRole, '내역할은 이거다');
 
   const roles = [
     {
@@ -57,7 +49,6 @@ const JobCheckModal = ({ roomId }, props) => {
     },
   ];
 
-  // console.log(roles[3]);
   return createPortal(
     <Container>
       {(() => {
@@ -114,19 +105,6 @@ const JobCheckModal = ({ roomId }, props) => {
           );
         }
       })()}
-
-      {/* {(() => {
-            if(myRole && myRole === 1) {
-              // 뷰
-            } else if (myRole && myRole === 2) {
-              //view
-            } else if (myRole && myRole === 3) {
-              //view
-            } else if (myRole && myRole === 4) {
-              //view
-            }
-          })}
-         */}
     </Container>,
     document.getElementById('JobCheckModal')
   );
@@ -151,7 +129,6 @@ const Background = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.15);
-  /* backdrop-filter: blur(5px); */
   animation: modal-bg-show 1s;
   @keyframes modal-bg-show {
     from {

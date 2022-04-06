@@ -5,17 +5,13 @@ import { useEffect, useState } from 'react';
 import Chat from '../components/Chat.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
-import vote, { actionCreators as voteActions } from '../redux/modules/vote';
+import { actionCreators as voteActions } from '../redux/modules/vote';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
-import Draggable from 'react-draggable';
 import { useRef } from 'react';
-import axios from 'axios';
 import { RiArrowGoBackFill } from 'react-icons/ri';
-import { OpenVidu } from 'openvidu-browser';
-import UserVideoComponent from '../UserVideoComponent';
 import Video from './Video';
 import IngameHeader from '../components/IngameHeader';
 
@@ -32,13 +28,11 @@ import { apis } from '../shared/apis';
 import VoteDetective from '../components/VoteWaitingModal/VoteDetective';
 import VoteSpy from '../components/VoteWaitingModal/VoteSpy';
 import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
-import ResultModal from '../components/ResultModal';
 import Fired from '../components/Fired';
 
-import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import { ToastContainer, toast} from 'react-toastify';
 import '../styles/toast.css';
 
-import { GiNetworkBars } from 'react-icons/gi';
 
 const socket = io.connect('https://mafia.milagros.shop');
 // const socket = io.connect('http://localhost:3001');
@@ -66,16 +60,14 @@ function Ingame(props) {
 
   const [msg, setMsg] = useState(() => {
     socket.on('getMsgToMe', (voteMsg) => {
-      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+     
       setMsg(voteMsg);
     });
     socket.on('getMsg', (voteMsg) => {
-      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+ 
       setMsg(voteMsg);
     });
   });
-
-  console.log(msg, '=====================');
 
   //채팅
   const Chatting = () => {
@@ -88,38 +80,28 @@ function Ingame(props) {
     joinChat();
 
     socket.on('readyCnt', (num) => {
-      console.log(num);
-      // dispatch(roomActions.readyCheck(true));
+    
       setReadyCnt(num.readyCnt);
     });
     socket.on('cancelReady', (num) => {
-      console.log(num);
-      // dispatch(roomActions.readyCheck(true));
+    
       setReadyCnt(num.readyCnt);
     });
 
     socket.on('myReadyCnt', (num) => {
-      console.log(num, '@@@@@@@@@@@@@@개인cnt');
-      // dispatch(roomActions.readyCheck(true));
+  
+   
       setReadyCnt(num.myReadyCnt);
     });
 
     socket.on('myCancelReady', (num) => {
-      console.log(num, '@@@@@@@@@@@@@@개인cnt');
+    
       setReadyCnt(num.myReadyCnt);
-      // dispatch(roomActions.readyCheck(false));
+     
     });
-    // socket.on('getMsgToMe', (voteMsg) => {
-    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
-    //   setMsg(voteMsg);
-    // });
-
-    // socket.on('getMsg', (voteMsg) => {
-    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
-    //   setMsg(voteMsg);
-    // });
+   
   }, []);
-  console.log(msg);
+ 
 
   useEffect(() => {
     dispatch(userActions.GetUser(userId, roomId));
@@ -173,7 +155,7 @@ function Ingame(props) {
 
   const _isFired = isFireds.includes(parseInt(userId));
 
-  console.log(_isFired, '죽은 사람의 ID 값');
+
 
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
@@ -192,14 +174,14 @@ function Ingame(props) {
   const doReady = () => {
     sound.play();
     socket.emit('readyCnt', { roomId, userId });
-    console.log(roomId, userId, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
     // dispatch(roomActions.readyCheck(true));
     setIsReady(!isReady);
   };
   const cancelReady = () => {
     socket.emit('cancelReady', { roomId, userId });
     setIsReady(!isReady);
-    console.log(roomId, userId, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
     // dispatch(roomActions.readyCheck(false));
     sound.play();
   };
@@ -341,13 +323,12 @@ function Ingame(props) {
         break;
       default:
         clearTimeout(winner);
-        console.log('실행안됨');
     }
   }, [status]);
 
   //롤부여하기
   const roleGive = () => {
-    console.log('@@@@ roleGive 함수 시작');
+   
     if (host[0] && host[0].userId === parseInt(userId)) {
       console.log('@@@@ roleGive if문 시작');
       dispatch(voteActions.divisionRole(roomId));
@@ -368,10 +349,10 @@ function Ingame(props) {
 
   //롤보여주기
   const showRole = () => {
-    console.log('@@@@ showRole 함수 시작');
+    
     setIsRoleModalShowing(true);
     setTimeout(() => {
-      console.log('@@@@ showRole in타이머 (모달 닫고, updateStatus (dayTime))');
+    
       setIsRoleModalShowing(false);
       if (host[0] && host[0].userId === parseInt(userId)) {
         socket.emit('getStatus', { roomId: roomId, status: 'dayTime' });
@@ -387,8 +368,7 @@ function Ingame(props) {
   };
   //토론시간
   const dayTime = () => {
-    console.log('@@@@ dayTime 함수 시작');
-    console.log('@@@@ dayTime in타이머 (updateStatus (voteDay))');
+
     if (host[0] && host[0].userId === parseInt(userId)) {
       socket.emit('getStatus', { roomId: roomId, status: 'voteDay' });
       setTimeout(() => {
@@ -400,12 +380,11 @@ function Ingame(props) {
   //투표시간
   const voteDay = () => {
     _isFired ? setIsFired(true) : setIsDayTimeModalShowing(true);
-    console.log('@@@@ vote Day 시작');
 
     const notiJobRoleTimer = setTimeout(() => {
       setIsFired(false);
       setIsDayTimeModalShowing(false);
-      console.log('@@@@ vote Day 타이머 안 updateStatus (invalidVoteCnt)');
+    
       if (host[0] && host[0].userId === parseInt(userId)) {
         socket.emit('getStatus', { roomId: roomId, status: 'invalidVoteCnt' });
         setStatus('invalidVoteCnt');
@@ -429,10 +408,10 @@ function Ingame(props) {
   //낮 투표 결과 확인
   function showResultDay() {
     //호스트만 보내고 값 전체가 받는거 나중
-    console.log('@@@@ 낮투표 결과 확인 시작');
+   
     if (host[0].userId === parseInt(userId)) {
       dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
-      console.log('@@@@ 낮 투표 결과 디스패치 다음');
+ 
       setTimeout(() => {
         setStatus('voteNightLawyer');
       }, 3000);
@@ -442,16 +421,15 @@ function Ingame(props) {
   //결과가 나오면 페이지 이동
   function winnerFn() {
     history.replace(`/result/${roomId}`);
-    console.log('낮 결과 다음 페이지 이동콘솔 @@@@ ++++===== ');
+
   }
 
   //변호사 투표
   function voteNightLawyer() {
-    console.log(roomUserList, 'check----------------');
-    console.log(isFired, 'check----------------------');
+
     setTimeout(() => {
       if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
-        console.log(isFired, 'check----------------------2');
+     
         _isFired ? setIsFired(true) : setIsLawyerModalShowing(true);
       } else {
         setIsVotingLawyer(true);
@@ -461,31 +439,29 @@ function Ingame(props) {
       setIsLawyerModalShowing(false);
       setIsVotingLawyer(false);
       setIsFired(false);
-      console.log(lawyerNullVote, '@@@@@@@@@@ 투표했으면 false');
+  
       if (
         isLawyer[0] &&
         isLawyer[0].isAi === 'N' &&
         isLawyer[0].userId === parseInt(userId) &&
         lawyerNullVote === true
       ) {
-        console.log('----내가 변호사고 아무것도 누르지 않았을때----');
+  
         dispatch(voteActions.lawyerActDB(roomId, null));
       }
 
       if (host[0] && host[0].userId === parseInt(userId)) {
-        console.log('----내가 방장이고----@@@@@@@@@', aiLawyer[0]);
+  
         setTimeout(() => {
           setStatus('voteNightDetective');
         }, 500);
 
         if (aiLawyer[0] && aiLawyer[0].isAi === 'Y') {
-          console.log('----내가 방장이고 ai가 변호사일때----****');
+      
 
           await apis
             .aiLawyerAct(roomId)
-            .then((res) => {
-              console.log(res, '@@@@@@@@@@@@@@@@@@ ai 변호사 api 요청');
-
+            .then(() => {
               setTimeout(() => {
                 socket.emit('getStatus', {
                   roomId: roomId,
@@ -493,10 +469,10 @@ function Ingame(props) {
                 });
                 setStatus('voteNightDetective');
               }, 500);
-              console.log('ai변호사 정상 실행.......', res);
+           
             })
             .catch(
-              (err) => console.log('ai변호사 캐치문......', err),
+              (err) => console.log(err),
 
               socket.emit('getStatus', {
                 roomId: roomId,
@@ -522,8 +498,6 @@ function Ingame(props) {
       setIsFired(false);
 
       if (host[0] && host[0].userId === parseInt(userId)) {
-        console.log('@@@@ 탐정 api 호스만 요청');
-
         setTimeout(() => {
           socket.emit('getStatus', { roomId: roomId, status: 'voteNightSpy' });
           setStatus('voteNightSpy');
@@ -546,8 +520,7 @@ function Ingame(props) {
       setIsSpyModalShowing(false);
       setIsVotingSpy(false);
       setIsFired(false);
-      console.log('@@@@ 스파이 콘솔 타이머 실행 됨');
-
+ 
       if (
         isSpy[0] &&
         isSpy[0].isAi === 'N' &&
@@ -555,7 +528,6 @@ function Ingame(props) {
         isSpy[0].isEliminated.includes('N') &&
         spyNullVote === true
       ) {
-        console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
         dispatch(voteActions.spyActDB(roomId, null));
       }
 
@@ -566,7 +538,6 @@ function Ingame(props) {
 
         if (aiSpy[0] && aiSpy[0].isAi === 'Y') {
           // false
-          console.log('@@@@ 스파이 - ai가 스파이고 방장이 나일때');
           apis
             .aiSpyAct(roomId)
             .then((res) =>
@@ -579,7 +550,7 @@ function Ingame(props) {
                 socket.emit('getMsg', {
                   roomId,
                   msg: res.data.msg,
-                }); // getMsg, getMsgToMe
+                }); 
               }, 500)
             )
             .catch((err) =>
@@ -591,7 +562,7 @@ function Ingame(props) {
                 socket.emit('getMsg', {
                   roomId,
                   msg: err,
-                }); // getMsg, getMsgToMe
+                }); 
               }, 500)
             );
         }
@@ -621,7 +592,7 @@ function Ingame(props) {
   //아침에 최종 결과 공지
   function finalResult() {
     const Timer = setTimeout(() => {
-      console.log('여기는 finalResult');
+  
       dispatch(voteActions.voteResult(roomId, userId));
 
       setStatus('dayTime');

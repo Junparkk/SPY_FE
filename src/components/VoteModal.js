@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import vote, { actionCreators as voteActions } from '../redux/modules/vote';
 import io from 'socket.io-client';
 
 // 이미지
@@ -15,7 +14,6 @@ import Ai from '../images/Ai.png';
 const VoteModal = (props) => {
   const socket = io.connect('https://mafia.milagros.shop');
   const { isMe, roomId, _handleModal, children, ...rest } = props;
-  const dispatch = useDispatch();
 
   const user_list = useSelector((state) => state.vote.userList);
   const round = useSelector((state) => state.room.round);
@@ -32,34 +30,16 @@ const VoteModal = (props) => {
     const chosen = user_list[idx];
     setChosenId(chosen.userId);
     setChosenRoomId(chosen.roomId);
-    console.log(chosen, '초이슨 낮투표');
-    console.log(chosenId, '초이슨ID 낮투표');
-    console.log(chosenRoomId, '초이슨RoomID 낮투표');
   };
-  console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       setSubmit(true);
-      //디스패치로 넘겨주기 넣기
-      // dispatch(
-      //   voteActions.sendDayTimeVoteAPI(
-      //     chosenRoomId,
-      //     userId,
-      //     round,
-      //     chosenId,
-      //     roomId
-      //   )
-      // );
-      console.log('vote용 소켓 data --->', roomId, userId, chosenId, round);
       socket.emit('dayTimeVoteArr', {
         roomId,
         userId,
         candidacy: chosenId,
         roundNo: round,
       });
-      console.log(roomId, userId, '$$$$$$$$f룸아디유져아디');
-      console.log(chosenId, '투표', round, '라운드');
-      console.log(round, '<<<<<<<< 투표 클릭할 때 round');
 
       socket.on('dayTimeVoteArr', (vote) => {
         setCount(vote.voteCnt);
@@ -144,7 +124,6 @@ const VoteModal = (props) => {
           }
         })()}
 
-        {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
         <SendBtn disabled={submit} onClick={() => submitClicked()}>
           선택 완료
         </SendBtn>

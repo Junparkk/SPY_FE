@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { history } from '../redux/configureStore';
 
 import { RiQuestionnaireLine } from 'react-icons/ri';

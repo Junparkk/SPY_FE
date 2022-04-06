@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,22 +7,18 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 이미지
 import SpyBG from '../images/SpyBG.png';
-import spyNothing from '../images/spyNothing.png';
 import BasicProfile from '../images/BasicProfile.png';
 import BasicProfile_Death from '../images/BasicProfile_Death.png';
-import Ai from '../images/Ai.png';
 
 // 스파이 모달
 const SpyVoteModal = (props) => {
   const { isMe, roomId, _handleModal, children, ...rest } = props;
   const dispatch = useDispatch();
-  const round = useSelector((state) => state.room.round);
   const user_list = useSelector((state) => state.vote.userList);
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-  const Alive = user_list.filter((user) => user.isEliminated === 'N');
   const ref = useRef();
 
   //빈 값 넘겨줄 때
@@ -33,10 +29,6 @@ const SpyVoteModal = (props) => {
   const voteSpy = spy_list.sort((a, b) => b - a);
   const spyId = localStorage.getItem('userid');
 
-  console.log(spy_list);
-  console.log(voteSpy);
-  console.log(spyId);
-
   // 투표 사람 클릭
   const clicked = (idx) => {
     if (setVoteBtnClicked === null) {
@@ -46,19 +38,14 @@ const SpyVoteModal = (props) => {
       const chosen = user_list[idx];
       setChosenId(chosen.userId);
       setChosenRoomId(chosen.roomId);
-      console.log(chosen, '초이슨 스파이');
-      console.log(chosenId, '초이슨ID 스파이');
-      console.log(chosenRoomId, '초이슨RoomID 스파이');
     }
   };
-  console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   // 투표 값 서버로 전달
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
       dispatch(voteActions.spyNullVote(false));
       setSubmit(true);
-      console.log(chosenId, '선택한 ID 스파이');
     } else {
       window.alert('해고 시킬 직원을 선택해주세요. :)');
     }
@@ -67,7 +54,6 @@ const SpyVoteModal = (props) => {
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
-      {/* 높은애는 대기화면 나타내기(미완) */}
       {voteSpy[0] && voteSpy[0].user.id === parseInt(spyId) ? (
         <ModalBlock {...rest} src={SpyBG}>
           <Title>스파이 투표</Title>
@@ -156,7 +142,6 @@ const SpyVoteModal = (props) => {
             }
           })()}
 
-          {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
           <SendBtn disabled={submit} onClick={submitClicked}>
             선택 완료
           </SendBtn>

@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Slider from '../components/Slider/Slider';
 
-//효과음
-import click from '../sound/Click Sound.mp3';
 
 const RuleModal = ({ showModal, setShowModal }) => {
 
@@ -17,7 +15,6 @@ const RuleModal = ({ showModal, setShowModal }) => {
     (e) => {
       if (e.key === 'Escape' && showModal) {
         setShowModal(false);
-        console.log('I pressed');
       }
     },
     [setShowModal, showModal]
@@ -50,7 +47,6 @@ const WrapModal = styled.div`
   background: #212121;
   color: #000;
   display: flex;
-  /* grid-template-columns: 1fr 1fr; */
   position: relative;
   z-index: 10;
   text-align: center;

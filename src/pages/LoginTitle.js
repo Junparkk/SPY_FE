@@ -1,15 +1,22 @@
+//라이브러리
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
+import { useSelector } from 'react-redux';
+
+//이미지
 import Logo from '../images/Mapia.png';
 import Title from '../images/Title.png';
 import Building from '../images/Building.png';
+
+//css
 import '../shared/App.css';
+
+//사운드
 import click from '../sound/Click Sound.mp3';
-import { useSelector } from 'react-redux';
 
 function LoginTitle() {
   //랜덤 닉네임

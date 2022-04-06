@@ -14,7 +14,6 @@ import BasicProfile_Death from '../images/BasicProfile_Death.png';
 const DetectiveVoteModal = (props) => {
   const { roomId, _handleModal, children, ...rest } = props;
   const dispatch = useDispatch();
-  const round = useSelector((state) => state.room.round);
   const _user_list = useSelector((state) => state.vote.userList);
 
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);

@@ -1,8 +1,10 @@
+//라이브러리
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
+
 //이미지
 import Basic from '../images/BasicProfile.png';
 import Null from '../images/Null.png';
@@ -15,27 +17,21 @@ import click from '../sound/Click Sound.mp3';
 
 // 컴포넌트
 import Header from '../components/Header';
-import VoteWaitingModal from '../components/VoteWaitingModal/VoteSpy';
 
 //리액트 아이콘
 import { FaLock, FaLockOpen } from 'react-icons/fa';
 import { RiArrowGoBackFill, RiQuestionMark } from 'react-icons/ri';
 
 //토스트 알림
-import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import { ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Markingroom = () => {
   const dispatch = useDispatch();
-  const hostName = localStorage.getItem('nickname');
   const userId = localStorage.getItem('userid');
-  // const [createRoom, setCreateRoom] = useState('');
   const [roomName, setRoomName] = useState('');
   const [roomPwd, setRoomPwd] = useState(null);
-  //인원디폴트 6(명)
-  // const [maxPlayer, setMaxPlayer] = useState(6);
-  // 방 문짝 선택 디폴트(0) 맨앞에꺼
-
+ 
   //클릭 효과음
   const sound = new Audio(click);
 
@@ -63,11 +59,6 @@ const Markingroom = () => {
   const [count, setCount] = useState(6);
   const [roomLock, setRoomLock] = useState(false);
 
-  //xptmxm
-  // const [open, setOpen] = useState(false);
-
-  //비밀번호 숫자만 입력하게 알럿띄우기(정규표현식)
-  // ¯\_( ͡° ͜ʖ ͡°)_/¯
   const RoomCreate = () => {
     Click();
     if (roomName === '') {

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router';
 import '../../styles/slider.css';
 import styled from 'styled-components';
 import dataSlider from './dataSlider';
-import { useSelector } from 'react-redux';
 //리액트 아이콘
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';

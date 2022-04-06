@@ -1,10 +1,9 @@
-import React, { Component, useEffect } from 'react';
+import React from 'react';
 import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
 import SubUserProfile from './components/SubUserProfile';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import User from './redux/modules/user';
 
 import BasicProfileDeath from './images/BasicProfile_Death.png';
 
@@ -22,43 +21,12 @@ const UserVideoComponent = ({
   const userInfo = useSelector((state) => state.user.userinfo);
   const is_Live = userInfo.isEliminated;
   const UserSpeaking = speakingId;
-  // const Id = session.streamManagers.map(
-  //   (i) => i.stream.connection.connectionId
-  // );
+
   const Id = session.streamManagers;
-  // console.log(Id.indexOf(UserSpeaking));
-  console.log(Id);
-  console.log(UserSpeaking);
 
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };
-
-  React.useEffect(() => {
-    setSubspeaking(speaking);
-    console.log('변환했다');
-    console.log(subspeaking);
-  }, [speaking]);
-
-  // const mySession = session;
-
-  // mySession.on('streamCreated', (event) => {
-  //   var subscriber = mySession.subscribe(event.stream, undefined);
-
-  //   subscriber.on('publisherStartSpeaking', (event) => {
-  //     setSubspeaking(true);
-  //     console.log('섭스크라이버 시작2222');
-  //     console.log(subspeaking);
-  //     console.log(event.connection.connectionId)
-  //   });
-  //   subscriber.on('publisherStopSpeaking', (event) => {
-  //     setSubspeaking(false);
-  //     console.log('섭스크라이버 종료2222222');
-  //     console.log(subspeaking);
-  //     console.log(event.connection.connectionId)
-
-  //   });
-  // });
 
   return (
     <>
@@ -155,86 +123,3 @@ const DeathVideo = styled.div`
   }
 `;
 
-const Button = styled.button`
-  position: absolute;
-  top: 500px;
-`;
-
-/////////class 형 ///////////////////////////
-// export default class UserVideoComponent extends Component {
-//   state = { subspeaking: false };
-
-//   // componentDidnmount = () => {};
-
-//   // componentWillUnmount = () => {};
-
-//   // componentDidUpdate = (prevProps, prevState) => {
-//   //   console.log('===========update===========');
-//   //   if (this.props.speaking !== prevProps.speaking) {
-//   //     console.log('변화중 ');
-//   //     this.setState({
-//   //       subspeaking: !this.state.subspeaking,
-//   //     });
-//   //   }
-//   // };
-//   Change() {
-//     this.setState({ subspeaking: !this.state.subspeaking });
-//   }
-
-//   getNicknameTag() {
-//     // Gets the nickName of the user
-//     // console.log(this.props.streamManager)
-//     return JSON.parse(this.props.streamManager.stream.connection.data)
-//       .clientData;
-//   }
-
-//   render() {
-//     const mySession = this.props.session;
-//     const publisher = this.props.publisher;
-//     console.log(publisher);
-
-//     // mySession.on('publisherStartSpeaking', (event) => {
-//     //   this.setState({ subspeaking: true });
-//     //   // this.Change();
-//     // });
-//     // mySession.on('publisherStopSpeaking', (event) => {
-//     //   this.setState({ subspeaking: false });
-//     //   // this.Change();
-//     // });
-
-//     mySession.on('streamCreated', (event) => {
-//       var subscriber = mySession.subscribe(event.stream, undefined);
-
-//       subscriber.on('publisherStartSpeaking', (event) => {
-//         this.setState({ subspeaking: true });
-//         // this.Change();
-//       });
-//       subscriber.on('publisherStopSpeaking', (event) => {
-//         this.setState({ subspeaking: false });
-//         // this.Change();
-//       });
-//     });
-//     return (
-//       <>
-//         {this.props.streamManager !== undefined ? (
-//           <VideoBox className={this.state.subspeaking ? 'speaking' : ''}>
-//             <div className="streamcomponent">
-//               <OpenViduVideoComponent
-//                 streamManager={this.props.streamManager}
-//               />
-//               <Text>{this.getNicknameTag()}</Text>
-//             </div>
-//             <UserLogo/>
-//             {/* <Button
-//               onClick={() => {
-//                 this.Change();
-//               }}
-//             >
-//               속상한 버튼
-//             </Button> */}
-//           </VideoBox>
-//         ) : null}
-//       </>
-//     );
-//   }
-// }

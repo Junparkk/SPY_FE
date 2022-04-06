@@ -64,7 +64,7 @@ const initialState = {
 const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
-      console.log(res);
+     
       dispatch(setRoom(res.data.rooms));
     });
   };
@@ -72,19 +72,17 @@ const getRoomAPI = () => {
 
 //방들어가기
 const enterRoomDB = (userId, roomId, roomPwd) => {
-  console.log(roomId);
   return async function (dispatch, getState, { history }) {
     await axios
       .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: null,
       })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+      
         history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
         window.alert(error.response.data.msg);
-        console.log(error.response.data.msg);
         window.location.reload();
       });
   };
@@ -99,12 +97,10 @@ const leaveRoomDB = (nickname, roomId) => {
       })
       .then((response) => {
         dispatch(leaveUser(response.data.user));
-        console.log(response);
         window.location.replace('/lobby');
       })
       .catch((error) => {
         window.alert(error);
-        console.log(error.response.data.msg);
       });
   };
 };
@@ -118,12 +114,10 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
         roomPwd,
       })
       .then((response) => {
-        console.log(response);
         const roomId = response.data.room.id;
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
-        console.log(error);
         window.alert(error);
       });
   };
@@ -131,13 +125,12 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
 // 방 들어갈 때 패스워드 확인하기
 const roomPwCheckAPI = (userId, roomId, pwd) => {
   return async function (dispatch, useState, { history }) {
-    console.log(pwd);
     await axios
       .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: pwd,
       })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+       
         history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
@@ -150,8 +143,8 @@ const doReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
       .ready(roomId, userId)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+   
       })
       .catch((error) => {
         console.log(error.response.data.msg);
@@ -163,8 +156,8 @@ const cancelReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
       .cancelReady(roomId, userId)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+       
       })
       .catch((error) => {
         console.log(error);
@@ -178,7 +171,6 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
       //시작 전 조건확인
       .checkStart(roomId, userId)
       .then((res) => {
-        console.log(res, '==============₩=======');
         // max = cur 바로 실행
         if (res.data.msg === '시작!') {
           apis
@@ -208,7 +200,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+       
         window.confirm(error.response.data.msg);
       });
   };
@@ -221,7 +213,7 @@ const startCheckAPI = (roomId) => {
       .startCheck(roomId)
       .then((res) => {
         dispatch(roundNoInfo(res.data.roundNo));
-        console.log(res);
+      
       })
       .catch((error) => {
         console.log(error);
@@ -234,8 +226,8 @@ const finalResult = (roomId) => {
   return async function (dispatch, useState, { history }) {
     await apis
       .finalResult(roomId)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+       
       })
       .catch((error) => {
         console.log(error);
@@ -245,12 +237,12 @@ const finalResult = (roomId) => {
 
 //최종 승리자 API
 const WinnerDB = (roomId, userId) => {
-  console.log('@@@@ winner api 요청됨');
+ 
   return async function (dispatch, useState, { history }) {
     await apis
       .winnerList(roomId, userId)
       .then((res) => {
-        console.log(res.data.users, '@@@@ 값 ');
+      
         dispatch(winnerList(res.data.users));
       })
       .catch((err) => {
@@ -261,12 +253,11 @@ const WinnerDB = (roomId, userId) => {
 
 //방데이터 삭제 API
 const deleteDB = (roomId) => {
-  console.log('@@@@ delete api 요청됨');
   return async function (dispatch, useState, { history }) {
     await apis
       .deleteRoom(roomId)
-      .then((res) => {
-        console.log(res, '@@@@ 값 ');
+      .then(() => {
+        
       })
       .catch((err) => {
         console.log(err);
@@ -278,8 +269,7 @@ export default handleActions(
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.list = action.payload.room_list;
-        console.log(draft.list);
-        console.log(action.payload);
+     
       }),
 
     [PRIVATE_ROOM]: (state, action) =>
@@ -293,7 +283,7 @@ export default handleActions(
       }),
     [ROUND_NUM]: (state, action) =>
       produce(state, (draft) => {
-        console.log(action.payload.round_num);
+     
         draft.round = action.payload.round_num;
       }),
     [GAME_START]: (state, action) =>
@@ -310,8 +300,6 @@ export default handleActions(
       }),
     [WINNER_LIST]: (state, action) =>
       produce(state, (draft) => {
-        console.log(draft.winner);
-        console.log(action.payload);
         draft.winner = action.payload.winner;
       }),
   },

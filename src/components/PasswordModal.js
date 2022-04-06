@@ -11,10 +11,9 @@ const PasswordModal = (props) => {
   const nickName = localStorage.getItem('userid');
   const [pwd, setPwd] = React.useState('');
   const roomId = useSelector((state) => state.room.roomState.roomId);
-  console.log(roomId);
+
   const onChangePwd = (e) => {
     setPwd(e.target.value);
-    console.log(pwd);
   };
   return createPortal(
     <>

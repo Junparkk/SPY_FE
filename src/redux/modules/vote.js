@@ -15,13 +15,11 @@ const socket = io.connect('https://mafia.milagros.shop');
 const SET_USERS = 'SET_USERS';
 // const SEND_VOTE = 'SEND_VOTE';
 const ROLE_GIVE = 'ROLE_GIVE';
-const VOTE_CHECK = 'VOTE_CHECK';
 const LAWYER_NULL_VOTE = 'LAYER_NULL_VOTE';
 const SPY_NULL_VOTE = 'SPY_NULL_VOTE';
 const IS_VOTE = 'IS_VOTE';
 
 const setUsers = createAction(SET_USERS, (users_list) => ({ users_list }));
-// const answerUsers = createAction(SEND_VOTE, (userId) => ({ userId }));
 const giveUsers = createAction(ROLE_GIVE, (users) => ({ users }));
 const lawyerNullVote = createAction(LAWYER_NULL_VOTE, (vote) => ({ vote }));
 const spyNullVote = createAction(SPY_NULL_VOTE, (vote) => ({ vote }));
@@ -46,7 +44,7 @@ const initialState = {
 const getUserDB = (roomId) => {
   return async function (dispatch, useState, { history }) {
     await apis.player(roomId).then(function (res) {
-      console.log(res.data.users);
+      
       dispatch(setUsers(res.data.users));
     });
   };
@@ -73,7 +71,6 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
         if (res.data.result === 0) {
-          console.log('낮투표 결과 확인 @@@@@@@@@@@@@@@', res.data.msg, res);
           dispatch(getUserDB(roomId));
           socket.emit('getMsg', {
             roomId,
@@ -85,15 +82,7 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
               status: 'voteNightLawyer',
             });
           }, 3000);
-          console.log(
-            '@@@@ resultDayTimeVoteAPI 요청 응답이 0일 경우 emit 상태(voteNightLawyer) 받음',
-            res
-          );
         } else {
-          console.log(
-            '@@@@ resultDayTimeVoteAPI 요청 응답이 1, 2일 경우 바로 결과 화면',
-            res
-          );
           setTimeout(() => {
             socket.emit('getStatus', {
               roomId: roomId,
@@ -110,7 +99,6 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
 //변호사 투표
 const lawyerActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
-    console.log(roomId, userId, '변호사');
     await apis
       .lawyerAct(roomId, userId)
       .then(function (res) {
@@ -121,8 +109,6 @@ const lawyerActDB = (roomId, userId) => {
           pauseOnFocusLoss: false,
           pauseOnHover: false,
         });
-        console.log('@@@@ lawyerActDB 요청 답변 받음');
-        console.log(res.data);
         setTimeout(() => {
           socket.emit('getStatus', {
             roomId: roomId,
@@ -145,7 +131,6 @@ const lawyerActDB = (roomId, userId) => {
 //탐정 투표
 const detectiveActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
-    console.log(userId, '탐정 리듀서');
     await apis
       .detectiveAct(roomId, userId)
       .then((res) => {
@@ -166,12 +151,9 @@ const detectiveActDB = (roomId, userId) => {
 //스파이 투표
 const spyActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
-    console.log(userId, '스파이 리듀서');
     await apis
       .spyAct(roomId, userId)
       .then(function (res) {
-        console.log('@@@@ spyActDB api 요청 후 답변 받음');
-        console.log(res.data.msg, '스파이가 투표한 api 밤 투표 결과가 노출 되는 api');
         setTimeout(() => {
           socket.emit('getStatus', {
             roomId: roomId,
@@ -184,7 +166,7 @@ const spyActDB = (roomId, userId) => {
         }, 500);
       })
       .catch((err) =>
-        console.log('스파이 캐치로 빠질경우 emit 상태 업데이트', err)
+        console.log(err)
       );
   };
 };
@@ -195,12 +177,10 @@ const divisionRole = (roomId) => {
     await apis
       .role(roomId)
       .then((res) => {
-        console.log('@@@@ divisionRole 요청 후 답변 받음');
-        console.log('api 요청 후 DB 삽입됨', res, Date().toString());
         dispatch(giveUsers(res.data.users));
         socket.emit('getStatus', { roomId: roomId, status: 'showRole' });
       })
-      .catch((err) => console.log('@@@@ divisionRole catch문으로 빠짐)', err));
+      .catch((err) => console.log(err));
   };
 };
 
@@ -211,9 +191,8 @@ const invalidVote = (roomId, roundNo, userId) => {
       .sendInvalidVote(roomId, roundNo, userId)
       .then(function (res) {
         socket.emit('getStatus', { roomId: roomId, status: 'showResultDay' });
-        console.log('@@@@ invalidVote api 요청 받음', res);
       })
-      .catch((err) => console.log('@@@@ invalidVote catch문으로 빠짐)', err));
+      .catch((err) => console.log(err));
   };
 };
 
@@ -224,7 +203,6 @@ const isVoteDB = (roomId) => {
       .isVote(roomId)
       .then((res) => {
         dispatch(_isVote(res.data));
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -237,20 +215,16 @@ const voteResult = (roomId, userId) => {
     await apis
       .gameResult(roomId, userId)
       .then((res) => {
-        console.log('@@@@ voteResult api 요청 받음', res.data.result);
         if (res.data.result === 0) {
           setTimeout(() => {
             socket.emit('getStatus', { roomId: roomId, status: 'dayTime' });
           }, 500);
-          console.log(res);
-          console.log('@@@@ voteResult api 요청 값 0일때');
-
-          console.log('@@@@ voteResult api 요청 값 0일때 emit(dayTime) 함');
+        
         } else if (res.data.result === 1) {
-          console.log('@@@@ voteResult api 요청 값 1일때 결과페이지');
+         
           history.replace(`/result/${roomId}`);
         } else if (res.data.result === 2) {
-          console.log('@@@@ voteResult api 요청 값 2일때 결과페이지');
+          
           history.replace(`/result/${roomId}`);
         }
       })
@@ -264,27 +238,18 @@ export default handleActions(
       produce(state, (draft) => {
         draft.userList = action.payload.users_list;
       }),
-    // [SEND_VOTE]: (state, action) =>
-    //   produce(state, (draft) => {
-    //     draft.userId = action.payload.userId;
-    //     console.log(draft.userId);
-    //     console.log(action.payload);
-    //   }),
     [ROLE_GIVE]: (state, action) =>
       produce(state, (draft) => {
         draft.users = action.payload.users;
-        console.log(draft.users);
-        console.log(action.payload);
+       
       }),
     [LAWYER_NULL_VOTE]: (state, action) =>
       produce(state, (draft) => {
         draft.isLawyerNull = action.payload.vote;
-        console.log(action.payload.vote, '@@@@@@ 변호사 핸들러');
       }),
     [SPY_NULL_VOTE]: (state, action) =>
       produce(state, (draft) => {
         draft.isSpyNull = action.payload.vote;
-        console.log(action.payload.vote);
       }),
     [IS_VOTE]: (state, action) =>
       produce(state, (draft) => {

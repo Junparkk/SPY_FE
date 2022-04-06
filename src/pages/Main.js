@@ -1,21 +1,23 @@
+//라이브러리
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import blueDoor from '../images/blueDoor.png';
-import Header from '../components/Header';
-import click from '../sound/Click Sound.mp3';
-import Advertisement from '../images/Advertisement.png';
-
-import JobCheckModal from '../components/JobCheckModal';
-import VoteModal from '../components/VoteModal';
-import RoomCard from '../components/RoomCard';
-import PasswordModal from '../components/PasswordModal';
-
 import { actionCreators as roomActions } from '../redux/modules/room';
 
-import { apis } from '../shared/apis';
+//이미지
+import blueDoor from '../images/blueDoor.png';
+import Advertisement from '../images/Advertisement.png';
+
+//사운드
+import click from '../sound/Click Sound.mp3';
+
+//컴포넌트
 import Footer from '../components/Footer';
+import RoomCard from '../components/RoomCard';
+import PasswordModal from '../components/PasswordModal';
+import Header from '../components/Header';
+
 
 const Main = (props) => {
   //방버튼 스크롤 이벤트
@@ -92,7 +94,7 @@ const Main = (props) => {
                   <Cards
                     key={idx}
                     onClick={() => {
-                      console.log('비번 없는 방 입장');
+                   
                       const moveTimer = setTimeout(() => {
                         dispatch(roomActions.enterRoomDB(userId, p.id));
                       }, 1000);
@@ -107,8 +109,6 @@ const Main = (props) => {
                   <Cards
                     onClick={() => {
                       dispatch(roomActions.privateRoom(p.id, true));
-                      console.log('나는 널이 아니오');
-                      console.log('비번달기용', p.roomPwd);
                     }}
                   >
                     <RoomCard key={p.id} {...p}></RoomCard>
@@ -169,8 +169,6 @@ const Adv = styled.div`
 
 const Container = styled.div`
   display: grid;
-  /* background-color: #ffe179; */
-  /* height: 100%; */
   padding-top: 0px;
   grid-template-columns: repeat(5, 150px);
   grid-template-rows: repeat(auto-fit, 300px);

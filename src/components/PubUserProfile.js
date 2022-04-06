@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+
 import BasicProfile from '../images/BasicProfile.png';
 import MapiaProfile from '../images/Mapia.png';
 import ByunProfile from '../images/ByunProfile.png';
 import TamProfile from '../images/TamProfile.png';
-
 import BasicProfileDeath from '../images/BasicProfile_Death.png';
 import MapiaProfileDeath from '../images/SpyProfile_Death.png';
 import ByunProfileDeath from '../images/ByunProfile_Death.png';
