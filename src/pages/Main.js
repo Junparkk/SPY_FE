@@ -1,24 +1,24 @@
+//라이브러리
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import blueDoor from '../images/blueDoor.png';
-import Header from '../components/Header';
-import Advertisement from '../images/Advertisement.png';
+import { actionCreators as roomActions } from '../redux/modules/room';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
 import OpenDoor from '../sound/Door Open.mp3';
 
-import JobCheckModal from '../components/JobCheckModal';
-import VoteModal from '../components/VoteModal';
+//컴포넌트
 import RoomCard from '../components/RoomCard';
 import PasswordModal from '../components/PasswordModal';
-
-import { actionCreators as roomActions } from '../redux/modules/room';
-
-import { apis } from '../shared/apis';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
+
+//이미지
+import blueDoor from '../images/blueDoor.png';
+import Advertisement from '../images/Advertisement.png';
+
 
 const Main = (props) => {
   //방버튼 스크롤 이벤트
@@ -59,7 +59,6 @@ const Main = (props) => {
     document.documentElement.offsetHeight
   );
   const dispatch = useDispatch();
-  const islogin = localStorage.getItem('nickname');
   const userId = localStorage.getItem('userid');
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
@@ -67,8 +66,8 @@ const Main = (props) => {
 
   const _private = useSelector((state) => state.room.roomState.privateState);
 
-    console.log(ScrollY)
-    console.log(maxScroll)
+  console.log(ScrollY);
+  console.log(maxScroll);
   //방 리스트 불러오기
   useEffect(() => {
     dispatch(roomActions.getRoomAPI());
@@ -126,7 +125,10 @@ const Main = (props) => {
               }
             })}
         </Container>
-        <EnterRoomBtn className={maxScroll - ScrollY < 1250 ? 'change' : '' } onClick={MakingRoom}>
+        <EnterRoomBtn
+          className={maxScroll - ScrollY < 1250 ? 'change' : ''}
+          onClick={MakingRoom}
+        >
           <span
             style={{
               fontFamily: 'yg-jalnan',
@@ -210,7 +212,7 @@ const Container = styled.div`
 
 const EnterRoomBtn = styled.button`
   position: fixed;
-  &.change{
+  &.change {
     position: absolute;
     bottom: -260px;
   }

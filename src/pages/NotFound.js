@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 
 const NotFound = () => {
   const history = useHistory();
-
   return (
     <Wrap>
       <BackroundImg src={notFound}>
