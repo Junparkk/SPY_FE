@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +9,6 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 import VoteBG from '../images/VoteBG.png';
 import BasicProfile from '../images/BasicProfile.png';
 import BasicProfile_Death from '../images/BasicProfile_Death.png';
-import Ai from '../images/Ai.png';
 
 // 탐정 모달
 const DetectiveVoteModal = (props) => {
@@ -17,7 +16,6 @@ const DetectiveVoteModal = (props) => {
   const dispatch = useDispatch();
   const round = useSelector((state) => state.room.round);
   const _user_list = useSelector((state) => state.vote.userList);
-  const Alive = _user_list.filter((user) => user.isEliminated === 'N');
 
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
@@ -25,26 +23,17 @@ const DetectiveVoteModal = (props) => {
   const [chosenRoomId, setChosenRoomId] = useState(0);
 
   const ref = useRef();
+
   // 본인명단은 제외하기
   const user_list = _user_list.filter((user) => user.role !== 3);
-  console.log(user_list, '~~~~~~~~~~~~~~~~~본인 제외명단 리스트');
-  console.log(_user_list, '~~~~~~~~~~~전체 리스트~~~~~~');
-  console.log(chosenId, '선택한 ID값');
-  console.log(submit);
 
-  console.log(round, '게임 라운드');
-  console.log(_user_list, '유저 리스트');
-  console.log('투표모달안에 몇명?', _user_list.length, '명');
 
+  
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
-    console.log(idx, ' 얘는 인덱스');
     const chosen = user_list[idx];
-    setChosenId(chosen.user.id);
+    setChosenId(chosen.userId);
     setChosenRoomId(chosen.roomId);
-    console.log(chosen, '초이슨 탐정')
-    console.log(chosenId, '초이슨ID  탐정')
-    console.log(chosenRoomId, '초이슨RoomID 탐정')
   };
 
   const submitClicked = () => {

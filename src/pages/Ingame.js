@@ -172,6 +172,9 @@ function Ingame(props) {
   });
 
   const _isFired = isFireds.includes(parseInt(userId));
+
+  console.log(_isFired, '죽은 사람의 ID 값');
+
   // 유저리스트에서 본인 정보만 뽑아
   const findMe = roomUserList.filter(
     (user) => user.userId === parseInt(userId)
@@ -262,6 +265,13 @@ function Ingame(props) {
         break;
       case 'dayTime':
         setChangeDay('afternoon');
+        toast.success(msg, {
+          draggable: false,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+        });
         setTimeout(() => {
           toast.success('아침이 밝았습니다.', {
             draggable: false,
@@ -611,13 +621,6 @@ function Ingame(props) {
   //아침에 최종 결과 공지
   function finalResult() {
     const Timer = setTimeout(() => {
-      toast.error(msg, {
-        draggable: false,
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 2000,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-      });
       console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId, userId));
 
