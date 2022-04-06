@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import React, { Component } from 'react';
-import UserVideoComponent from '../UserVideoComponent';
 import styled from 'styled-components';
-import PubVideoComponent from '../PubVideoComponent';
 import OpenViduVideoComponent from '../OvVideo';
 import PubUserProfile from '../components/PubUserProfile';
 import BasicProfileDeath from '../images/BasicProfile_Death.png';
@@ -277,7 +275,6 @@ class Video extends Component {
     const DeathInfo = theOther.map((i) => i.isEliminated.includes('N'));
     const userInfo = this.props.userInfo;
 
-    console.log(theOther);
     return (
       ///////////////////////////////////////////////////////
       //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2

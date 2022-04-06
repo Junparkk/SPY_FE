@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Loading from './images/VideoLoading.png';
+import SubUserProfile from '../src/components/SubUserProfile';
 import BasicProfileDeath from './images/BasicProfile_Death.png';
 
 export default class OpenViduVideoComponent extends Component {
@@ -28,21 +29,26 @@ export default class OpenViduVideoComponent extends Component {
 
   render() {
     const DeathInfo = this.props.deathinfo;
-    console.log(DeathInfo);
     return (
       <>
         <div>
           <div>
             {DeathInfo === true ? (
-              <VideoBox src={Loading}>
-                <video autoPlay={true} ref={this.videoRef} />
-              </VideoBox>
+              <div>
+                <VideoBox src={Loading}>
+                  <video autoPlay={true} ref={this.videoRef} />
+                </VideoBox>
+                <SubUserProfile deathinfo={DeathInfo} />
+              </div>
             ) : DeathInfo === false ? (
-              <DeathVideoBox src={BasicProfileDeath}>
-                <div style={{ display: 'none' }}>
-                  <video autoPlay={true} ref={this.videoRef} muted={true} />
-                </div>
-              </DeathVideoBox>
+              <div>
+                <DeathVideoBox src={BasicProfileDeath}>
+                  <div style={{ display: 'none' }}>
+                    <video autoPlay={true} ref={this.videoRef} muted={true} />
+                  </div>
+                </DeathVideoBox>
+                <SubUserProfile deathinfo={DeathInfo} />
+              </div>
             ) : (
               <VideoBox src={Loading}>
                 <video autoPlay={true} ref={this.videoRef} />
@@ -61,7 +67,7 @@ export default class OpenViduVideoComponent extends Component {
 const Text = styled.div`
   position: absolute;
   font-size: 18px;
-  margin: 20px 0px 0px 30px;
+  margin: 25px 0px 0px 25px;
   color: #6164ce;
   text-align: center;
   font-family: 'yg-jalnan';

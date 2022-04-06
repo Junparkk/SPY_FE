@@ -3,22 +3,20 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import BasicProfile from '../images/BasicProfile.png';
 import BasicProfileDeath from '../images/BasicProfile_Death.png';
-import MapiaProfile from '../images/Mapia.png';
-import { actionCreators as userActions } from '../redux/modules/user';
-import { useDispatch } from 'react-redux';
 
-const SubUserProfile = (props) => {
+const SubUserProfile = ({deathinfo},props) => {
   const userInfo = useSelector((state) => state.user.userinfo);
   const Role = userInfo.role;
   const is_Live = userInfo.isEliminated;
+  console.log(deathinfo)
 
   return (
     <>
-      {Role && is_Live.includes('N') ? (
+      {deathinfo === true ? (
         <Wrap>
           <Basic src={BasicProfile} />
         </Wrap>
-      ) : Role && is_Live.includes('Y') ? (
+      ) : deathinfo === false ? (
         <WrapChange>
           <Basic src={BasicProfileDeath} />
         </WrapChange>

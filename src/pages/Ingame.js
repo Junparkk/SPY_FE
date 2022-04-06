@@ -82,16 +82,6 @@ function Ingame(props) {
     setChatView(!chatView);
     sound.play();
   };
-  //채팅창 드레그
-  const trackPos = (data) => {
-    setPosition({ x: data.x, y: data.y });
-  };
-  const handleStart = () => {
-    setOpacity(true);
-  };
-  const handleEnd = () => {
-    setOpacity(false);
-  };
 
   // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
   useEffect(() => {
@@ -164,6 +154,7 @@ function Ingame(props) {
   const [isVotingDetective, setIsVotingDetective] = useState(false); // 탐정 투표 시
   const [iVotingSpy, setIsVotingSpy] = useState(false); // 스파이 투표 시
   const [isFired_, setIsFired] = useState(false); //해고 당한 사람이 투표 되는동안 볼 모달
+  const [changeDay, setChangeDay] = useState(''); //낮과 밤을 셋팅
 
   //본인 확인 용도
   const host = roomUserList.filter((user) => user.isHost === 'Y');
@@ -178,7 +169,6 @@ function Ingame(props) {
   const isFireds = isFired.map((user) => {
     return user.userId;
   });
-  console.log(isFireds, '죽은사람 모달들');
 
   const _isFired = isFireds.includes(parseInt(userId));
 
@@ -273,6 +263,7 @@ function Ingame(props) {
         showRoleSetTimeOut = setTimeout(showRole, 3000);
         break;
       case 'dayTime':
+        setChangeDay('afternoon');
         toast.success(msg, {
           draggable: false,
           position: toast.POSITION.TOP_CENTER,
@@ -311,6 +302,7 @@ function Ingame(props) {
         clearTimeout(invalidAndAiVoteCnt);
         break;
       case 'voteNightLawyer':
+        setChangeDay('night');
         toast.success(msg, {
           draggable: false,
           position: toast.POSITION.TOP_CENTER,
@@ -410,7 +402,7 @@ function Ingame(props) {
         socket.emit('getStatus', { roomId: roomId, status: 'invalidVoteCnt' });
         setStatus('invalidVoteCnt');
       }
-    }, 10000);
+    }, 13000);
     return () => clearTimeout(notiJobRoleTimer);
   };
 
@@ -632,7 +624,7 @@ function Ingame(props) {
   //////////////////////////////////////////////////////////////////////
   return (
     <>
-      <Wrap>
+      <Wrap className={changeDay === 'night' ? 'night' : ''}>
         <ToastContainer className={'toast-container'} />
         {isDayTimeModalShowing && <VoteModal isMe={findMe} roomId={roomId} />}
         {isRoleModalShowing && <JobCheckModal roomId={roomId} />}
@@ -716,10 +708,8 @@ const Wrap = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #ffe179;
-  //반응형 손봐야함
-  @media screen and (min-width: 663px) {
-    width: 100%;
-    height: 100vh;
+  &.night {
+    background-color: #32346b;
   }
 `;
 const ButtonContainer = styled.div`

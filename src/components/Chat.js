@@ -10,6 +10,7 @@ function Chat({ socket, username, roomId }) {
   const [change, setChange] = useState(false);
   const [sendtype, setSendtype] = useState('send_message');
   const [toUser, setToUser] = useState('');
+  const [userList, setUsetList] = useState([]);
   const roomUserList = useSelector((state) => state.vote.userList);
   const userSocketId = useSelector((state) => state.user.userinfo).socketId;
   //채팅창 드레그
@@ -32,7 +33,7 @@ function Chat({ socket, username, roomId }) {
     setChange(!change);
   };
 
-  const List = roomUserList.map((u) => ({
+  const List = userList.map((u) => ({
     value: u.socketId,
     name: u.nickname,
   }));
@@ -55,10 +56,17 @@ function Chat({ socket, username, roomId }) {
       setCurrentMessage('');
     }
   };
-
   useEffect(() => {
     socket.on('receive_message', (data) => {
       setMessageList((list) => [...list, data]);
+    });
+    socket.emit('currUsers', { roomId });
+
+    socket.on('currUsers', (user) => {
+      setUsetList(user);
+    });
+    socket.on('currUsersToMe', (user) => {
+      setUsetList(user);
     });
   }, [socket]);
 
@@ -89,11 +97,29 @@ function Chat({ socket, username, roomId }) {
                 <>
                   <div
                     className="message"
-                    id={userNick === messageContent.author ? 'you' : 'other'}
+                    id={
+                      userNick === messageContent.author
+                        ? 'you'
+                        : userNick === messageContent.author &&
+                          messageContent.socketId !== ''
+                        ? 'whisperyou'
+                        : messageContent.socketId !== ''
+                        ? 'whisper'
+                        : 'other'
+                    }
                   >
                     <div>
                       <div className="message-meta">
-                        <p id="author">{messageContent.author}</p>
+                        {userNick === messageContent.author ? (
+                          <p id="author"></p>
+                        ) : userNick === messageContent.author &&
+                          messageContent.socketId !== '' ? (
+                          <p id="author">귓속말</p>
+                        ) : messageContent.socketId !== '' ? (
+                          <p id="author">{messageContent.author}님의 귓속말</p>
+                        ) : (
+                          <p id="author">{messageContent.author}</p>
+                        )}
                       </div>
                       <div className="message-content">
                         <p>{messageContent.message}</p>
