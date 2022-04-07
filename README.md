@@ -56,6 +56,9 @@
 <img src="https://user-images.githubusercontent.com/82128525/161918874-bd6a8fdb-0548-4bbb-9a51-869d4ddfab2a.png" width="300" height="200">
 <img src="https://user-images.githubusercontent.com/82128525/161918892-7b1efd19-2ebe-482f-bd39-30145a85e313.png" width="300" height="200">
 <img src="https://user-images.githubusercontent.com/82128525/161918897-db1cbd27-bf0c-48f2-9640-3781daffed11.png" width="300" height="200">
+   <img src="https://user-images.githubusercontent.com/82128525/162191481-4f5b0f76-91fd-461f-8422-c11f31166ee9.png" width="300" height="200">
+   <img src="https://user-images.githubusercontent.com/82128525/162191469-7fc150d9-7a75-4f8f-8077-94265094bf21.png" width="300" height="200">
+   <img src="https://user-images.githubusercontent.com/82128525/162191477-b8e571f3-30eb-4982-a964-aa75be1beef6.png" width="300" height="200">
 </div>
 
 ---
@@ -64,25 +67,27 @@
 
 ### 1. 랜덤 닉네임 로그인
 
-![랜덤닉로그인](https://user-images.githubusercontent.com/82128525/161944631-a9b28791-fea1-4cbe-a3e9-ebfbcfebbd3f.gif)
+ <img src="https://user-images.githubusercontent.com/82128525/161944631-a9b28791-fea1-4cbe-a3e9-ebfbcfebbd3f.gif" width="900" height="500">
 
 ### 2. 투표 기능
 
-![변호사투표](https://user-images.githubusercontent.com/82128525/161945380-2d0f7f31-8496-486d-8c2b-f1cf629a57c5.gif)
-![탐정투표](https://user-images.githubusercontent.com/82128525/161945398-fa1870b2-3003-4cfd-a453-e7c9f6b7f8a4.gif)
+<img src="https://user-images.githubusercontent.com/82128525/161945380-2d0f7f31-8496-486d-8c2b-f1cf629a57c5.gif" width="900" height="500">
+<img src="https://user-images.githubusercontent.com/82128525/161945398-fa1870b2-3003-4cfd-a453-e7c9f6b7f8a4.gif" width="900" height="500">
+
 
 ### 3. 게임 진행
 
-![게임진행1](https://user-images.githubusercontent.com/82128525/161945715-3bea4566-4688-41cf-82c0-d38385bc652c.gif)
-![게임진행2](https://user-images.githubusercontent.com/82128525/161945725-79b2759d-e314-4786-a073-6dd20f73ac4d.gif)
+<img src="https://user-images.githubusercontent.com/82128525/161945715-3bea4566-4688-41cf-82c0-d38385bc652c.gif" width="900" height="500">
+<img src="https://user-images.githubusercontent.com/82128525/161945725-79b2759d-e314-4786-a073-6dd20f73ac4d.gif" width="900" height="500">
 
 ### 4. 실시간 채팅 기능
 
-![채팅](https://user-images.githubusercontent.com/82128525/161959286-012b398b-4421-4ea7-9be2-f1bf2b415ec2.gif)
+<img src="https://user-images.githubusercontent.com/82128525/161959286-012b398b-4421-4ea7-9be2-f1bf2b415ec2.gif" width="900" height="500">
 
 ### 5. 결과 페이지
 
-![결과페이지](https://user-images.githubusercontent.com/82128525/161945744-4a62dde0-aa8e-4461-8c93-5dd1a483bd47.gif)
+<img src="https://user-images.githubusercontent.com/82128525/161945744-4a62dde0-aa8e-4461-8c93-5dd1a483bd47.gif" width="900" height="500">
+
 
 ---
 
@@ -108,8 +113,6 @@
 
 ---
 
-## 🔥 이슈 및 트러블슈팅
-
-[상세보기] (https://pattern-beluga-3d8.notion.site/23911097ceab446e8690d09e85cddc2b)
+## 🔥 [프론트엔드 트러블 슈팅 상세보기](https://pattern-beluga-3d8.notion.site/23911097ceab446e8690d09e85cddc2b)
 
 ---
