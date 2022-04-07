@@ -47,7 +47,6 @@ const Slider = ({ showModal, setShowModal }) => {
 
   return (
     <div className="slider">
-      <CloseBtn onClick={close} >X</CloseBtn>
       <BsFillArrowLeftCircleFill className="arrow prev" onClick={prevSlide} />
       <BsFillArrowRightCircleFill className="arrow next" onClick={nextSlide} />
 
@@ -130,22 +129,6 @@ const CloseModal = styled.button`
   z-index: 10;
 `;
 
-const CloseBtn = styled.button`
-  position: absolute;
-  right: 5%;
-  top: 3%;
-  border-radius: 30px;
-  border: none;
-  font-family: 'yg-jalnan';
-  background-color: #9296fd;
-  color: #dddddd;
-  font-size: 1.5rem;
-  cursor: pointer;
-  width: 5%;
-  height: 55px;
-  padding: 0;
-  z-index: 10;
-`;
 
 const DescSrc = styled.div`
   width: 100%;
