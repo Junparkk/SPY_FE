@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Ai from '../images/Ai.png';
 
-const Fired = () => {
+const Fired = ({ roomId }, props) => {
+  const { _handleModal, children, ...rest } = props;
+  const dispatch = useDispatch();
+  const [_roomId, setRoomId] = useState({ roomId });
+  const room_id = _roomId.roomId;
+  const userId = localStorage.getItem('userid');
+
+  const user_list = useSelector((state) => state.vote.userList);
+
+  const findMe = user_list.filter((user) => user.userId === parseInt(userId));
+  const myRole = findMe[0]?.role;
+
 
   return createPortal(
     <Container>
@@ -40,6 +52,7 @@ const Background = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.15);
+  /* backdrop-filter: blur(5px); */
   animation: modal-bg-show 1s;
   @keyframes modal-bg-show {
     from {
@@ -82,6 +95,98 @@ const ModalBasic = styled.div`
   }
 `;
 
+const ModalSpy = styled.div`
+  position: absolute;
+  top: 15rem;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #282828;
+  width: 60rem;
+  @media (max-width: 1120px) {
+    width: 50rem;
+  }
+  @media (max-width: 50rem) {
+    width: 80%;
+  }
+  min-height: 35rem;
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+`;
+
+const ModalByun = styled.div`
+  position: absolute;
+  top: 15rem;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #6a3da4;
+  width: 60rem;
+  @media (max-width: 1120px) {
+    width: 50rem;
+  }
+  @media (max-width: 50rem) {
+    width: 80%;
+  }
+  min-height: 35rem;
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+`;
+
+const ModalTam = styled.div`
+  position: absolute;
+  top: 15rem;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #bc814f;
+  width: 60rem;
+  @media (max-width: 1120px) {
+    width: 50rem;
+  }
+  @media (max-width: 50rem) {
+    width: 80%;
+  }
+  min-height: 35rem;
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+`;
 
 const Contents = styled.div`
   display: flex;

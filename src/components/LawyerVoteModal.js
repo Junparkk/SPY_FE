@@ -9,12 +9,15 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 import VoteBG from '../images/VoteBG.png';
 import BasicProfile from '../images/BasicProfile.png';
 import BasicProfile_Death from '../images/BasicProfile_Death.png';
+import Ai from '../images/Ai.png';
 
 // 변호사 모달
 const LawyerVoteModal = (props) => {
   const { isMe, roomId, _handleModal, showing, children, ...rest } = props;
   const dispatch = useDispatch();
+  const round = useSelector((state) => state.room.round);
   const user_list = useSelector((state) => state.vote.userList);
+  const Alive = user_list.filter((user) => user.isEliminated === 'N');
 
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
@@ -30,7 +33,7 @@ const LawyerVoteModal = (props) => {
     } else {
       setVoteBtnClicked(idx);
       const chosen = user_list[idx];
-      setChosenId(chosen.userId);
+      setChosenId(chosen.user.id);
       setChosenRoomId(chosen.roomId);
     }
   };
@@ -56,6 +59,7 @@ const LawyerVoteModal = (props) => {
           <br />단 투표를 안하게 되면 무효표 처리 되어 랜덤 선택 됩니다.
         </Contents>
 
+        {/* 롤을 부여받은대로 보여줘야함 */}
         {(() => {
           if (user_list.length <= 6) {
             return (
@@ -138,6 +142,7 @@ const LawyerVoteModal = (props) => {
           }
         })()}
 
+        {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
         <SendBtn disabled={submit} onClick={submitClicked}>
           선택 완료
         </SendBtn>
@@ -242,7 +247,6 @@ const Title = styled.div`
   font-family: 'yg-jalnan';
   margin: 1rem;
   font-size: 4rem;
-
   @media screen and (max-width: 1040px) {
     font-size: 4rem;
   }
@@ -253,7 +257,6 @@ const Contents = styled.div`
   font-family: 'yg-jalnan';
   margin: 1rem;
   font-size: 2rem;
-
   @media screen and (max-width: 1040px) {
     font-size: 1.25rem;
   }

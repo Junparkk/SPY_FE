@@ -5,6 +5,9 @@ import BasicProfile from '../images/BasicProfile.png';
 import BasicProfileDeath from '../images/BasicProfile_Death.png';
 
 const SubUserProfile = ({deathinfo},props) => {
+  const userInfo = useSelector((state) => state.user.userinfo);
+  const Role = userInfo.role;
+  const is_Live = userInfo.isEliminated;
 
   return (
     <>

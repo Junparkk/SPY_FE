@@ -27,38 +27,6 @@ const Header = () => {
     sound.play();
   };
 
-  // function Sound() {
-  //   const [volume, setVolume] = useState(1);
-  //   const [muted, setMuted] = useState(false);
-
-  //   return (
-  //     <>
-  //       <div style={{ display: 'flex' }}>
-  //         <div onClick={() => setMuted((m) => !m)}>
-  //           {volume === 0 || muted ? (
-  //             <GiSpeakerOff size={36} />
-  //           ) : (
-  //             <GiSpeaker size={36} />
-  //           )}
-  //         </div>
-  //         <div style={{ margin: 'auto' }}>
-  //           <input
-  //             type="range"
-  //             min={0}
-  //             max={1}
-  //             step={0.02}
-  //             value={volume}
-  //             onChange={(event) => {
-  //               setVolume(event.target.valueAsNumber);
-  //             }}
-  //           />
-  //         </div>
-  //       </div>
-  //       <button>게임 룰(아이콘)</button>
-  //     </>
-  //   );
-  // }
-
   return (
     <React.Fragment>
       <Wrap>

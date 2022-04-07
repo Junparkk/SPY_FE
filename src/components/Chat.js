@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 
-function Chat({ socket, username, roomId }) {
+function Chat({ socket, username, roomId, showchat }) {
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [change, setChange] = useState(false);
@@ -13,6 +13,12 @@ function Chat({ socket, username, roomId }) {
   const [userList, setUsetList] = useState([]);
   const roomUserList = useSelector((state) => state.vote.userList);
   const userSocketId = useSelector((state) => state.user.userinfo).socketId;
+  const userId = localStorage.getItem('userid');
+
+  const findMe = roomUserList.filter(
+    (user) => user.userId === parseInt(userId)
+  );
+
   //채팅창 드레그
   const nodeRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -90,7 +96,7 @@ function Chat({ socket, username, roomId }) {
         <div className="chat-header" onClick={chageChat}>
           <p>채팅</p>
         </div>
-        <div className={change ? 'chat-Longbody' : 'chat-body'}>
+        <div className={change ? 'chat-body' : 'chat-Longbody'}>
           <ScrollToBottom className="message-container">
             {messageList.map((messageContent, i) => {
               return (
@@ -143,9 +149,17 @@ function Chat({ socket, username, roomId }) {
           </Select>
         </div>
         <div className="chat-footer">
-          <input
+          <ChatInput
+            className={
+              findMe[0] && findMe[0].isEliminated.includes('N') ? '' : 'notChat'
+            }
             type="text"
             value={currentMessage}
+            placeholder={
+              findMe[0] && findMe[0].isEliminated.includes('N')
+                ? ''
+                : '해고된 사원은 채팅 할 수 없어요 :('
+            }
             onChange={(event) => {
               setCurrentMessage(event.target.value);
             }}
@@ -182,6 +196,8 @@ const Select = styled.select`
   }
 `;
 
-const Wrap = styled.div`
-  display: flex;
+const ChatInput = styled.input`
+  &.notChat {
+    pointer-events: none;
+  }
 `;

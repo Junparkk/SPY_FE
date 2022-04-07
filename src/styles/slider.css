@@ -36,14 +36,12 @@
 /* 내용물 */
 .content {
   position: absolute;
-  justify-content: center;
-  align-items: center;
   top: 5rem;
   left: 23%;
   opacity: 0;
   width: 50%;
-  height: 70%;
   padding: 3rem;
+  background: rgba(0, 0, 0, 0.3);
   animation-fill-mode: forwards;
 }
 @keyframes slide-up {

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import '../../styles/slider.css';
 import styled from 'styled-components';
 import dataSlider from './dataSlider';
+import { useSelector } from 'react-redux';
 //리액트 아이콘
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
@@ -15,7 +17,7 @@ const Slider = ({ showModal, setShowModal }) => {
 
   //클릭 효과음
   const sound = new Audio(click);
-
+  
   useEffect(() => {
     setCurrentSlide(0);
   }, []);
@@ -39,10 +41,13 @@ const Slider = ({ showModal, setShowModal }) => {
     setCurrentSlide(index);
   };
 
+  
+
   const Gif = currentSlide > 1;
 
   return (
     <div className="slider">
+      <CloseBtn onClick={close} >X</CloseBtn>
       <BsFillArrowLeftCircleFill className="arrow prev" onClick={prevSlide} />
       <BsFillArrowRightCircleFill className="arrow next" onClick={nextSlide} />
 
@@ -80,7 +85,7 @@ const Slider = ({ showModal, setShowModal }) => {
 
 const SlideTitle = styled.p`
   font-size: 3rem;
-  color: #ffff00;
+  color: white;
   height: 5rem;
   text-align: center;
   align-items: center;
@@ -97,7 +102,6 @@ const Desc = styled.div`
   font-size: 1.25rem;
   background-color: #00000000;
   background: url('${(props) => props.src}') no-repeat center/contain;
-
   line-height: 30px;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 763px) {
@@ -125,6 +129,24 @@ const CloseModal = styled.button`
   padding: 0;
   z-index: 10;
 `;
+
+const CloseBtn = styled.button`
+  position: absolute;
+  right: 5%;
+  top: 3%;
+  border-radius: 30px;
+  border: none;
+  font-family: 'yg-jalnan';
+  background-color: #9296fd;
+  color: #dddddd;
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 5%;
+  height: 55px;
+  padding: 0;
+  z-index: 10;
+`;
+
 const DescSrc = styled.div`
   width: 100%;
   background: url('${(props) => props.src}') no-repeat center/contain;

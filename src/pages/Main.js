@@ -1,23 +1,24 @@
-//라이브러리
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { actionCreators as roomActions } from '../redux/modules/room';
-
-//이미지
 import blueDoor from '../images/blueDoor.png';
+import Header from '../components/Header';
 import Advertisement from '../images/Advertisement.png';
 
-//사운드
+//효과음
 import click from '../sound/Click Sound.mp3';
+import OpenDoor from '../sound/Door Open.mp3';
 
-//컴포넌트
-import Footer from '../components/Footer';
+import JobCheckModal from '../components/JobCheckModal';
+import VoteModal from '../components/VoteModal';
 import RoomCard from '../components/RoomCard';
 import PasswordModal from '../components/PasswordModal';
-import Header from '../components/Header';
 
+import { actionCreators as roomActions } from '../redux/modules/room';
+
+import { apis } from '../shared/apis';
+import Footer from '../components/Footer';
 
 const Main = (props) => {
   //방버튼 스크롤 이벤트
@@ -35,8 +36,9 @@ const Main = (props) => {
     return () => window.removeEventListener('scroll', handleFollow);
   });
 
-  //클릭 효과음
+  //효과음
   const sound = new Audio(click);
+  const DoorOpen = new Audio(OpenDoor);
 
   const MakingRoom = () => {
     sound.play();
@@ -61,6 +63,7 @@ const Main = (props) => {
   const userId = localStorage.getItem('userid');
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
+  const room_length = room_list.map((room) => room).length;
 
   const _private = useSelector((state) => state.room.roomState.privateState);
 
@@ -74,7 +77,7 @@ const Main = (props) => {
       {/* 패스워드 모달 */}
       {_private ? <PasswordModal /> : null}
       {/* 대기실 화면 */}
-      <Wrap>
+      <Wrap className={room_length < 9 ? 'change' : ''}>
         <div
           style={{
             position: 'fixed',
@@ -94,7 +97,7 @@ const Main = (props) => {
                   <Cards
                     key={idx}
                     onClick={() => {
-                   
+                      DoorOpen.play();
                       const moveTimer = setTimeout(() => {
                         dispatch(roomActions.enterRoomDB(userId, p.id));
                       }, 1000);
@@ -108,6 +111,7 @@ const Main = (props) => {
                 return (
                   <Cards
                     onClick={() => {
+                      DoorOpen.play();
                       dispatch(roomActions.privateRoom(p.id, true));
                     }}
                   >
@@ -117,7 +121,10 @@ const Main = (props) => {
               }
             })}
         </Container>
-        <EnterRoomBtn onClick={MakingRoom}>
+        <EnterRoomBtn
+          className={maxScroll - ScrollY < maxScroll ? 'change' : ''}
+          onClick={MakingRoom}
+        >
           <span
             style={{
               fontFamily: 'yg-jalnan',
@@ -127,8 +134,10 @@ const Main = (props) => {
             방<br />만<br />들<br />기
           </span>
         </EnterRoomBtn>
-        <Footer />
       </Wrap>
+      <FooterBox>
+        <Footer />
+      </FooterBox>
     </React.Fragment>
   );
 };
@@ -142,10 +151,15 @@ const Cards = styled.div`
   height: 300px;
 `;
 const Wrap = styled.div`
-  height: 100vh;
-  min-height: 900px;
+  height: auto;
+  min-height: 100%;
   background-color: #ffe179;
   overflow: auto;
+  padding-bottom: 100px;
+  &.change {
+    height: 900px;
+    min-height: 900px;
+  }
 `;
 
 const Adv = styled.div`
@@ -169,12 +183,13 @@ const Adv = styled.div`
 
 const Container = styled.div`
   display: grid;
+  /* background-color: #ffe179; */
+  /* height: 100%; */
   padding-top: 0px;
   grid-template-columns: repeat(5, 150px);
   grid-template-rows: repeat(auto-fit, 300px);
   gap: 0px 100px;
   justify-content: center;
-
   @media screen and (min-width: 1607px) {
     grid-template-columns: repeat(5, 150px);
   }
@@ -192,6 +207,9 @@ const Container = styled.div`
 
 const EnterRoomBtn = styled.button`
   position: fixed;
+  &.change {
+    /* position: absolute; */
+  }
   bottom: 20px;
   right: 100px;
   width: 4rem;
@@ -213,6 +231,11 @@ const EnterRoomBtn = styled.button`
     right: 30px;
     font-size: 14px;
   }
+`;
+
+const FooterBox = styled.div`
+  width: 100%;
+  position: relative;
 `;
 
 export default Main;

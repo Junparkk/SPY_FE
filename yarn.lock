@@ -3134,11 +3134,6 @@ commander@^2.20.0:
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-commander@^6.1.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
-  integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
-
 commander@^7.2.0:
   version "7.2.0"
   resolved "https://registry.npmjs.org/commander/-/commander-7.2.0.tgz"
@@ -3265,7 +3260,7 @@ core-util-is@~1.0.0:
 
 cors@^2.8.5:
   version "2.8.5"
-  resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.5.tgz#eac11da51592dd86b9f06f6e7ac293b3df875d29"
+  resolved "https://registry.npmjs.org/cors/-/cors-2.8.5.tgz"
   integrity sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
   dependencies:
     object-assign "^4"
@@ -3349,7 +3344,7 @@ css-loader@^6.5.1:
 
 css-mediaquery@^0.1.2:
   version "0.1.2"
-  resolved "https://registry.yarnpkg.com/css-mediaquery/-/css-mediaquery-0.1.2.tgz#6a2c37344928618631c54bd33cedd301da18bea0"
+  resolved "https://registry.npmjs.org/css-mediaquery/-/css-mediaquery-0.1.2.tgz"
   integrity sha1-aiw3NEkoYYYxxUvTPO3TAdoYvqA=
 
 css-minimizer-webpack-plugin@^3.2.0:
@@ -3835,7 +3830,7 @@ dotenv@^10.0.0:
 
 dotenv@^16.0.0:
   version "16.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.0.tgz#c619001253be89ebb638d027b609c75c26e47411"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.0.0.tgz"
   integrity sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==
 
 duplexer@^0.1.2:
@@ -4541,7 +4536,7 @@ fraction.js@^4.1.2:
 
 freeice@2.2.2:
   version "2.2.2"
-  resolved "https://registry.yarnpkg.com/freeice/-/freeice-2.2.2.tgz#f66b3e0f67c2fda835161f76d4884881cde83be4"
+  resolved "https://registry.npmjs.org/freeice/-/freeice-2.2.2.tgz"
   integrity sha512-XNoIxDHufqPIBSLpp4IrFPnoc+hv/0RwdOGhIoggIDC2ZKf5r6OoixbeoFJSmZOAq2aYiEUArhuQ8zVVrM5C4w==
   dependencies:
     normalice "^1.0.0"
@@ -4727,7 +4722,7 @@ handle-thing@^2.0.0:
 
 hark@1.2.3:
   version "1.2.3"
-  resolved "https://registry.yarnpkg.com/hark/-/hark-1.2.3.tgz#959981400f561be5580ecd4321a9f55b16bacbd0"
+  resolved "https://registry.npmjs.org/hark/-/hark-1.2.3.tgz"
   integrity sha512-u68vz9SCa38ESiFJSDjqK8XbXqWzyot7Cj6Y2b6jk2NJ+II3MY2dIrLMg/kjtIAun4Y1DHF/20hfx4rq1G5GMg==
   dependencies:
     wildemitter "^1.2.0"
@@ -4941,7 +4936,7 @@ human-signals@^2.1.0:
 
 hyphenate-style-name@^1.0.0:
   version "1.0.4"
-  resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
+  resolved "https://registry.npmjs.org/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz"
   integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
 
 iconv-lite@0.4.24:
@@ -5818,7 +5813,7 @@ jsesc@~0.5.0:
 
 jsnlog@2.30.0:
   version "2.30.0"
-  resolved "https://registry.yarnpkg.com/jsnlog/-/jsnlog-2.30.0.tgz#6feb20bf44fee693b255e31f92f739b21b4188f9"
+  resolved "https://registry.npmjs.org/jsnlog/-/jsnlog-2.30.0.tgz"
   integrity sha512-o3ROQVkhek+dkc7/9TXlB4TNtxUpYsRLOBJHZYk3Vy0B5zRBmfv9tyr56PrjcgEXuy06ARgfLTANY0+ImhzzGA==
 
 json-parse-better-errors@^1.0.2:
@@ -6087,7 +6082,7 @@ makeerror@1.0.12:
 
 matchmediaquery@^0.3.0:
   version "0.3.1"
-  resolved "https://registry.yarnpkg.com/matchmediaquery/-/matchmediaquery-0.3.1.tgz#8247edc47e499ebb7c58f62a9ff9ccf5b815c6d7"
+  resolved "https://registry.npmjs.org/matchmediaquery/-/matchmediaquery-0.3.1.tgz"
   integrity sha512-Hlk20WQHRIm9EE9luN1kjRjYXAQToHOIAHPJn9buxBwuhfTHoKUcX+lXBbxc85DVQfXYbEQ4HcwQdd128E3qHQ==
   dependencies:
     css-mediaquery "^0.1.2"
@@ -6171,7 +6166,7 @@ mime@1.6.0:
 
 mime@3.0.0:
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
+  resolved "https://registry.npmjs.org/mime/-/mime-3.0.0.tgz"
   integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
 
 mimic-fn@^2.1.0:
@@ -6279,12 +6274,12 @@ neo-async@^2.6.2:
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 nginx@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/nginx/-/nginx-1.0.3.tgz#fa9b042207b72d8e0733a7a11f302688240a7cad"
-  integrity sha512-5q4ddIBXgkvYV3+yJurgSW7NV72GnmLLbvMC8FEPRq71NWP3bMLHqemtzsofqmx1bkBdnW75ANbRiOvA6sSUtg==
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/nginx/-/nginx-1.0.7.tgz"
+  integrity sha512-NuGrdY4A9oxJOET+Wu94gxtqe2yc1A5ilpRTOUNYb0xmMHyYnkhEG9URZVBgPomyUNqKgT0k1xTzgOvggU6FMQ==
   dependencies:
     chalk "^4.1.0"
-    commander "^6.1.0"
+    commander "^7.2.0"
 
 no-case@^3.0.4:
   version "3.0.4"
@@ -6311,7 +6306,7 @@ node-releases@^2.0.2:
 
 normalice@^1.0.0:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/normalice/-/normalice-1.0.1.tgz#03435c2eecd5631a6bca02da3930ec3e345a80f7"
+  resolved "https://registry.npmjs.org/normalice/-/normalice-1.0.1.tgz"
   integrity sha1-A0NcLuzVYxprygLaOTDsPjRagPc=
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
@@ -6479,7 +6474,7 @@ open@^8.0.9, open@^8.4.0:
 
 openvidu-browser@^2.21.0:
   version "2.21.0"
-  resolved "https://registry.yarnpkg.com/openvidu-browser/-/openvidu-browser-2.21.0.tgz#45824755633aadbd07bf09437f42fee473249847"
+  resolved "https://registry.npmjs.org/openvidu-browser/-/openvidu-browser-2.21.0.tgz"
   integrity sha512-dQZ8lsvt7zydklG/naHtaWpnhRo5ErTjEkWslmg6e2fjFVy+GmGVrJBeMJrJDM2FrOWv8aH86fRNR+P7eESB9g==
   dependencies:
     events "3.3.0"
@@ -6727,7 +6722,7 @@ pkg-up@^3.1.0:
 
 platform@1.3.6:
   version "1.3.6"
-  resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.6.tgz#48b4ce983164b209c2d45a107adb31f473a6e7a7"
+  resolved "https://registry.npmjs.org/platform/-/platform-1.3.6.tgz"
   integrity sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==
 
 portfinder@^1.0.28:
@@ -7514,7 +7509,7 @@ react-refresh@^0.11.0:
 
 react-responsive@^9.0.0-beta.6:
   version "9.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/react-responsive/-/react-responsive-9.0.0-beta.6.tgz#78dcc9c2af3b176dfa4088dae617a73dba8adbe7"
+  resolved "https://registry.npmjs.org/react-responsive/-/react-responsive-9.0.0-beta.6.tgz"
   integrity sha512-Flk6UrnpBBByreva6ja/TsbXiXq4BXOlDEKL6Ur+nshUs3CcN5W0BpGe6ClFWrKcORkMZAAYy7A4N4xlMmpgVw==
   dependencies:
     hyphenate-style-name "^1.0.0"
@@ -7621,7 +7616,7 @@ react-scroll-to-bottom@^4.2.0:
 
 react-toastify@^8.2.0:
   version "8.2.0"
-  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-8.2.0.tgz#ef7d56bdfdc6272ca6b228368ab564721c3a3244"
+  resolved "https://registry.npmjs.org/react-toastify/-/react-toastify-8.2.0.tgz"
   integrity sha512-Pg2Ju7NngAamarFvLwqrFomJ57u/Ay6i6zfLurt/qPynWkAkOthu6vxfqYpJCyNhHRhR4hu7+bySSeWWJu6PAg==
   dependencies:
     clsx "^1.1.1"
@@ -8088,7 +8083,7 @@ setprototypeof@1.2.0:
 
 shallow-equal@^1.2.1:
   version "1.2.1"
-  resolved "https://registry.yarnpkg.com/shallow-equal/-/shallow-equal-1.2.1.tgz#4c16abfa56043aa20d050324efa68940b0da79da"
+  resolved "https://registry.npmjs.org/shallow-equal/-/shallow-equal-1.2.1.tgz"
   integrity sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==
 
 shallowequal@^1.1.0:
@@ -9161,12 +9156,12 @@ which@^2.0.1:
 
 wildemitter@^1.2.0:
   version "1.2.1"
-  resolved "https://registry.yarnpkg.com/wildemitter/-/wildemitter-1.2.1.tgz#9da3b5ca498e4378628d1783145493c70a10b774"
+  resolved "https://registry.npmjs.org/wildemitter/-/wildemitter-1.2.1.tgz"
   integrity sha512-UMmSUoIQSir+XbBpTxOTS53uJ8s/lVhADCkEbhfRjUGFDPme/XGOb0sBWLx5sTz7Wx/2+TlAw1eK9O5lw5PiEw==
 
 wolfy87-eventemitter@5.2.9:
   version "5.2.9"
-  resolved "https://registry.yarnpkg.com/wolfy87-eventemitter/-/wolfy87-eventemitter-5.2.9.tgz#e879f770b30fbb6512a8afbb330c388591099c2a"
+  resolved "https://registry.npmjs.org/wolfy87-eventemitter/-/wolfy87-eventemitter-5.2.9.tgz"
   integrity sha512-P+6vtWyuDw+MB01X7UeF8TaHBvbCovf4HPEMF/SV7BdDc1SMTiBy13SRD71lQh4ExFTG1d/WNzDGDCyOKSMblw==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:

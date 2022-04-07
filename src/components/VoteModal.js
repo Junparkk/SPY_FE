@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
+import vote, { actionCreators as voteActions } from '../redux/modules/vote';
 import io from 'socket.io-client';
 
 // 이미지
@@ -14,6 +15,7 @@ import Ai from '../images/Ai.png';
 const VoteModal = (props) => {
   const socket = io.connect('https://mafia.milagros.shop');
   const { isMe, roomId, _handleModal, children, ...rest } = props;
+  const dispatch = useDispatch();
 
   const user_list = useSelector((state) => state.vote.userList);
   const round = useSelector((state) => state.room.round);
@@ -22,7 +24,6 @@ const VoteModal = (props) => {
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-  const [count, setCount] = useState(0);
   const ref = useRef();
 
   const clicked = (idx) => {
@@ -34,6 +35,16 @@ const VoteModal = (props) => {
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       setSubmit(true);
+      //디스패치로 넘겨주기 넣기
+      // dispatch(
+      //   voteActions.sendDayTimeVoteAPI(
+      //     chosenRoomId,
+      //     userId,
+      //     round,
+      //     chosenId,
+      //     roomId
+      //   )
+      // );
       socket.emit('dayTimeVoteArr', {
         roomId,
         userId,
@@ -42,14 +53,11 @@ const VoteModal = (props) => {
       });
 
       socket.on('dayTimeVoteArr', (vote) => {
-        setCount(vote.voteCnt);
       });
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
   };
-
-
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />
@@ -124,6 +132,7 @@ const VoteModal = (props) => {
           }
         })()}
 
+        {/* 소켓으로 현재 뭐 눌렀는지 통신 & 누르면 비활성화 시키기*/}
         <SendBtn disabled={submit} onClick={() => submitClicked()}>
           선택 완료
         </SendBtn>
@@ -228,7 +237,6 @@ const Title = styled.div`
   font-family: 'yg-jalnan';
   margin: 1rem;
   font-size: 4rem;
-
   @media screen and (max-width: 1040px) {
     font-size: 4rem;
   }
@@ -239,7 +247,6 @@ const Contents = styled.div`
   font-family: 'yg-jalnan';
   margin: 1rem;
   font-size: 2rem;
-
   @media screen and (max-width: 1040px) {
     font-size: 1.25rem;
   }

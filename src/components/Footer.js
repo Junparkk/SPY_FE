@@ -69,12 +69,10 @@ const Footer = () => {
 
 const Wrap = styled.div`
   width: 100%;
-  min-width: 380px;
   height: 280px;
+  min-width: 380px;
   justify-content: space-between;
   background-color: #6164cedd;
-  position: relative;
-  bottom: 0;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 15px 3px;
 `;
 

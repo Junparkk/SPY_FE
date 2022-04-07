@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-
 import { actionCreators as voteActions } from '../redux/modules/vote';
 
 // 이미지
@@ -15,6 +14,7 @@ const DetectiveVoteModal = (props) => {
   const { roomId, _handleModal, children, ...rest } = props;
   const dispatch = useDispatch();
   const _user_list = useSelector((state) => state.vote.userList);
+  const Alive = _user_list.filter((user) => user.isEliminated === 'N');
 
   const [voteBtnClicked, setVoteBtnClicked] = useState(null);
   const [submit, setSubmit] = useState(false);
@@ -22,17 +22,15 @@ const DetectiveVoteModal = (props) => {
   const [chosenRoomId, setChosenRoomId] = useState(0);
 
   const ref = useRef();
-
   // 본인명단은 제외하기
   const user_list = _user_list.filter((user) => user.role !== 3);
 
-
-  
   const clicked = (idx) => {
     setVoteBtnClicked(idx);
     const chosen = user_list[idx];
-    setChosenId(chosen.userId);
+    setChosenId(chosen.user.id);
     setChosenRoomId(chosen.roomId);
+
   };
 
   const submitClicked = () => {

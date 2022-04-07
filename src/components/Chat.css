@@ -39,14 +39,14 @@
     text-align: center;
   }
   
-  .chat-window .chat-body {
+  .chat-window .chat-Longbody {
     height: calc(600px - (45px + 70px));
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: #9296Fd99;
     position: relative;
   }
-  .chat-window .chat-Longbody {
-    height: calc(500px - (45px + 70px));
+  .chat-window .chat-body {
+    height: calc(300px - (45px + 70px));
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: #9296Fd99;
     position: relative;

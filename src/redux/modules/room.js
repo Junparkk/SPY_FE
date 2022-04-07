@@ -64,7 +64,6 @@ const initialState = {
 const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
-     
       dispatch(setRoom(res.data.rooms));
     });
   };
@@ -77,12 +76,13 @@ const enterRoomDB = (userId, roomId, roomPwd) => {
       .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: null,
       })
-      .then(() => {
-      
+      .then((res) => {
+        console.log(res);
         history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
         window.alert(error.response.data.msg);
+        console.log(error.response.data.msg);
         window.location.reload();
       });
   };
@@ -97,10 +97,13 @@ const leaveRoomDB = (nickname, roomId) => {
       })
       .then((response) => {
         dispatch(leaveUser(response.data.user));
+        console.log(response);
         window.location.replace('/lobby');
+        socket.emit('currUsers', { roomId });
       })
       .catch((error) => {
         window.alert(error);
+        console.log(error.response.data.msg);
       });
   };
 };
@@ -114,10 +117,12 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
         roomPwd,
       })
       .then((response) => {
+        console.log(response);
         const roomId = response.data.room.id;
         history.push(`/room/${roomId}`);
       })
       .catch((error) => {
+        console.log(error);
         window.alert(error);
       });
   };
@@ -129,8 +134,8 @@ const roomPwCheckAPI = (userId, roomId, pwd) => {
       .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: pwd,
       })
-      .then(() => {
-       
+      .then((res) => {
+        console.log(res);
         history.replace(`/room/${roomId}`);
       })
       .catch((error) => {
@@ -143,8 +148,8 @@ const doReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
       .ready(roomId, userId)
-      .then(() => {
-   
+      .then((res) => {
+        console.log(res);
       })
       .catch((error) => {
         console.log(error.response.data.msg);
@@ -156,8 +161,8 @@ const cancelReadyAPI = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
     await apis
       .cancelReady(roomId, userId)
-      .then(() => {
-       
+      .then((res) => {
+        console.log(res);
       })
       .catch((error) => {
         console.log(error);
@@ -171,6 +176,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
       //시작 전 조건확인
       .checkStart(roomId, userId)
       .then((res) => {
+        console.log(res, '==============₩=======');
         // max = cur 바로 실행
         if (res.data.msg === '시작!') {
           apis
@@ -200,7 +206,7 @@ const doStartAPI = (roomId, userId, changeMaxLength) => {
         }
       })
       .catch((error) => {
-       
+        console.log(error);
         window.confirm(error.response.data.msg);
       });
   };
@@ -213,7 +219,7 @@ const startCheckAPI = (roomId) => {
       .startCheck(roomId)
       .then((res) => {
         dispatch(roundNoInfo(res.data.roundNo));
-      
+        console.log(res);
       })
       .catch((error) => {
         console.log(error);
@@ -226,8 +232,8 @@ const finalResult = (roomId) => {
   return async function (dispatch, useState, { history }) {
     await apis
       .finalResult(roomId)
-      .then(() => {
-       
+      .then((res) => {
+        console.log(res);
       })
       .catch((error) => {
         console.log(error);
@@ -237,12 +243,11 @@ const finalResult = (roomId) => {
 
 //최종 승리자 API
 const WinnerDB = (roomId, userId) => {
- 
   return async function (dispatch, useState, { history }) {
     await apis
       .winnerList(roomId, userId)
       .then((res) => {
-      
+        console.log(res.data.users);
         dispatch(winnerList(res.data.users));
       })
       .catch((err) => {
@@ -256,8 +261,8 @@ const deleteDB = (roomId) => {
   return async function (dispatch, useState, { history }) {
     await apis
       .deleteRoom(roomId)
-      .then(() => {
-        
+      .then((res) => {
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -269,7 +274,6 @@ export default handleActions(
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.list = action.payload.room_list;
-     
       }),
 
     [PRIVATE_ROOM]: (state, action) =>
@@ -283,7 +287,6 @@ export default handleActions(
       }),
     [ROUND_NUM]: (state, action) =>
       produce(state, (draft) => {
-     
         draft.round = action.payload.round_num;
       }),
     [GAME_START]: (state, action) =>
