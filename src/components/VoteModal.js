@@ -24,7 +24,6 @@ const VoteModal = (props) => {
   const [submit, setSubmit] = useState(false);
   const [chosenId, setChosenId] = useState(0);
   const [chosenRoomId, setChosenRoomId] = useState(0);
-  const [count, setCount] = useState(0);
   const ref = useRef();
 
   const clicked = (idx) => {
@@ -32,9 +31,9 @@ const VoteModal = (props) => {
     const chosen = user_list[idx];
     setChosenId(chosen.userId);
     setChosenRoomId(chosen.roomId);
-    console.log(chosen, '초이슨 낮투표');
-    console.log(chosenId, '초이슨ID 낮투표');
-    console.log(chosenRoomId, '초이슨RoomID 낮투표');
+    console.log(chosen, '초이슨 낮투표')
+    console.log(chosenId, '초이슨ID 낮투표')
+    console.log(chosenRoomId, '초이슨RoomID 낮투표')
   };
   console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   const submitClicked = () => {
@@ -62,14 +61,14 @@ const VoteModal = (props) => {
       console.log(round, '<<<<<<<< 투표 클릭할 때 round');
 
       socket.on('dayTimeVoteArr', (vote) => {
-        setCount(vote.voteCnt);
+        console.log(vote, '투표$$$$$$$');
       });
     } else {
       window.alert('스파이로 의심되는 사람을 선택해주세요 :)');
     }
   };
-
-
+  console.log(submit, '선택 완료 눌렀는가');
+  console.log(vote.voteCnt);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />

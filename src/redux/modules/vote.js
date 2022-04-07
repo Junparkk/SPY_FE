@@ -171,7 +171,7 @@ const spyActDB = (roomId, userId) => {
       .spyAct(roomId, userId)
       .then(function (res) {
         console.log('@@@@ spyActDB api 요청 후 답변 받음');
-        console.log(res.data.msg, '스파이가 투표한 api 밤 투표 결과가 노출 되는 api');
+        console.log(res.data.msg);
         setTimeout(() => {
           socket.emit('getStatus', {
             roomId: roomId,

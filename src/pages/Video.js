@@ -1,12 +1,10 @@
-//라이브러리
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-
-//컴포넌트
 import OpenViduVideoComponent from '../OvVideo';
 import PubUserProfile from '../components/PubUserProfile';
+import BasicProfileDeath from '../images/BasicProfile_Death.png';
 
 const OPENVIDU_SERVER_URL = 'https://wawoong.shop';
 const OPENVIDU_SERVER_SECRET = 'INDUSTRIAL_SPY';
@@ -166,7 +164,7 @@ class Video extends Component {
                 videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
                 publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                resolution: '640x480', // The resolution of your video
+                resolution: '320x240', // The resolution of your video
                 frameRate: 30, // The frame rate of your video
                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                 mirror: true, // Whether to mirror your local video or not
@@ -278,6 +276,8 @@ class Video extends Component {
     const userInfo = this.props.userInfo;
 
     return (
+      ///////////////////////////////////////////////////////
+      //방의 인원수에 따른 grid 배치 변경 필요 현재 5x2
       <div>
         {this.state.session !== undefined ? (
           <VideoContainer>

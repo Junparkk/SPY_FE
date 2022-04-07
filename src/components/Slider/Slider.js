@@ -3,18 +3,28 @@ import { useHistory } from 'react-router';
 import '../../styles/slider.css';
 import styled from 'styled-components';
 import dataSlider from './dataSlider';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+// import { actionCreators as roomActions } from '../../redux/modules/room';
+import { actionCreators as roomActions } from '../../redux/modules/room';
 //리액트 아이콘
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
+import { GrClose } from 'react-icons/gr';
+import { current } from 'immer';
 
 //효과음
 import click from '../../sound/Click Sound.mp3';
 
 const Slider = ({ showModal, setShowModal }) => {
+  const history = useHistory();
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideLength = dataSlider.length;
-
+  const [check, setCheck] = useState(false);
+  //useSelector 튜토리얼 api 전용
+  const tuto = useSelector((state) => state.room.tuto);
+  console.log(tuto);
+  console.log(dataSlider);
+  console.log(currentSlide);
   //클릭 효과음
   const sound = new Audio(click);
 
@@ -41,8 +51,6 @@ const Slider = ({ showModal, setShowModal }) => {
     setCurrentSlide(index);
   };
 
-  const Gif = currentSlide > 1;
-
   return (
     <div className="slider">
       <BsFillArrowLeftCircleFill className="arrow prev" onClick={prevSlide} />
@@ -56,10 +64,12 @@ const Slider = ({ showModal, setShowModal }) => {
           >
             {index === currentSlide && (
               <>
-                <img src={Gif ? slide.src : slide.image} alt="slide" />
+                <img src={slide.image} alt="slide" />
                 <Desc className="content">
                   <SlideTitle>{slide.heading}</SlideTitle>
-                  <DescSrc>{slide.desc}</DescSrc>
+                  <br />
+                  <br />
+                  <div style={{ textAlign: 'start' }}>{slide.desc}</div>
                 </Desc>
               </>
             )}
@@ -67,7 +77,7 @@ const Slider = ({ showModal, setShowModal }) => {
         );
       })}
       <div className="container-dots">
-        {Array.from({ length: 8 }).map((item, index) => (
+        {Array.from({ length: 4 }).map((item, index) => (
           <div
             key={index}
             onClick={() => moveDot(index)}
@@ -81,13 +91,9 @@ const Slider = ({ showModal, setShowModal }) => {
 };
 
 const SlideTitle = styled.p`
-  font-size: 3rem;
-  color: #ffff00;
-  height: 5rem;
-  text-align: center;
-  align-items: center;
+  font-size: 2.25rem;
+  color: #ffe179;
   font-family: 'yg-jalnan';
-  margin-bottom: 4rem;
   @media screen and (max-width: 763px) {
     font-size: 1.5rem;
   }
@@ -98,8 +104,6 @@ const Desc = styled.div`
   width: '50%';
   font-size: 1.25rem;
   background-color: #00000000;
-  background: url('${(props) => props.src}') no-repeat center/contain;
-
   line-height: 30px;
   font-family: 'yg-jalnan';
   @media screen and (max-width: 763px) {
@@ -126,16 +130,6 @@ const CloseModal = styled.button`
   font-size: 1.5rem;
   padding: 0;
   z-index: 10;
-`;
-const DescSrc = styled.div`
-  width: 100%;
-  background: url('${(props) => props.src}') no-repeat center/contain;
-  height: 80%;
-  @media screen and (max-width: 763px) {
-    font-size: 1rem;
-    line-height: 25px;
-    width: 35%;
-  }
 `;
 
 export default Slider;

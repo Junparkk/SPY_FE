@@ -1,31 +1,18 @@
-//라이브러리
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
-import { useSelector } from 'react-redux';
-
-//이미지
 import Logo from '../images/Mapia.png';
 import Title from '../images/Title.png';
 import Building from '../images/Building.png';
-
-//사운드
-import click from '../sound/Click Sound.mp3';
-
-//css
 import '../shared/App.css';
+import click from '../sound/Click Sound.mp3';
+import { useSelector } from 'react-redux';
 
 function LoginTitle() {
   //랜덤 닉네임
-  const dispatch = useDispatch();
-  const [nickname, setNickname] = useState('');
-  const randomUser = useSelector((state) => state.user.randomNick);
-  const clearNick = () => {
-    setNickname('');
-  };
 
   //카메라 마이크 권한 획득
   async function getMedia() {
@@ -38,6 +25,10 @@ function LoginTitle() {
     } catch (err) {}
   }
 
+  const randomUser = useSelector((state) => state.user.randomNick);
+  const clearNick = () => {
+    setNickname('');
+  };
   //스크롤 업 애니매이션
   const [ScrollY, setScrollY] = useState(0);
 
@@ -71,6 +62,11 @@ function LoginTitle() {
   const ClickSound = () => {
     sound.play();
   };
+
+  //닉네임 서버 전달
+  const dispatch = useDispatch();
+
+  const [nickname, setNickname] = useState('');
 
   const Login = () => {
     dispatch(userActions.LoginDB(nickname));

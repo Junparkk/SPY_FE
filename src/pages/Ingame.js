@@ -1,20 +1,23 @@
-//css
 import '../components/Chat.css';
 import '../shared/App.css';
-import '../styles/toast.css';
-
-//라이브러리
-import { useRef } from 'react';
+import io from 'socket.io-client';
 import { useEffect, useState, useCallback } from 'react';
+import Chat from '../components/Chat.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
-import { actionCreators as voteActions } from '../redux/modules/vote';
+import vote, { actionCreators as voteActions } from '../redux/modules/vote';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { useHistory } from 'react-router-dom';
-import io from 'socket.io-client';
+
+
 import styled from 'styled-components';
+import Draggable from 'react-draggable';
+import { useRef } from 'react';
+import axios from 'axios';
 import { RiArrowGoBackFill } from 'react-icons/ri';
-import { ToastContainer, toast } from 'react-toastify';
+import { OpenVidu } from 'openvidu-browser';
+import Video from './Video';
+import IngameHeader from '../components/IngameHeader';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
@@ -32,24 +35,148 @@ import { apis } from '../shared/apis';
 import VoteDetective from '../components/VoteWaitingModal/VoteDetective';
 import VoteSpy from '../components/VoteWaitingModal/VoteSpy';
 import VoteLawyer from '../components/VoteWaitingModal/VoteLawyer';
+import ResultModal from '../components/ResultModal';
 import Fired from '../components/Fired';
 import CountDown from '../components/CountDown';
-import Chat from '../components/Chat.js';
-import Video from './Video';
-import IngameHeader from '../components/IngameHeader';
 
-//socket 서버
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import '../styles/toast.css';
+
+import { GiNetworkBars } from 'react-icons/gi';
+
 const socket = io.connect('https://mafia.milagros.shop');
+// const socket = io.connect('http://localhost:3001');
+//socket 서버
 
 function Ingame(props) {
-  //공통
-  const dispatch = useDispatch();
   const history = useHistory();
+  //채팅
+  const dispatch = useDispatch();
   const userId = localStorage.getItem('userid');
-  //효준
-  //소켓 으로 ready 받기
-  const [readyCnt, setReadyCnt] = useState();
-  const [isResult, setIsResult] = useState(0);
+  const roomId = props.match.params.roomId;
+  const [username, setUsername] = useState('');
+  const [room, setRoom] = useState('');
+  const [showChat, setShowChat] = useState(false);
+  const [chatView, setChatView] = useState(false);
+  const [userList, setUsetList] = useState([]);
+  const [min, setMin] = useState(0);
+  const [secs, setSecs] = useState(0);
+  const minsec = { minutes: min, seconds: secs };
+
+  const userInfo = useSelector((state) => state.user.userinfo);
+
+  //새로고침 막기
+  const doNotReload = (event) => {
+    if (
+      (event.ctrlKey === true &&
+        (event.keyCode === 78 || event.keyCode === 82)) ||
+      event.keyCode === 116
+    ) {
+      return window.confirm('새로고침하면 게임이 정상작동하지 않아요:(');
+    }
+  };
+
+  //클릭 효과음
+  const sound = new Audio(click);
+  const spyActive = new Audio(SpyActive);
+  const Role = new Audio(role);
+  const Morning = new Audio(morning);
+
+  //채팅창 드레그
+  const nodeRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [Opacity, setOpacity] = useState(false);
+
+  const [msg, setMsg] = useState(() => {
+    socket.on('getMsgToMe', (voteMsg) => {
+      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+      setMsg(voteMsg);
+    });
+    socket.on('getMsg', (voteMsg) => {
+      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+      setMsg(voteMsg);
+    });
+  });
+
+  console.log(msg, '=====================');
+
+  //채팅
+  const Chatting = () => {
+    setChatView(!chatView);
+    sound.play();
+  };
+
+  // 여기 socket data를 리듀서에 저장이 가능 한 지 확인 및 구현.
+  useEffect(() => {
+    joinChat();
+
+    socket.on('readyCnt', (num) => {
+      console.log(num);
+      // dispatch(roomActions.readyCheck(true));
+      setReadyCnt(num.readyCnt);
+    });
+    socket.on('cancelReady', (num) => {
+      console.log(num);
+      // dispatch(roomActions.readyCheck(true));
+      setReadyCnt(num.readyCnt);
+    });
+
+    socket.on('myReadyCnt', (num) => {
+      console.log(num, '@@@@@@@@@@@@@@개인cnt');
+      // dispatch(roomActions.readyCheck(true));
+      setReadyCnt(num.myReadyCnt);
+    });
+
+    socket.on('myCancelReady', (num) => {
+      console.log(num, '@@@@@@@@@@@@@@개인cnt');
+      setReadyCnt(num.myReadyCnt);
+      // dispatch(roomActions.readyCheck(false));
+    });
+    // socket.on('getMsgToMe', (voteMsg) => {
+    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
+    //   setMsg(voteMsg);
+    // });
+
+    // socket.on('getMsg', (voteMsg) => {
+    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
+    //   setMsg(voteMsg);
+    // });
+  }, [socket]);
+
+  useEffect(() => {
+    dispatch(userActions.GetUser(userId, roomId));
+    document.onkeydown = doNotReload;
+  }, []);
+
+  useEffect(() => {
+    socket.emit('currUsers', { roomId });
+
+    socket.on('currUsers', (user) => {
+      setUsetList(user);
+    });
+    socket.on('currUsersToMe', (user) => {
+      setUsetList(user);
+    });
+  }, [socket]);
+  function useForceUpdate() {
+    const [, updateState] = useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
+    console.log('리렌더링!!');
+  }
+  const forceUpdate = useForceUpdate;
+
+  // 방 입장 시 socket으로 닉네임 방번호 전송
+  const joinChat = () => {
+    socket.emit('join_room', { roomId, userId });
+    setShowChat(true);
+  };
+
+  const leaveRoom = () => {
+    sound.play();
+    dispatch(roomActions.leaveRoomDB(userId, roomId));
+  };
+
+  ////////////////////////////////////////////////////////////////////
   const round = useSelector((state) => state.room.round);
   const [isReady, setIsReady] = useState(false);
   const roomUserList = useSelector((state) => state.vote.userList);
@@ -85,6 +212,15 @@ function Ingame(props) {
     return user.userId;
   });
 
+  const _isFired = isFireds.includes(parseInt(userId));
+  // 유저리스트에서 본인 정보만 뽑아
+  const findMe = roomUserList.filter(
+    (user) => user.userId === parseInt(userId)
+  );
+  const findMeSocket = userList.filter(
+    (user) => user.userId === parseInt(userId)
+  );
+
   //빈 값 넘겨주는 용도
   const lawyerNullVote = useSelector((state) => state.vote.isLawyerNull);
   const spyNullVote = useSelector((state) => state.vote.isSpyNull);
@@ -94,131 +230,34 @@ function Ingame(props) {
   const [ready, setReady] = useState(false);
   const readyCheck = useSelector((state) => state.room.readyCheck);
 
-  //효과음
-  const sound = new Audio(click);
-  const spyActive = new Audio(SpyActive);
-  const Role = new Audio(role);
-  //카운트다운
-  const [min, setMin] = useState(0);
-  const [secs, setSecs] = useState(0);
-  const minsec = { minutes: min, seconds: secs };
-  
-  //채팅
-  const roomId = props.match.params.roomId;
-  const [username, setUsername] = useState('');
-  const [room, setRoom] = useState('');
-  const [showChat, setShowChat] = useState(false);
-  const [chatView, setChatView] = useState(false);
-  const [userList, setUsetList] = useState([]);
-  const userInfo = useSelector((state) => state.user.userinfo);
-
-  //새로고침 막기
-  const doNotReload = (event) => {
-    if (
-      (event.ctrlKey === true &&
-        (event.keyCode === 78 || event.keyCode === 82)) ||
-      event.keyCode === 116
-    ) {
-      return window.confirm('새로고침하면 게임이 정상작동하지 않아요:(');
-    }
-  };
-
-  // 유저리스트에서 본인 정보만 뽑아
-  const findMe = roomUserList.filter(
-    (user) => user.userId === parseInt(userId)
-  );
-  const findMeSocket = userList.filter(
-    (user) => user.userId === parseInt(userId)
-  );
-
-  const _isFired = isFireds.includes(parseInt(userId));
-
-  const [msg, setMsg] = useState(() => {
-    socket.on('getMsgToMe', (voteMsg) => {
-      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
-      setMsg(voteMsg);
-    });
-    socket.on('getMsg', (voteMsg) => {
-      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
-      setMsg(voteMsg);
-    });
-  });
-
-  //채팅
-  const Chatting = () => {
-    setChatView(!chatView);
-    sound.play();
-  };
-
-  useEffect(() => {
-    joinChat();
-    socket.on('readyCnt', (num) => {
-      setReadyCnt(num.readyCnt);
-    });
-    socket.on('cancelReady', (num) => {
-      setReadyCnt(num.readyCnt);
-    });
-    socket.on('myReadyCnt', (num) => {
-      setReadyCnt(num.myReadyCnt);
-    });
-    socket.on('myCancelReady', (num) => {
-      setReadyCnt(num.myReadyCnt);
-    });
-  }, [socket]);
-
-  useEffect(() => {
-    dispatch(userActions.GetUser(userId, roomId));
-    document.onkeydown = doNotReload;
-  }, []);
-
-  useEffect(() => {
-    socket.emit('currUsers', { roomId });
-    socket.on('currUsers', (user) => {
-      setUsetList(user);
-    });
-    socket.on('currUsersToMe', (user) => {
-      setUsetList(user);
-    });
-  }, [socket]);
-  //강제 리래
-  function useForceUpdate() {
-    const [, updateState] = useState();
-    const forceUpdate = useCallback(() => updateState({}), []);
-    console.log('리렌더링!!');
-  }
-  const forceUpdate = useForceUpdate;
-
-  // 방 입장 시 socket으로 닉네임 방번호 전송
-  const joinChat = () => {
-    socket.emit('join_room', { roomId, userId });
-    setShowChat(true);
-  };
-
-  const leaveRoom = () => {
-    sound.play();
-    dispatch(roomActions.leaveRoomDB(userId, roomId));
-  };
-
   const doReady = () => {
     sound.play();
     socket.emit('readyCnt', { roomId, userId });
+    console.log(roomId, userId, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    // dispatch(roomActions.readyCheck(true));
     setIsReady(!isReady);
   };
   const cancelReady = () => {
     socket.emit('cancelReady', { roomId, userId });
     setIsReady(!isReady);
+    console.log(roomId, userId, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    // dispatch(roomActions.readyCheck(false));
     sound.play();
   };
   const doStart = () => {
     dispatch(roomActions.doStartAPI(roomId, userId, changeMaxLength));
     sound.play();
   };
+  //소켓 으로 ready 받기
+  const [readyCnt, setReadyCnt] = useState();
+
+  const [isResult, setIsResult] = useState(0);
 
   //시작하는 기능
   useEffect(() => {
     return () => setStatus('isStart');
   }, [isStart]);
-  // 소켓으로 상태값 받아와서 셋팅해주는 부분
+
   if (host[0] && host[0].userId !== parseInt(userId)) {
     socket.on('getStatus', (gameStatus) => {
       setStatus(gameStatus.status);
@@ -353,13 +392,14 @@ function Ingame(props) {
 
   //롤부여하기
   const roleGive = () => {
+    console.log('@@@@ roleGive 함수 시작');
     if (host[0] && host[0].userId === parseInt(userId)) {
       console.log('@@@@ roleGive if문 시작');
       dispatch(voteActions.divisionRole(roomId));
       setTimeout(() => {
         setStatus('showRole');
       }, 500);
-
+      // updateStatus();
       //백엔드에서 api 호출을 받고 showRole로 바꿔줌
       toast.success('역할이 부여됩니다 :)', {
         draggable: false,
@@ -373,8 +413,10 @@ function Ingame(props) {
 
   //롤보여주기
   const showRole = () => {
+    console.log('@@@@ showRole 함수 시작');
     setIsRoleModalShowing(true);
     setTimeout(() => {
+      console.log('@@@@ showRole in타이머 (모달 닫고, updateStatus (dayTime))');
       setIsRoleModalShowing(false);
       if (host[0] && host[0].userId === parseInt(userId)) {
         socket.emit('getStatus', { roomId: roomId, status: 'dayTime' });
@@ -383,9 +425,15 @@ function Ingame(props) {
         }, 500);
       }
     }, 3000);
+
+    // 롤 보여주기가 끝나면 showRole만 호출이 되고 있고
+    // 다음 status로 넘겨주는게 필요함
+    // if 살아있는 사람중에 첫번쨰라면 소켓으로 요청을 해라~~~~
   };
   //토론시간
   const dayTime = () => {
+    console.log('@@@@ dayTime 함수 시작');
+    console.log('@@@@ dayTime in타이머 (updateStatus (voteDay))');
     if (host[0] && host[0].userId === parseInt(userId)) {
       socket.emit('getStatus', { roomId: roomId, status: 'voteDay' });
       setTimeout(() => {
@@ -397,9 +445,12 @@ function Ingame(props) {
   //투표시간
   const voteDay = () => {
     _isFired ? setIsFired(true) : setIsDayTimeModalShowing(true);
+    console.log('@@@@ vote Day 시작');
+
     const notiJobRoleTimer = setTimeout(() => {
       setIsFired(false);
       setIsDayTimeModalShowing(false);
+      console.log('@@@@ vote Day 타이머 안 updateStatus (invalidVoteCnt)');
       if (host[0] && host[0].userId === parseInt(userId)) {
         socket.emit('getStatus', { roomId: roomId, status: 'invalidVoteCnt' });
         setStatus('invalidVoteCnt');
@@ -410,6 +461,8 @@ function Ingame(props) {
 
   //무효표 던지는 시간
   const invalidVoteCnt = () => {
+    console.log(round, '<<<< 여기 현재 라운드임 ');
+
     if (host[0] && host[0].userId === parseInt(userId)) {
       dispatch(voteActions.invalidVote(roomId, round, userId));
       setTimeout(() => {
@@ -420,8 +473,11 @@ function Ingame(props) {
 
   //낮 투표 결과 확인
   function showResultDay() {
+    //호스트만 보내고 값 전체가 받는거 나중
+    console.log('@@@@ 낮투표 결과 확인 시작');
     if (host[0].userId === parseInt(userId)) {
       dispatch(voteActions.resultDayTimeVoteAPI(roomId, round));
+      console.log('@@@@ 낮 투표 결과 디스패치 다음');
       setTimeout(() => {
         setStatus('voteNightLawyer');
       }, 3000);
@@ -431,12 +487,16 @@ function Ingame(props) {
   //결과가 나오면 페이지 이동
   function winnerFn() {
     history.replace(`/result/${roomId}`);
+    console.log('낮 결과 다음 페이지 이동콘솔 @@@@ ++++===== ');
   }
 
   //변호사 투표
   function voteNightLawyer() {
+    console.log(roomUserList, 'check----------------');
+    console.log(isFired, 'check----------------------');
     setTimeout(() => {
       if (isLawyer[0] && isLawyer[0].userId === parseInt(userId)) {
+        console.log(isFired, 'check----------------------2');
         _isFired ? setIsFired(true) : setIsLawyerModalShowing(true);
       } else {
         setIsVotingLawyer(true);
@@ -446,25 +506,31 @@ function Ingame(props) {
       setIsLawyerModalShowing(false);
       setIsVotingLawyer(false);
       setIsFired(false);
-
+      console.log(lawyerNullVote, '@@@@@@@@@@ 투표했으면 false');
       if (
         isLawyer[0] &&
         isLawyer[0].isAi === 'N' &&
         isLawyer[0].userId === parseInt(userId) &&
         lawyerNullVote === true
       ) {
+        console.log('----내가 변호사고 아무것도 누르지 않았을때----');
         dispatch(voteActions.lawyerActDB(roomId, null));
       }
 
       if (host[0] && host[0].userId === parseInt(userId)) {
+        console.log('----내가 방장이고----@@@@@@@@@', aiLawyer[0]);
         setTimeout(() => {
           setStatus('voteNightDetective');
         }, 500);
 
         if (aiLawyer[0] && aiLawyer[0].isAi === 'Y') {
+          console.log('----내가 방장이고 ai가 변호사일때----****');
+
           await apis
             .aiLawyerAct(roomId)
-            .then(() => {
+            .then((res) => {
+              console.log(res, '@@@@@@@@@@@@@@@@@@ ai 변호사 api 요청');
+
               setTimeout(() => {
                 socket.emit('getStatus', {
                   roomId: roomId,
@@ -472,8 +538,11 @@ function Ingame(props) {
                 });
                 setStatus('voteNightDetective');
               }, 500);
+              console.log('ai변호사 정상 실행.......', res);
             })
-            .catch(() =>
+            .catch(
+              (err) => console.log('ai변호사 캐치문......', err),
+
               socket.emit('getStatus', {
                 roomId: roomId,
                 status: 'voteNightDetective',
@@ -498,6 +567,8 @@ function Ingame(props) {
       setIsFired(false);
 
       if (host[0] && host[0].userId === parseInt(userId)) {
+        console.log('@@@@ 탐정 api 호스만 요청');
+
         setTimeout(() => {
           socket.emit('getStatus', { roomId: roomId, status: 'voteNightSpy' });
           setStatus('voteNightSpy');
@@ -520,6 +591,7 @@ function Ingame(props) {
       setIsSpyModalShowing(false);
       setIsVotingSpy(false);
       setIsFired(false);
+      console.log('@@@@ 스파이 콘솔 타이머 실행 됨');
 
       if (
         isSpy[0] &&
@@ -528,6 +600,7 @@ function Ingame(props) {
         isSpy[0].isEliminated.includes('N') &&
         spyNullVote === true
       ) {
+        console.log('@@@@@@@@@@@@ 이거 찍혀야 하지롱', isSpy[0].isEliminated);
         dispatch(voteActions.spyActDB(roomId, null));
       }
 
@@ -537,10 +610,13 @@ function Ingame(props) {
         }, 500);
 
         if (aiSpy[0] && aiSpy[0].isAi === 'Y') {
+          // false
+          console.log('@@@@ 스파이 - ai가 스파이고 방장이 나일때');
           apis
             .aiSpyAct(roomId)
             .then((res) =>
               setTimeout(() => {
+                console.log(res.data.msg);
                 socket.emit('getStatus', {
                   roomId,
                   status: 'showResultNight',
@@ -548,7 +624,7 @@ function Ingame(props) {
                 socket.emit('getMsg', {
                   roomId,
                   msg: res.data.msg,
-                });
+                }); // getMsg, getMsgToMe
               }, 500)
             )
             .catch((err) =>
@@ -560,7 +636,7 @@ function Ingame(props) {
                 socket.emit('getMsg', {
                   roomId,
                   msg: err,
-                });
+                }); // getMsg, getMsgToMe
               }, 500)
             );
         }
@@ -590,6 +666,7 @@ function Ingame(props) {
   //아침에 최종 결과 공지
   function finalResult() {
     const Timer = setTimeout(() => {
+      console.log('여기는 finalResult');
       dispatch(voteActions.voteResult(roomId, userId));
 
       setStatus('dayTime');
@@ -597,6 +674,7 @@ function Ingame(props) {
     return () => clearTimeout(Timer);
   }
 
+  //////////////////////////////////////////////////////////////////////
   return (
     <>
       <Wrap className={changeDay === 'night' ? 'night' : ''}>

@@ -1,13 +1,8 @@
-//라이브러리
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
 import { history } from '../redux/configureStore';
-import { FaLock, FaLockOpen } from 'react-icons/fa';
-import { RiArrowGoBackFill, RiQuestionMark } from 'react-icons/ri';
-import { OpenVidu } from 'openvidu-browser';
-
 //이미지
 import Basic from '../images/BasicProfile.png';
 import Null from '../images/Null.png';
@@ -21,6 +16,10 @@ import click from '../sound/Click Sound.mp3';
 // 컴포넌트
 import Header from '../components/Header';
 import VoteWaitingModal from '../components/VoteWaitingModal/VoteSpy';
+
+//리액트 아이콘
+import { FaLock, FaLockOpen } from 'react-icons/fa';
+import { RiArrowGoBackFill, RiQuestionMark } from 'react-icons/ri';
 
 //토스트 알림
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';

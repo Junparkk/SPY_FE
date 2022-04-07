@@ -1,24 +1,24 @@
-//라이브러리
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { actionCreators as roomActions } from '../redux/modules/room';
+import blueDoor from '../images/blueDoor.png';
+import Header from '../components/Header';
+import Advertisement from '../images/Advertisement.png';
 
 //효과음
 import click from '../sound/Click Sound.mp3';
 import OpenDoor from '../sound/Door Open.mp3';
 
-//컴포넌트
+import JobCheckModal from '../components/JobCheckModal';
+import VoteModal from '../components/VoteModal';
 import RoomCard from '../components/RoomCard';
 import PasswordModal from '../components/PasswordModal';
+
+import { actionCreators as roomActions } from '../redux/modules/room';
+
+import { apis } from '../shared/apis';
 import Footer from '../components/Footer';
-import Header from '../components/Header';
-
-//이미지
-import blueDoor from '../images/blueDoor.png';
-import Advertisement from '../images/Advertisement.png';
-
 
 const Main = (props) => {
   //방버튼 스크롤 이벤트
@@ -59,6 +59,7 @@ const Main = (props) => {
     document.documentElement.offsetHeight
   );
   const dispatch = useDispatch();
+  const islogin = localStorage.getItem('nickname');
   const userId = localStorage.getItem('userid');
   const { history } = props;
   const room_list = useSelector((state) => state.room.list);
@@ -126,7 +127,7 @@ const Main = (props) => {
             })}
         </Container>
         <EnterRoomBtn
-          className={maxScroll - ScrollY < 1250 ? 'change' : ''}
+          className={maxScroll - ScrollY < maxScroll ? 'change' : ''}
           onClick={MakingRoom}
         >
           <span
@@ -161,8 +162,8 @@ const Wrap = styled.div`
   overflow: auto;
   padding-bottom: 100px;
   &.change {
-    /* height: 1200px;
-    min-height: 1200px; */
+    height: 900px;
+    min-height: 900px;
   }
 `;
 
@@ -213,8 +214,7 @@ const Container = styled.div`
 const EnterRoomBtn = styled.button`
   position: fixed;
   &.change {
-    position: absolute;
-    bottom: -260px;
+    /* position: absolute; */
   }
   bottom: 20px;
   right: 100px;
