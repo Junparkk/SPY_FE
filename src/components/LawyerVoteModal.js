@@ -14,10 +14,8 @@ import Ai from '../images/Ai.png';
 // 변호사 모달
 const LawyerVoteModal = (props) => {
   const { isMe, roomId, _handleModal, showing, children, ...rest } = props;
-  console.log(props);
   const dispatch = useDispatch();
   const round = useSelector((state) => state.room.round);
-  console.log(round);
   const user_list = useSelector((state) => state.vote.userList);
   const Alive = user_list.filter((user) => user.isEliminated === 'N');
 
@@ -34,13 +32,9 @@ const LawyerVoteModal = (props) => {
       lawyerNullVote(true);
     } else {
       setVoteBtnClicked(idx);
-      console.log(idx);
       const chosen = user_list[idx];
       setChosenId(chosen.user.id);
       setChosenRoomId(chosen.roomId);
-      console.log(chosen, '초이슨 변호사');
-      console.log(chosenId, '초이슨ID  변호사');
-      console.log(chosenRoomId, '초이슨RoomID 변호사');
     }
   };
 
@@ -52,11 +46,8 @@ const LawyerVoteModal = (props) => {
     } else {
       window.alert('해고 당할거 같은 직원을 선택해주세요 :)');
     }
-    console.log(chosenId);
-    console.log(chosenRoomId);
   };
 
-  console.log(submit);
   return createPortal(
     <Container>
       <Background onClick={_handleModal} />

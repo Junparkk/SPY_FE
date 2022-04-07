@@ -10,9 +10,7 @@ import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const JobCheckModal = ({ roomId }, props) => {
   const { _handleModal, children, ...rest } = props;
-  console.log(props);
   const dispatch = useDispatch();
-  // const [roomId, setRoomId] = useState()
   const [_roomId, setRoomId] = useState({ roomId });
   const room_id = _roomId.roomId;
   const userId = localStorage.getItem('userid');
@@ -24,10 +22,8 @@ const JobCheckModal = ({ roomId }, props) => {
   const spyNick = spys.map((a, index) => a.nickname).join(',  ');
 
   const findMe = user_list.filter((user) => user.userId === parseInt(userId));
-  console.log(findMe);
   const myRole = findMe[0]?.role;
 
-  console.log(myRole, '내역할은 이거다');
 
   const roles = [
     {
@@ -57,7 +53,6 @@ const JobCheckModal = ({ roomId }, props) => {
     },
   ];
 
-  // console.log(roles[3]);
   return createPortal(
     <Container>
       {(() => {

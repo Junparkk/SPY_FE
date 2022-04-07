@@ -19,10 +19,6 @@ function Chat({ socket, username, roomId, showchat }) {
     (user) => user.userId === parseInt(userId)
   );
 
-  // const userInfo = useSelector((state) => state.user.userinfo);
-  // const isLive = userInfo.isEliminated.includes('N');
-  // console.log(isLive)
-
   //채팅창 드레그
   const nodeRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });

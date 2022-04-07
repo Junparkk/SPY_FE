@@ -5,15 +5,13 @@ import { useEffect, useState, useCallback } from 'react';
 import Chat from '../components/Chat.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreators as roomActions } from '../redux/modules/room';
-import vote, { actionCreators as voteActions } from '../redux/modules/vote';
+import { actionCreators as voteActions } from '../redux/modules/vote';
 import { actionCreators as userActions } from '../redux/modules/user';
 import { useHistory } from 'react-router-dom';
 
 
 import styled from 'styled-components';
-import Draggable from 'react-draggable';
 import { useRef } from 'react';
-import axios from 'axios';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 import { OpenVidu } from 'openvidu-browser';
 import Video from './Video';
@@ -42,7 +40,6 @@ import CountDown from '../components/CountDown';
 import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
 import '../styles/toast.css';
 
-import { GiNetworkBars } from 'react-icons/gi';
 
 const socket = io.connect('https://mafia.milagros.shop');
 // const socket = io.connect('http://localhost:3001');
@@ -89,16 +86,13 @@ function Ingame(props) {
 
   const [msg, setMsg] = useState(() => {
     socket.on('getMsgToMe', (voteMsg) => {
-      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
       setMsg(voteMsg);
     });
     socket.on('getMsg', (voteMsg) => {
-      console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
       setMsg(voteMsg);
     });
   });
 
-  console.log(msg, '=====================');
 
   //채팅
   const Chatting = () => {
@@ -111,36 +105,19 @@ function Ingame(props) {
     joinChat();
 
     socket.on('readyCnt', (num) => {
-      console.log(num);
-      // dispatch(roomActions.readyCheck(true));
       setReadyCnt(num.readyCnt);
     });
     socket.on('cancelReady', (num) => {
-      console.log(num);
-      // dispatch(roomActions.readyCheck(true));
       setReadyCnt(num.readyCnt);
     });
 
     socket.on('myReadyCnt', (num) => {
-      console.log(num, '@@@@@@@@@@@@@@개인cnt');
-      // dispatch(roomActions.readyCheck(true));
       setReadyCnt(num.myReadyCnt);
     });
 
     socket.on('myCancelReady', (num) => {
-      console.log(num, '@@@@@@@@@@@@@@개인cnt');
       setReadyCnt(num.myReadyCnt);
-      // dispatch(roomActions.readyCheck(false));
     });
-    // socket.on('getMsgToMe', (voteMsg) => {
-    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
-    //   setMsg(voteMsg);
-    // });
-
-    // socket.on('getMsg', (voteMsg) => {
-    //   console.log(voteMsg, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
-    //   setMsg(voteMsg);
-    // });
   }, [socket]);
 
   useEffect(() => {
@@ -158,12 +135,7 @@ function Ingame(props) {
       setUsetList(user);
     });
   }, [socket]);
-  function useForceUpdate() {
-    const [, updateState] = useState();
-    const forceUpdate = useCallback(() => updateState({}), []);
-    console.log('리렌더링!!');
-  }
-  const forceUpdate = useForceUpdate;
+
 
   // 방 입장 시 socket으로 닉네임 방번호 전송
   const joinChat = () => {
@@ -233,14 +205,12 @@ function Ingame(props) {
   const doReady = () => {
     sound.play();
     socket.emit('readyCnt', { roomId, userId });
-    console.log(roomId, userId, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     // dispatch(roomActions.readyCheck(true));
     setIsReady(!isReady);
   };
   const cancelReady = () => {
     socket.emit('cancelReady', { roomId, userId });
     setIsReady(!isReady);
-    console.log(roomId, userId, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     // dispatch(roomActions.readyCheck(false));
     sound.play();
   };

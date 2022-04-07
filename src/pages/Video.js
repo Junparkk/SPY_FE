@@ -111,7 +111,6 @@ class Video extends Component {
               subspeaking: true,
               speakingId: event.connection.connectionId,
             });
-            console.log(this.state.speakingId);
           });
 
           subscriber.on('publisherStopSpeaking', (event) => {
@@ -119,7 +118,6 @@ class Video extends Component {
               subspeaking: false,
               speakingId: event.connection.connectionId,
             });
-            console.log(this.state.speakingId);
           });
 
           this.setState({
@@ -143,7 +141,6 @@ class Video extends Component {
         // 'getToken' method is simulating what your server-side should do.
         // 'token' parameter should be retrieved and returned by your own backend
         this.getToken().then((token) => {
-          // console.log(token);
           // First param is the token got from OpenVidu Server. Second param can be retrieved by every user on event
           // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
           mySession
@@ -164,7 +161,7 @@ class Video extends Component {
                 videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
                 publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                resolution: '320x240', // The resolution of your video
+                resolution: '320x260', // The resolution of your video
                 frameRate: 30, // The frame rate of your video
                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                 mirror: true, // Whether to mirror your local video or not
@@ -172,14 +169,10 @@ class Video extends Component {
 
               publisher.on('publisherStartSpeaking', (event) => {
                 this.setState({ pubspeaking: true });
-                console.log('퍼블리셔시작', this.state.pubspeaking);
-                console.log(event.connection.connectionId);
               });
 
               publisher.on('publisherStopSpeaking', (event) => {
                 this.setState({ pubspeaking: false });
-                console.log('퍼블리셔종료', this.state.pubspeaking);
-                console.log(event.connection.connectionId);
               });
 
               // --- 6) Publish your stream ---
@@ -502,8 +495,6 @@ class Video extends Component {
   }
 
   createSession(sessionId) {
-    //var sessionId = this.state.mySessionId
-    // console.log(sessionId);
     return new Promise((resolve, reject) => {
       let data = JSON.stringify({ customSessionId: sessionId });
       axios

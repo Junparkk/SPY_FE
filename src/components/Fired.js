@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import tam from '../images/tam.png';
-import basic from '../images/basic.png';
-import byun from '../images/byun.png';
 import Ai from '../images/Ai.png';
-import { actionCreators as voteActions } from '../redux/modules/vote';
 
 const Fired = ({ roomId }, props) => {
   const { _handleModal, children, ...rest } = props;
-  console.log(props);
   const dispatch = useDispatch();
-  // const [roomId, setRoomId] = useState()
   const [_roomId, setRoomId] = useState({ roomId });
   const room_id = _roomId.roomId;
   const userId = localStorage.getItem('userid');
 
   const user_list = useSelector((state) => state.vote.userList);
-  // console.log(user_list[0].id);
 
   const findMe = user_list.filter((user) => user.userId === parseInt(userId));
-  console.log(findMe);
   const myRole = findMe[0]?.role;
 
-  console.log(myRole, '내역할은 이거다');
 
   return createPortal(
     <Container>

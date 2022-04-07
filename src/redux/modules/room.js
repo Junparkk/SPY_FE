@@ -64,7 +64,6 @@ const initialState = {
 const getRoomAPI = () => {
   return async function (dispatch, useState, { history }) {
     await apis.lobby().then(function (res) {
-      console.log(res);
       dispatch(setRoom(res.data.rooms));
     });
   };
@@ -72,7 +71,6 @@ const getRoomAPI = () => {
 
 //방들어가기
 const enterRoomDB = (userId, roomId, roomPwd) => {
-  console.log(roomId);
   return async function (dispatch, getState, { history }) {
     await axios
       .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
@@ -132,7 +130,6 @@ const createRoomDB = (roomName, maxPlayer, roomPwd = null, userId) => {
 // 방 들어갈 때 패스워드 확인하기
 const roomPwCheckAPI = (userId, roomId, pwd) => {
   return async function (dispatch, useState, { history }) {
-    console.log(pwd);
     await axios
       .put(`https://mafia.milagros.shop/api/enter/${roomId}/user/${userId}`, {
         roomPwd: pwd,
@@ -246,12 +243,11 @@ const finalResult = (roomId) => {
 
 //최종 승리자 API
 const WinnerDB = (roomId, userId) => {
-  console.log('@@@@ winner api 요청됨');
   return async function (dispatch, useState, { history }) {
     await apis
       .winnerList(roomId, userId)
       .then((res) => {
-        console.log(res.data.users, '@@@@ 값 ');
+        console.log(res.data.users);
         dispatch(winnerList(res.data.users));
       })
       .catch((err) => {
@@ -262,12 +258,11 @@ const WinnerDB = (roomId, userId) => {
 
 //방데이터 삭제 API
 const deleteDB = (roomId) => {
-  console.log('@@@@ delete api 요청됨');
   return async function (dispatch, useState, { history }) {
     await apis
       .deleteRoom(roomId)
       .then((res) => {
-        console.log(res, '@@@@ 값 ');
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -279,8 +274,6 @@ export default handleActions(
     [SET_ROOM]: (state, action) =>
       produce(state, (draft) => {
         draft.list = action.payload.room_list;
-        console.log(draft.list);
-        console.log(action.payload);
       }),
 
     [PRIVATE_ROOM]: (state, action) =>
@@ -294,7 +287,6 @@ export default handleActions(
       }),
     [ROUND_NUM]: (state, action) =>
       produce(state, (draft) => {
-        console.log(action.payload.round_num);
         draft.round = action.payload.round_num;
       }),
     [GAME_START]: (state, action) =>
@@ -311,8 +303,6 @@ export default handleActions(
       }),
     [WINNER_LIST]: (state, action) =>
       produce(state, (draft) => {
-        console.log(draft.winner);
-        console.log(action.payload);
         draft.winner = action.payload.winner;
       }),
   },

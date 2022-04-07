@@ -25,7 +25,6 @@ const ResultModal = (props) => {
   const socket = io.connect('https://mafia.milagros.shop');
 //승리자 명단
 const winnerList = props.winnerList
-console.log(winnerList, '@@@@@승자 리스트')
   //클릭 효과음
   const sound = new Audio(click);
 
@@ -50,35 +49,7 @@ console.log(winnerList, '@@@@@승자 리스트')
     sound.play();
   };
 
-  // 방나가기 소켓 요청
-//   const leaveRoom = () => {
-//     sound.play();
-//     socket.emit('leaveRoom', {
-//       roomId,
-//     });
-//     console.log(roomId, '방 나가기 소켓요처어어어엉');
-//     history.push('/lobby');
-//   };
-
-  // 승리자 리스트 소켓 요청
-  //   useEffect(() => {
-//   socket.on('winner', (users) => {
-//     console.log('@@@@@@ 위너 값이 들어옴 --->');
-//     console.log(users);
-//     setList(users);
-//   });
-
-//   socket.on('winnerforHost', (users) => {
-//     console.log('@@@@@@ 방장전용@@@ 위너 값이 들어옴 --->');
-//     console.log(users);
-//     setList(users);
-//   });
-  //   }, []);
-  
-  console.log(list.users, '들어오는 값 ');
-
   const divideWinner = list.users && list.users[0] === 4;
-  console.log(divideWinner);
 
   return createPortal(
     <Container>

@@ -73,7 +73,6 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
       .dayTimeVoteResult(roomId, roundNo)
       .then(function (res) {
         if (res.data.result === 0) {
-          console.log('낮투표 결과 확인 @@@@@@@@@@@@@@@', res.data.msg, res);
           dispatch(getUserDB(roomId));
           socket.emit('getMsg', {
             roomId,
@@ -110,7 +109,6 @@ const resultDayTimeVoteAPI = (roomId, roundNo) => {
 //변호사 투표
 const lawyerActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
-    console.log(roomId, userId, '변호사');
     await apis
       .lawyerAct(roomId, userId)
       .then(function (res) {
@@ -121,7 +119,6 @@ const lawyerActDB = (roomId, userId) => {
           pauseOnFocusLoss: false,
           pauseOnHover: false,
         });
-        console.log('@@@@ lawyerActDB 요청 답변 받음');
         console.log(res.data);
         setTimeout(() => {
           socket.emit('getStatus', {
@@ -145,7 +142,6 @@ const lawyerActDB = (roomId, userId) => {
 //탐정 투표
 const detectiveActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
-    console.log(userId, '탐정 리듀서');
     await apis
       .detectiveAct(roomId, userId)
       .then((res) => {
@@ -166,7 +162,6 @@ const detectiveActDB = (roomId, userId) => {
 //스파이 투표
 const spyActDB = (roomId, userId) => {
   return async function (dispatch, useState, { history }) {
-    console.log(userId, '스파이 리듀서');
     await apis
       .spyAct(roomId, userId)
       .then(function (res) {

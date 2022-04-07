@@ -74,18 +74,12 @@ const Result = (props) => {
   };
 
   const roomId = props.match.params.roomId;
-  console.log(roomId, '룸, 아이디');
   const userId = localStorage.getItem('userid');
-  console.log(userId, '유져, 아이디');
   const roomUserList = useSelector((state) => state.vote.userList);
   const host = roomUserList.filter((user) => user.isHost === 'Y');
-  console.log(host, 's나는 방장이다 맨 ');
-  console.log(roomUserList, '@@@@리스트');
-  console.log(host[0] && host[0].userId === parseInt(userId), '방장인지 확인');
 
   // 승자명단
   const users = useSelector((state) => state.room.winner);
-  console.log(users);
   useEffect(() => {
     dispatch(roomActions.WinnerDB(roomId, userId));
   }, []);
@@ -98,33 +92,6 @@ const Result = (props) => {
       }
     }, 5000);
   });
-
-  //   //결과페이지에서 결과 리스트 불러오기
-  //   // const [list, setList] = useState();
-
-  //   setTimeout(() => {
-  //     socket.emit('winner', {
-  //       roomId,
-  //       userId,
-  //     });
-  //   }, 0);
-
-  // 유저 전체 리스트 > 결과값 0 ~ 2 // 1 : role 1~3  승리 / ㅈㅈ
-  // const [list, setList] = useState(() => {
-  //   socket.on('winner', (users) => {
-  //     console.log(users, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 전체');
-  //     setList(users);
-  //   });
-  //   socket.on('winnerToMe', (users) => {
-  //     console.log(users, '@@@@@@@@@@@@@@@@@@ 새로 만든 소켓 투미');
-  //     setList(users);
-  //   });
-  // });
-  // console.log(list, '소켓 값 받아옴 @@@@@@@@@@@@@@리스트 유즈스테이츠');
-
-  //승자 목록
-  // const winUsers = list.users;
-  // const divideWinner = users && users[0] === 4;
 
   const divideWinner = users && users[0]?.role === 4;
 

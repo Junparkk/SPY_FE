@@ -8,7 +8,6 @@ const SubUserProfile = ({deathinfo},props) => {
   const userInfo = useSelector((state) => state.user.userinfo);
   const Role = userInfo.role;
   const is_Live = userInfo.isEliminated;
-  console.log(deathinfo)
 
   return (
     <>

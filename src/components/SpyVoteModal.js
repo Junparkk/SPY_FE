@@ -33,10 +33,6 @@ const SpyVoteModal = (props) => {
   const voteSpy = spy_list.sort((a, b) => b - a);
   const spyId = localStorage.getItem('userid');
 
-  console.log(spy_list);
-  console.log(voteSpy);
-  console.log(spyId);
-
   // 투표 사람 클릭
   const clicked = (idx) => {
     if (setVoteBtnClicked === null) {
@@ -46,19 +42,14 @@ const SpyVoteModal = (props) => {
       const chosen = user_list[idx];
       setChosenId(chosen.userId);
       setChosenRoomId(chosen.roomId);
-      console.log(chosen, '초이슨 스파이');
-      console.log(chosenId, '초이슨ID 스파이');
-      console.log(chosenRoomId, '초이슨RoomID 스파이');
     }
   };
-  console.log(submit, '@@@@@@@@@@@@@@@@@@@@@@@@@제출');
   // 투표 값 서버로 전달
   const submitClicked = () => {
     if (voteBtnClicked !== null) {
       dispatch(voteActions.spyActDB(chosenRoomId, chosenId));
       dispatch(voteActions.spyNullVote(false));
       setSubmit(true);
-      console.log(chosenId, '선택한 ID 스파이');
     } else {
       window.alert('해고 시킬 직원을 선택해주세요. :)');
     }

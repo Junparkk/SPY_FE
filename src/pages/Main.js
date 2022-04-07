@@ -67,8 +67,6 @@ const Main = (props) => {
 
   const _private = useSelector((state) => state.room.roomState.privateState);
 
-  console.log(ScrollY);
-  console.log(maxScroll);
   //방 리스트 불러오기
   useEffect(() => {
     dispatch(roomActions.getRoomAPI());
@@ -100,7 +98,6 @@ const Main = (props) => {
                     key={idx}
                     onClick={() => {
                       DoorOpen.play();
-                      console.log('비번 없는 방 입장');
                       const moveTimer = setTimeout(() => {
                         dispatch(roomActions.enterRoomDB(userId, p.id));
                       }, 1000);
@@ -116,8 +113,6 @@ const Main = (props) => {
                     onClick={() => {
                       DoorOpen.play();
                       dispatch(roomActions.privateRoom(p.id, true));
-                      console.log('나는 널이 아니오');
-                      console.log('비번달기용', p.roomPwd);
                     }}
                   >
                     <RoomCard key={p.id} {...p}></RoomCard>
